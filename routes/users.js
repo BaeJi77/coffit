@@ -5,7 +5,8 @@ var router = express.Router();
  * @swagger
  * /users:
  *   get:
- *     description: Returns users
+ *     tags : [User]
+ *     description: show all User
  *     produces:
  *      - application/json
  *     responses:
@@ -15,6 +16,14 @@ var router = express.Router();
  *           type: array
  *           items:
  *             $ref: '#/definitions/User'
+ *
+ * /users/{id}:
+ *    get:
+ *      tags: [User]
+ *      description: show user object using user id
+ *      produces:
+ *       - application/json
+ *
  */
 
 router.get('/', function(req, res, next) {

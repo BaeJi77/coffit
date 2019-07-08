@@ -55,16 +55,37 @@ module.exports = {
                     type: 'object',
                     properties: {
                         id: {
-                            type: 'string'
-                        },
-                        age: {
                             type: 'integer'
                         },
-                        addr: {
+                        name: {
+                            type: 'string'
+                        },
+                        email: {
                             type: 'string'
                         }
                     }
+                },
+                'Trainer': {
+                    type: 'object',
+                    properties: {
+                        id: {
+                            type: 'integer'
+                        },
+                        name: {
+
+                        }
+
+                    }
+                },
+                'Order': {
+                    type: 'object',
+                    properties: {
+                        id: {
+                            type: 'integer'
+                        }
+                    }
                 }
+
             }
     },
     apis: ['./routes/*.js'] // api 파일 위치들

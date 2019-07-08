@@ -14,7 +14,6 @@ var app = express();
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerOptions = require('./config/swagger');
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
-
 const swaggerUi = require('swagger-ui-express');
 
 // view engine setup
@@ -32,6 +31,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
