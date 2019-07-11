@@ -11,9 +11,8 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
-const swaggerJSDoc = require('swagger-jsdoc');
-const swaggerOptions = require('./config/swagger');
-const swaggerSpec = swaggerJSDoc(swaggerOptions);
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load("./config/swagger.yaml");
 const swaggerUi = require('swagger-ui-express');
 
 // view engine setup
@@ -27,7 +26,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //swagger api
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
