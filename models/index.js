@@ -36,6 +36,6 @@ db.Sequelize = Sequelize;
 
 db.Trainer = require('./trainer')(sequelize, Sequelize);
 
-
+//hiuhi
 
 module.exports = db;
