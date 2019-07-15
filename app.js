@@ -6,13 +6,14 @@ var logger = require('morgan');
 
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var trainersRouter = require('./routes/trainerRouter');
 
 
 var app = express();
 
+//init sequelize
 var sequelize = require('./models').sequelize;
-
+sequelize.sync();
 
 //swagger api
 const YAML = require('yamljs');
@@ -20,8 +21,6 @@ const swaggerDocument = YAML.load("./config/swagger.yaml");
 const swaggerUi = require('swagger-ui-express');
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-sequelize.sync();
 
 
 // view engine setup
@@ -39,7 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //router
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/trainers', trainersRouter);
 
 
 // catch 404 and forward to error handler
