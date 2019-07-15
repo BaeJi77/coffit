@@ -31,11 +31,10 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.Trainer = require('./trainer')(sequelize, Sequelize);
-
-//hiuhi
 
 module.exports = db;
