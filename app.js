@@ -5,15 +5,24 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+
 var app = express();
 
+var sequelize = require('./models').sequelize;
+
+
+//swagger api
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load("./config/swagger.yaml");
 const swaggerUi = require('swagger-ui-express');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+sequelize.sync();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,9 +34,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//swagger api
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+
+
+//router
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

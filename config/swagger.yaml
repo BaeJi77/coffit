@@ -114,7 +114,7 @@ components:
           type: "string"
         total_star:
           type: "integer"
-        num_star:
+        num_review:
           type: "integer"
         created_at:
           type: integer
@@ -865,7 +865,7 @@ definitions:
         type: "string"
       total_star:
         type: "integer"
-      num_star:
+      num_review:
         type: "integer"
       created_at:
         type: integer
