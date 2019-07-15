@@ -11,9 +11,17 @@ var trainersRouter = require('./routes/trainerRouter');
 
 var app = express();
 
+const faker = require('./config/faker');
+
 //init sequelize
 var sequelize = require('./models').sequelize;
-sequelize.sync();
+sequelize.sync({
+  force: true,
+  logging: console.log
+}).then(() => {
+  faker.makeFakeTrainerData();
+});
+
 
 //swagger api
 const YAML = require('yamljs');
