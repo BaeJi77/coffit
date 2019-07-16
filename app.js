@@ -5,15 +5,31 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 
-
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var trainersRouter = require('./routes/trainerRouter');
+
 
 var app = express();
 
+const faker = require('./config/faker');
+
+//init sequelize
+var sequelize = require('./models').sequelize;
+sequelize.sync({
+  force: true,
+  logging: console.log
+}).then(() => {
+  faker.makeFakeTrainerData();
+});
+
+
+//swagger api
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load("./config/swagger.yaml");
 const swaggerUi = require('swagger-ui-express');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,11 +41,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//swagger api
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+
+
+//router
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/trainers', trainersRouter);
 
 
 // catch 404 and forward to error handler
