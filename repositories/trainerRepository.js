@@ -26,9 +26,9 @@ module.exports = {
         });
     },
 
-    updateFCMToken: async function(trainerId, FCMTokenValue) {
+    updateFcmToken: async function(trainerId, FcmToken) {
         return await Trainer.update({
-            fcm_token: FCMTokenValue
+            fcm_token: FcmToken
         }, {
             where: {
                 id: trainerId
