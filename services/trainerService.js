@@ -57,6 +57,6 @@ module.exports = {
     },
 
     updateFcmTokenOfTrainer: async function(trainerId, FcmToken) {
-        return await trainerRepository.updateFcmToken(trainerId, FcmToken);
+        return await trainerRepository.updateTrainerFcmToken(trainerId, FcmToken);
     }
 };
