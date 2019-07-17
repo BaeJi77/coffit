@@ -39,6 +39,7 @@ module.exports = {
         return await trainerRepository.findTrainer(trainerId);
     },
 
+    // TODO: Refactoring registerNewTrainer, updateTrainerProfile. Because having Same format.
     registerNewTrainer: async function(newTrainerInformation, trainerPictures) {
         let profilePicture = trainerPictures['profilePicture']; // 하나는 반드시 보내도록 들어옴 => 사진 안넣으면 에러임;
         let activityPictures = trainerPictures['activityPictures'];
