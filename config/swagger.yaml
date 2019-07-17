@@ -378,31 +378,50 @@ paths:
           description: "Invalid input"
 
   /students: # 검색으로 학생 찾기
-    get:
+#    get:
+#      tags:
+#        - "student"
+#      summary: "Search certain student using student name"
+#      description: "Search certain student information and student schedule using student name"
+#      operationId: "findStudent"
+#      produces:
+#        - "application/json"
+#      parameters:
+#        - name: "studentName"
+#          in: "query"
+#          description: "student name"
+#          required: true
+#          type: "string"
+#      responses:
+#        200:
+#          description: "successful operation"
+#          schema:
+#            type: array
+#            items:
+#              $ref: "#/components/schemas/StudentWithSchedules"
+#        400:
+#          description: "Invalid ID supplied"
+#        404:
+#          description: "Not found"
+    post:
       tags:
         - "student"
-      summary: "Search certain student using student name"
-      description: "Search certain student information and student schedule using student name"
-      operationId: "findStudent"
+      summary: "Make new student"
       produces:
         - "application/json"
       parameters:
-        - name: "studentName"
-          in: "query"
-          description: "student name"
+        - name: "body"
+          in: "body"
           required: true
-          type: "string"
+          shema:
+            $ref: "#/definitions/Student"
       responses:
-        200:
-          description: "successful operation"
+        201:
           schema:
-            type: array
-            items:
-              $ref: "#/components/schemas/StudentWithSchedules"
-        400:
-          description: "Invalid ID supplied"
+            $ref: "#/definitions/Student"
         404:
           description: "Not found"
+
   /students/trainers/{id}: # 트레이너가 가지고 있는 학생 보여주기
     get:
       tags:
@@ -512,7 +531,7 @@ paths:
           description: "successful operation"
         405:
           description: "Invalid input"
-  /students/{Id}/setToken:
+  /students/{Id}/token:
     post:
       tags:
         - "student"

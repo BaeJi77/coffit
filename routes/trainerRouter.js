@@ -8,30 +8,28 @@ const trainerService = require('../services/trainerService');
 
 
 router.get('/', getAllTrainerList);
-router.post('/', fieldUpload, makeNewTrainer);
-router.get('/:trainerId', getCertainTrainer);
-router.put('/:trainerId', fieldUpload, updateTrainer);
-router.post('/:trainerId', setFcmToken);
-
-
 async function getAllTrainerList(req, res, next) {
     res.status(200).send(await trainerService.findAllTrainersOrderByRecognition());
 }
 
+router.get('/:trainerId', getCertainTrainer);
 async function getCertainTrainer(req, res, next) {
     let trainerId = req.params.trainerId;
     res.status(200).send(await trainerService.findCertainTrainer(trainerId));
 }
 
+router.post('/', fieldUpload, makeNewTrainer);
 async function makeNewTrainer(req, res, next) {
     res.status(201).send(await trainerService.registerNewTrainer(req.body, req.files));
 }
 
+router.put('/:trainerId', fieldUpload, updateTrainer);
 async function updateTrainer(req, res, next) {
     let trainerId = req.params.trainerId;
     res.status(201).send(await trainerService.updateTrainerProfile(trainerId, req.body, req.files))
 }
 
+router.post('/:trainerId/token', setFcmToken);
 async function setFcmToken(req, res, next) {
     let trainerId = req.params.trainerId;
     res.status(201).send(await trainerService.updateFcmTokenOfTrainer(trainerId, req.body));
