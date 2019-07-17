@@ -1,5 +1,5 @@
 const {Student} = require('../models');
-const Op = sequelize.Op;
+const {Op} = require('../models');
 
 module.exports = {
     // PT에서 trainerID와 같은 pt object 중에 student id를 확인하여서 그 애들을 모두 보여주기?
@@ -26,8 +26,8 @@ module.exports = {
         return await Student.create(newStudent);
     },
 
-    updateStudent: async function(studentId, updateSdudent){
-        return await Student.update(updateSdudent, {
+    updateStudent: async function(studentId, updateStudent){
+        return await Student.update(updateStudent, {
             where:{
                 id: studentId
             }
@@ -35,9 +35,7 @@ module.exports = {
     },
 
     updateStudentFcmToken: async function(studentId, FcmToken) {
-        return await Student.update({
-            fcm_token: FcmToken
-        }, {
+        return await Student.update(FcmToken, {
             where: {
                 id: studentId
             }
