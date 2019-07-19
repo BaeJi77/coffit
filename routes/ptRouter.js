@@ -21,11 +21,12 @@ async function postNewPt(req, res, next) {
     res.status(200).send(await ptServie.makeNewPt(req.body));
 }
 
-router.put('/:ptId', updatePt);
-async function updatePt(req, res, next) {
-    let ptId = req.params.ptId;
-    res.status(200).send(await ptServie.updatePtWhenEndDateIsPassed(ptId, req.body));
-}
+// TODO pt update 되는 상황이 외부에서 요청이 오는지 생각
+// router.put('/:ptId', updatePt);
+// async function updatePt(req, res, next) {
+//     let ptId = req.params.ptId;
+//     res.status(200).send(await ptServie.updatePtWhenEndDateIsPassed(ptId, req.body));
+// }
 
 
 module.exports = router;
