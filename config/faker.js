@@ -3,6 +3,7 @@ const trainerRepository = require('../repositories/trainerRepository');
 const trainerPictureRepository = require('../repositories/trainerPictureRepository');
 const studentRepository = require('../repositories/studentRepository');
 const ptRepository = require('../repositories/ptRepository');
+const bannerRepository = require('../repositories/bannerRepository');
 
 module.exports = {
     makeFakeTrainerData: async function() {
@@ -37,7 +38,6 @@ module.exports = {
             await studentRepository.createStudent(obj);
         }
 
-        // TODO: pt 데이터 넣기
         for(var i = 1 ; i <= 5 ; i++) {
             var obj = {};
             obj.state = faker.random.number(1);
@@ -50,6 +50,13 @@ module.exports = {
             obj.studentId = i;
             obj.trainerId = 6-i;
             await ptRepository.createNewPt(obj);
+        }
+
+        for(var i = 0 ; i < 5 ; i++) {
+            var obj = {};
+            obj.picture_url = faker.image.imageUrl();
+            obj.thumbnail_url = faker.image.imageUrl();
+            await bannerRepository.createNewBanner(obj);
         }
     }
 };
