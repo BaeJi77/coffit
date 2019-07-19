@@ -559,19 +559,19 @@ paths:
           description: "Invalid input"
 
   /PTs:
-    get:
-      tags:
-        - "PT"
-      summary: "Get all PT list"
-      description: "Get all PT, Nessary student id using session or JWT"
-      operationId: "getAllPT"
-      produces:
-        - "application/json"
-      responses:
-        200:
-          description: "Success!!"
-          schema:
-            $ref: "#/components/schemas/PTwithScheduleAndComment"
+#    get:
+#      tags:
+#        - "PT"
+#      summary: "Get all PT list"
+#      description: "Get all PT, Nessary student id using session or JWT"
+#      operationId: "getAllPT"
+#      produces:
+#        - "application/json"
+#      responses:
+#        200:
+#          description: "Success!!"
+#          schema:
+#            $ref: "#/components/schemas/PTwithScheduleAndComment"
     post:
       tags:
         - "PT"

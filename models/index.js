@@ -38,9 +38,16 @@ db.Sequelize = Sequelize;
 db.Trainer = require('./trainer')(sequelize, Sequelize);
 db.TrainerPicture = require('./trainer_picture')(sequelize, Sequelize);
 db.Student = require('./student')(sequelize, Sequelize);
+db.Pt = require('./pt')(sequelize, Sequelize);
 
 db.Trainer.hasMany(db.TrainerPicture);
 db.TrainerPicture.belongsTo(db.Trainer);
+
+db.Trainer.hasMany(db.Pt);
+db.Pt.belongsTo(db.Trainer);
+
+db.Student.hasMany(db.Pt);
+db.Pt.belongsTo(db.Student);
 
 db.Op = sequelize.Op;
 
