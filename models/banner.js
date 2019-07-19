@@ -5,4 +5,4 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         timestamps: true
     })
-}
+};
