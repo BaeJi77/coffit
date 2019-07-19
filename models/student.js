@@ -8,9 +8,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         picture_url: DataTypes.STRING,
         gender: {
-            type: DataTypes.ENUM(
-                '남성', '여성', '대답을 원하지 않음'
-            ),
+            type: DataTypes.ENUM,
+            values: ['남성', '여성', '대답을 원하지 않음']
         },
         phone_number: DataTypes.STRING,
         fcm_token: DataTypes.STRING,
