@@ -50,6 +50,6 @@ db.Pt.belongsTo(db.Trainer);
 db.Student.hasMany(db.Pt);
 db.Pt.belongsTo(db.Student);
 
-db.Op = sequelize.Op;
+db.Op = Sequelize.Op;
 
 module.exports = db;
