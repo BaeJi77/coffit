@@ -13,8 +13,8 @@ const upload = multer({
         bucket: 'coffit',
         contentType: multerS3.AUTO_CONTENT_TYPE,
         key: function (req, file, cb) {
-            let fileName = file.originalname;
-            fileName = Date.now().toString() + '_' + fileName;
+            let fileName = Date.now();
+            fileName = 'images/origin/' + fileName;
             cb(null, fileName);
         },
         acl: 'public-read'
