@@ -15,6 +15,8 @@ module.exports = (sequelize, DataTypes) => {
         fcm_token: DataTypes.STRING,
         access_token: DataTypes.STRING
     }, {
-        timestamps: true
+        timestamps: true,
+        charset: 'utf8',
+        collate: 'utf8_general_ci'
     })
 };
