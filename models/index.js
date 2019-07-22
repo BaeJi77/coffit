@@ -40,6 +40,7 @@ db.TrainerPicture = require('./trainer_picture')(sequelize, Sequelize);
 db.Student = require('./student')(sequelize, Sequelize);
 db.Pt = require('./pt')(sequelize, Sequelize);
 db.Banner = require('./banner')(sequelize, Sequelize);
+db.TrainerSchedule = require('./trainer_schedule')(sequelize, Sequelize);
 
 db.Trainer.hasMany(db.TrainerPicture);
 db.TrainerPicture.belongsTo(db.Trainer);
@@ -49,6 +50,9 @@ db.Pt.belongsTo(db.Trainer);
 
 db.Student.hasMany(db.Pt);
 db.Pt.belongsTo(db.Student);
+
+db.Trainer.hasMany(db.TrainerSchedule);
+db.TrainerSchedule.belongsTo(db.Trainer);
 
 db.Op = Sequelize.Op;
 
