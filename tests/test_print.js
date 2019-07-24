@@ -12,4 +12,4 @@ it('true is true', function () {
 it('jenkins test is ok?', function() {
     console.log('test');
     expect(true).to.equal(true);
-})
+});
