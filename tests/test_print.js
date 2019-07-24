@@ -7,4 +7,4 @@ it('hello test', function () {
 it('true is true', function () {
     console.log('test 2');
     expect(true).to.equal(true);
-})
+});
