@@ -1,6 +1,6 @@
 # COFFIT PROJECT
 - Team: New Black. (SoftWare Maestro 10th.)
-  - EUN SECK, JUNG [@Github](https://github.com/newwhite)
+  - EUN SEOK, JEONG [@Github](https://github.com/newwhite)
   - JI SOO, LEE [@Github](https://github.com/jisooleee)
   - JI HOON, BAE [@Github](https://github.com/BaeJi77)
   
