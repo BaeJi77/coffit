@@ -23,7 +23,7 @@ sequelize.sync({
   force: true,
   logging: console.log
 }).then(() => {
-  faker.makeFakeTrainerData();
+  faker.makeFakeData();
 });
 
 

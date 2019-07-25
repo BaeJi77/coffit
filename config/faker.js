@@ -7,7 +7,7 @@ const bannerRepository = require('../repositories/bannerRepository');
 const trainerScheduleRepository = require('../repositories/trainerScheduleRepository');
 
 module.exports = {
-    makeFakeTrainerData: async function() {
+    makeFakeData: async function() {
         for (var i = 0; i < 5; i++) {
             var obj = {};
             obj.username = faker.name.findName();
