@@ -4,6 +4,7 @@ const trainerPictureRepository = require('../repositories/trainerPictureReposito
 const studentRepository = require('../repositories/studentRepository');
 const ptRepository = require('../repositories/ptRepository');
 const bannerRepository = require('../repositories/bannerRepository');
+const trainerScheduleRepository = require('../repositories/trainerScheduleRepository');
 
 module.exports = {
     makeFakeTrainerData: async function() {
@@ -57,6 +58,13 @@ module.exports = {
             obj.picture_url = faker.image.imageUrl();
             obj.thumbnail_url = faker.image.imageUrl();
             await bannerRepository.createNewBanner(obj);
+        }
+
+        for(var i = 0 ; i < 20 ; i++) {
+            var obj = {};
+            obj.start_time = Date.now() + 30000 * i;
+            obj.available = i%2 === 0;
+            await trainerScheduleRepository.createNewTrainerSchedule(obj);
         }
     }
 };
