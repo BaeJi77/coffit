@@ -1,6 +1,17 @@
-#COFFIT back-end develop
+# COFFIT PROJECT
+- Team: New Black. (SoftWare Maestro 10th.)
+  - EUN SECK, JUNG [@Github](https://github.com/newwhite)
+  - JI SOO, LEE [@Github](https://github.com/jisooleee)
+  - JI HOON, BAE [@Github](https://github.com/BaeJi77)
+  
+- Project name : COFFIT.
+  - online 1:1 PT service
+  - Exercising together.
+  
 
-##development Environment
+------------------------------------------------------------------------------------------------------------------
+
+## Back-end development Environment
 
 - OS : MacOS Mojave(ver10.14.5)
   - ec2 : ubuntu 18.04
