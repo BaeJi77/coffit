@@ -22,7 +22,9 @@
     "timezone": "+09:00",
     "dialectOptions": {
       "useUTC": false
-    }
+    },
+    "charset": "utf8",
+    "collate": "utf8_general_ci"
   },
   "production": {
     "username": "root",
@@ -34,6 +36,8 @@
     "dialectOptions": {
       "useUTC": false,
       "dateStrings": true
-    }
+    },
+    "charset": "utf8",
+    "collate": "utf8_general_ci"
   }
 }
