@@ -26,7 +26,7 @@ module.exports = {
     },
 
     findCertainStudent: async function (studentId) {
-        return await studentRespository.findStudent(studentId);
+        return await studentRespository.findStudentUsingStudentId(studentId);
     },
 
     // TODO: After make schedule table, Please implement.

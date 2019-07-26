@@ -14,7 +14,7 @@ module.exports = {
         return await Student.findAll();
     },
 
-    findStudent: async function(studentId) {
+    findStudentUsingStudentId: async function(studentId) {
         return await Student.findOne({
             where: {
                 id: studentId
