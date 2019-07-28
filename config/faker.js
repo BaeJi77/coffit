@@ -73,7 +73,6 @@ module.exports = {
             await trainerScheduleRepository.createNewTrainerSchedule(obj);
         }
 
-        // TODO: add notification faker data.
         for(var i = 1 ; i <= 20 ; i++) {
             var obj = {};
             obj.toWhom = i % 2;
