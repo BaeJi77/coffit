@@ -5,10 +5,6 @@
     "database": "coffit",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "dialectOptions": {
-      "useUTC": false,
-      "dateStrings": true
-    },
     "timezone": "+09:00",
     "charset": "utf8",
     "collate": "utf8_general_ci"
@@ -20,9 +16,6 @@
     "host": "127.0.0.1",
     "dialect": "mysql",
     "timezone": "+09:00",
-    "dialectOptions": {
-      "useUTC": false
-    },
     "charset": "utf8",
     "collate": "utf8_general_ci"
   },
@@ -33,10 +26,6 @@
     "host": "127.0.0.1",
     "dialect": "mysql",
     "timezone": "+09:00",
-    "dialectOptions": {
-      "useUTC": false,
-      "dateStrings": true
-    },
     "charset": "utf8",
     "collate": "utf8_general_ci"
   }

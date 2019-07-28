@@ -1,4 +1,4 @@
-const {Notification} = require('../models/notification');
+const {Notification} = require('../models');
 
 module.exports = {
     //make notification. -> fcm까지 신경

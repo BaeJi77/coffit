@@ -17,9 +17,15 @@ const studentRepository = require('../repositories/studentRepository');
 
 
 async function decideWhatMakeContentUsingType(newNotification) {
-    //TODO: 각 type별 메세지가 달랐음. 그 내용 참고해서 content에 내용 넣기
-    let trainerName = await trainerRepository.findTrainerUsingTrainerId(newNotification.trainerId);
-    let studentName = await studentRepository.findStudentUsingStudentId(newNotification.studentId);
+    //TODO: 반환 Date 형식 이쁘게 바꾸기.
+    let trainerName;
+    let studentName;
+    await trainerRepository.findTrainerUsingTrainerId(newNotification.trainerId).then(result => {
+        trainerName = result.username;
+    });
+    await studentRepository.findStudentUsingStudentId(newNotification.studentId).then(result => {
+        studentName = result.username;
+    });
     let notificationContent;
     switch (newNotification.type) {
         case 0:
@@ -56,7 +62,7 @@ function makeContentWhenRequestingPtReservation(requestNotification, trainerName
      if(requestNotification.toWhom === 0) {
          return trainerName + "트레이너 님이 " + requestNotification.requestDate + "로 PT를 요청했습니다. 가능할까요?"
      } else {
-         return studentName + " 님이 " + requestNotification.requestDate + "로 PT를 요청했습니다. 가능할까요?"
+         return studentName + " 회원님이 " + requestNotification.requestDate + "로 PT를 요청했습니다. 가능할까요?"
      }
 }
 
@@ -64,7 +70,7 @@ function makeContentWhenRequestingChangingPtReservation(requestNotification, tra
     if(requestNotification.toWhom === 0) {
         return trainerName + "트레이너 님이 " + requestNotification.originDate + "에서 " + requestNotification.requestDate + "으로 PT를 변경 요청했습니다. 가능할까요?"
     } else {
-        return studentName + " 님이 " + requestNotification.originDate+ "에서 " + requestNotification.requestDate + "으로 PT를 변경 요청했습니다. 가능할까요?"
+        return studentName + " 회원님이 " + requestNotification.originDate+ "에서 " + requestNotification.requestDate + "으로 PT를 변경 요청했습니다. 가능할까요?"
     }
 }
 
