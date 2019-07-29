@@ -7,7 +7,7 @@ module.exports = {
         return await Trainer.findAll();
     },
 
-    findTrainer: async function(trainerId) {
+    findTrainerUsingTrainerId: async function(trainerId) {
         return await Trainer.findOne({
             where:{
                 id: trainerId

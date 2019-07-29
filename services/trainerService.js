@@ -36,7 +36,7 @@ module.exports = {
     },
 
     findCertainTrainer: async function(trainerId) {
-        return await trainerRepository.findTrainer(trainerId);
+        return await trainerRepository.findTrainerUsingTrainerId(trainerId);
     },
 
     // TODO: Refactoring registerNewTrainer, updateTrainerProfile. Because having Same format.
