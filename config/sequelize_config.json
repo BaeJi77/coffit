@@ -7,7 +7,11 @@
     "dialect": "mysql",
     "timezone": "+09:00",
     "charset": "utf8",
-    "collate": "utf8_general_ci"
+    "collate": "utf8_general_ci",
+    "define": {
+      "timestamps": true,
+      "underscored": true
+    }
   },
   "test": {
     "username": "root",
@@ -17,7 +21,11 @@
     "dialect": "mysql",
     "timezone": "+09:00",
     "charset": "utf8",
-    "collate": "utf8_general_ci"
+    "collate": "utf8_general_ci",
+    "define": {
+      "timestamps": true,
+      "underscored": true
+    }
   },
   "production": {
     "username": "root",
@@ -27,6 +35,10 @@
     "dialect": "mysql",
     "timezone": "+09:00",
     "charset": "utf8",
-    "collate": "utf8_general_ci"
+    "collate": "utf8_general_ci",
+    "define": {
+      "timestamps": true,
+      "underscored": true
+    }
   }
 }
