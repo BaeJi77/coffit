@@ -745,16 +745,16 @@ paths:
               $ref: "#/definitions/Notification"
 
   /schedules:
-    get:
-      tags:
-        - "schedule"
-      summary: "get all schedules"
-      description: "Show all schedules"
-      responses:
-        200:
-          description: "Success"
-          schema:
-            $ref: '#/definitions/Schedule'
+#    get:
+#      tags:
+#        - "schedule"
+#      summary: "get all schedules"
+#      description: "Show all schedules"
+#      responses:
+#        200:
+#          description: "Success"
+#          schema:
+#            $ref: '#/definitions/Schedule'
     post:
       tags:
         - "schedule"
