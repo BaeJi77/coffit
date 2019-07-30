@@ -11,6 +11,7 @@ var studentRouter = require('./routes/studentRouter');
 var ptRouter = require('./routes/ptRouter');
 var homeRouter = require('./routes/homeRouter');
 var trainerScheduleRouter = require('./routes/trainerScheduleRouter');
+var notificationRouter = require('./routes/notificationRouter');
 
 
 var app = express();
@@ -23,7 +24,7 @@ sequelize.sync({
   force: true,
   logging: console.log
 }).then(() => {
-  faker.makeFakeTrainerData();
+  faker.makeFakeData();
 });
 
 
@@ -53,6 +54,7 @@ app.use('/students', studentRouter);
 app.use('/pts', ptRouter);
 app.use('/home', homeRouter);
 app.use('/trainerSchedules', trainerScheduleRouter);
+app.use('/notifications', notificationRouter);
 
 
 // catch 404 and forward to error handler

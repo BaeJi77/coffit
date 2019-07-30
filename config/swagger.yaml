@@ -383,7 +383,7 @@ paths:
 #        - "student"
 #      summary: "Search certain student using student name"
 #      description: "Search certain student information and student schedule using student name"
-#      operationId: "findStudent"
+#      operationId: "findStudentUsingStudentId"
 #      produces:
 #        - "application/json"
 #      parameters:
@@ -1063,9 +1063,11 @@ definitions:
         type: integer
         format: int32
         enum:
-          - 0 #Sending trainer
-          - 1 #Sending student
+          - 0 #Sending student
+          - 1 #Sending trainer
       contents:
+        type: string
+      rejectMessage:
         type: string
       type:
         type: integer
