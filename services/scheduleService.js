@@ -30,31 +30,34 @@ const scheduleRepository = require('../repositories/scheduleRepository');
  * * => make notification
  */
 
-async function decideUpdatingPastSchedule (newSchedule) {
-    let pastScheduleId = newSchedule.past_schedule_id;
+async function decideUpdatingPastSchedule (requestedSchedule) {
+    let pastScheduleId = requestedSchedule.past_schedule_id;
     if (pastScheduleId !== -1)
-        await operateWhenExistingPastSchedule(newSchedule);
+        await operateWhenExistingPastSchedule(requestedSchedule);
 }
 
-async function operateWhenExistingPastSchedule (newSchedule) {
-    let scheduleState = newSchedule.state;
-    let pastScheduleId = newSchedule.past_schedule_id;
+// TODO: 만약 스케줄을 변경 요청하고 또 변경 요청한 경우는? (이전 요청에 대한 답이 오지 않은 상태에서) 재귀적으러 처리해야될 듯
+async function operateWhenExistingPastSchedule (requestedSchedule) {
+    let scheduleState = requestedSchedule.state;
+    let pastScheduleId = requestedSchedule.past_schedule_id;
     let pastSchedule = await scheduleRepository.findScheduleUsingScheduleId(pastScheduleId);
     switch (scheduleState) {
         case 0:
             await checkAlreadyAcceptedSchedule(pastSchedule);
             break;
 
-        case 1: // 이전 데이터 지우기
+        case 1: // 수락했기 때문에 past schedule을 지워야함.
             await scheduleRepository.deleteScheduleUsingScheduleId(pastScheduleId);
             break;
 
         case 3: // 이전 데이터 상황에 따라서 업데이트
             await checkAlreadyAcceptedSchedule(pastSchedule);
             break;
+
+        default:
+            break;
     }
 }
-
 
 async function checkAlreadyAcceptedSchedule (pastSchedule) {
     if(pastSchedule.state === 1) {
@@ -91,16 +94,31 @@ module.exports = {
             });
     },
 
-    updateScheduleWhenAcceptingOrRejecting: async function (updateSchedule) {
-        await decideUpdatingPastSchedule(updateSchedule);
-        return await scheduleRepository.updateScheduleStateWhenAcceptingRequest(updateSchedule)
+    // TODO: check when updating memo.
+    // TODO: 혹시 mysql hook 으로 처리 할 수 있을까?
+    updateScheduleWhenAcceptingOrRejecting: async function (scheduleId, updateSchedule) {
+        decideUpdatingPastSchedule(updateSchedule);
+        let requestedScheduleState = updateSchedule.state;
+        if(requestedScheduleState === 1) {
+            return await scheduleRepository.updateScheduleStateWhenAcceptingRequest(scheduleId)
+                .catch(err => {
+                    console.error(err);
+                    throw new Error(err);
+                });
+        } else if (requestedScheduleState === 3) {
+            return await scheduleRepository.deleteScheduleUsingScheduleId(scheduleId)
+                .catch(err => {
+                    console.error(err);
+                    throw new Error(err);
+                });
+        }
+    },
+
+    deleteSchedule: async function (scheduleId) {
+        return await scheduleRepository.deleteScheduleUsingScheduleId(scheduleId)
             .catch(err => {
                 console.error(err);
                 throw new Error(err);
             });
-    },
-
-    deleteSchedule: async function (scheduleId) {
-        return await scheduleRepository.deleteScheduleUsingScheduleId(scheduleId);
     }
 };

@@ -18,13 +18,13 @@ async function makeNewSchedule(req, res, next) {
 
 router.put('/:scheduleId', updateSchedule);
 async function updateSchedule(req, res, next) {
-    await scheduleService.updateScheduleWhenAcceptingOrRejecting(req.params.scheduleId)
+    await scheduleService.updateScheduleWhenAcceptingOrRejecting(req.params.scheduleId, req.body)
         .then(result => {
-            res.status(204).send(result);
+            res.status(204).json(result);
         })
         .catch(err => {
             console.error(err);
-            throw new Error(err);
+            next(new Error(err));
         })
 }
 
