@@ -20,10 +20,10 @@ async function decideWhatMakeContentUsingType(newNotification) {
     //TODO: 반환 Date 형식 이쁘게 바꾸기.
     let trainerName;
     let studentName;
-    await trainerRepository.findTrainerUsingTrainerId(newNotification.trainerId).then(result => {
+    await trainerRepository.findTrainerUsingTrainerId(newNotification.trainer_id).then(result => {
         trainerName = result.username;
     });
-    await studentRepository.findStudentUsingStudentId(newNotification.studentId).then(result => {
+    await studentRepository.findStudentUsingStudentId(newNotification.student_id).then(result => {
         studentName = result.username;
     });
     let notificationContent;
@@ -67,7 +67,7 @@ function makeContentWhenRequestingPtReservation(requestNotification, trainerName
 }
 
 function makeContentWhenRequestingChangingPtReservation(requestNotification, trainerName, studentName) {
-    if(requestNotification.toWhom === 0) {
+    if(requestNotification.to_whom === 0) {
         return trainerName + "트레이너 님이 " + requestNotification.originDate + "에서 " + requestNotification.requestDate + "으로 PT를 변경 요청했습니다. 가능할까요?"
     } else {
         return studentName + " 회원님이 " + requestNotification.originDate+ "에서 " + requestNotification.requestDate + "으로 PT를 변경 요청했습니다. 가능할까요?"
@@ -79,7 +79,7 @@ function makeContentWhenAcceptPtReservation(requestNotification) {
 }
 
 function makeContentWhnRejectPtReservation(requestNotification, trainerName, studentName) {
-    if(requestNotification.toWhom === 0) {
+    if(requestNotification.to_whom === 0) {
         return trainerName + " 트레이너님이 일정이 맞지 요청이 거절되었습니다. 아래 메세지를 확인해주세요.";
     } else {
         return studentName + " 회원님이 일정이 맞지 요청이 거절되었습니다. 아래 메세지를 확인해주세요.";

@@ -56,13 +56,13 @@ db.Pt.belongsTo(db.Student);
 db.Trainer.hasMany(db.TrainerSchedule);
 db.TrainerSchedule.belongsTo(db.Trainer);
 
-db.Trainer.hasMany(db.Notification);
+db.Trainer.hasMany(db.Notification, {foreignKey: 'trainer_id'});
 db.Notification.belongsTo(db.Trainer);
 
-db.Student.hasMany(db.Notification);
+db.Student.hasMany(db.Notification, {foreignKey: 'student_id'});
 db.Notification.belongsTo(db.Student);
 
-db.Pt.hasMany(db.Schedule);
+db.Pt.hasMany(db.Schedule, {foreignKey: 'pt_id'});
 db.Schedule.belongsTo(db.Pt);
 
 db.Op = Sequelize.Op;

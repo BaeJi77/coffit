@@ -9,8 +9,8 @@ module.exports = {
     findAllNotificationOfCertainStudent: async function(studentId) {
         return await Notification.findAll({
             where: {
-                studentId: studentId,
-                toWhom: 0
+                student_id: studentId,
+                to_whom: 0
             }
         })
     },
@@ -18,8 +18,8 @@ module.exports = {
     findAllNotificationOfCertainTrainer: async function(trainerId) {
         return await Notification.findAll({
             where: {
-                trainerId: trainerId,
-                toWhom: 1
+                trainer_id: trainerId,
+                to_whom: 1
             }
         })
     }
