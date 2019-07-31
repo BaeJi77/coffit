@@ -1,7 +1,7 @@
 const {Schedule} = require('../models');
 
 module.exports = {
-    findScheduleOfStudent: async function (studentId) {
+    findAllScheduleOfStudentUsingStudentId: async function (studentId) {
         return await Schedule.findAll({
             where: {
                 student_id: studentId
@@ -9,10 +9,18 @@ module.exports = {
         })
     },
 
-    findScheduleOfTrainer: async function (trainerId) {
+    findAllScheduleOfTrainerUsingTrainerId: async function (trainerId) {
         return await Schedule.findAll({
             where: {
                 trainer_id: trainerId
+            }
+        })
+    },
+
+    findScheduleUsingScheduleId: async function (scheduleId) {
+        return await Schedule.findOne({
+            where: {
+                id: scheduleId
             }
         })
     },
@@ -21,17 +29,7 @@ module.exports = {
         return await Schedule.create(newSchedule);
     },
 
-    updateDecidedScheduleWhenRequestingAnotherDate: async function (scheduleId) {
-        return await Schedule.update({
-            state: 0
-        }, {
-            where: {
-                id: scheduleId
-            }
-        })
-    },
-
-    updateRequestedScheduleWhenAcceptingSchedule: async function (scheduleId) {
+    updateScheduleStateWhenAcceptingRequest: async function (scheduleId) {
         return await Schedule.update({
             state: 1
         }, {
@@ -41,7 +39,7 @@ module.exports = {
         })
     },
 
-    updateExistingScheduleStatue: async function (scheduleId) {
+    updateScheduleStateWhenRequestAnotherDate: async function (scheduleId) {
         return await Schedule.update({
             state: 2
         }, {
@@ -51,12 +49,11 @@ module.exports = {
         })
     },
 
-    deleteSchedule: async function (scheduleId) {
+    deleteScheduleUsingScheduleId: async function (scheduleId) {
         return await Schedule.destroy({
             where: {
                 id: scheduleId
             }
         })
     }
-
 };
