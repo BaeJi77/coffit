@@ -5,7 +5,10 @@ module.exports = {
         return await Schedule.findAll({
             where: {
                 student_id: studentId
-            }
+            },
+            order: [
+                ['created_at', 'ASC'],
+            ]
         })
     },
 
