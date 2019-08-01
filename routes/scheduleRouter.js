@@ -6,7 +6,7 @@ const scheduleService = require('../services/scheduleService');
 
 router.post('/', makeNewSchedule);
 async function makeNewSchedule(req, res, next) {
-    await scheduleService.makeNewSchedule(req.body)
+    await scheduleService.makeNewSchedule(req.query.iAm, req.body)
         .then(result => {
             res.status(204).send(result);
         })
@@ -18,7 +18,7 @@ async function makeNewSchedule(req, res, next) {
 
 router.put('/:scheduleId', updateSchedule);
 async function updateSchedule(req, res, next) {
-    await scheduleService.updateScheduleWhenAcceptingOrRejecting(req.params.scheduleId, req.body)
+    await scheduleService.updateScheduleWhenAcceptingOrRejecting(req.params.scheduleId, req.query.iAm, req.body)
         .then(result => {
             res.status(204).json(result);
         })

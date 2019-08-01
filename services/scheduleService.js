@@ -1,4 +1,8 @@
+var moment = require('moment');
+
 const scheduleRepository = require('../repositories/scheduleRepository');
+const notificationRepository = require('../repositories/notificationRepository');
+const makeNotificationContent = require('../modules/make_notification_content');
 
 /**
  * @post - condition
@@ -24,9 +28,9 @@ const scheduleRepository = require('../repositories/scheduleRepository');
  * when rejecting request
  * 2. state: 3, past_schedule_id: -1 or number
  * => if past_schedule_id === -1, delete request schedule
- * => if past_schedule_id !== -1 is number, There are two situation.
- *   => 1. already accepted. => update past_schedule state to 1. (state: 2 -> 1)
- *   => 2. not accepted. => don't update (state: 0)
+ * => if past_schedule_id === number, delete request schedule. And there are two situation.
+ *   => 1. There is already accepted schedule. => update past_schedule state to 1. (state: 2 -> 1)
+ *   => 2. There is not accepted schedule. => don't update (state: 0)
  * * => make notification
  */
 
@@ -36,7 +40,6 @@ async function decideUpdatingPastSchedule (requestedSchedule) {
         await operateWhenExistingPastSchedule(requestedSchedule);
 }
 
-// TODO: 만약 스케줄을 변경 요청하고 또 변경 요청한 경우는? (이전 요청에 대한 답이 오지 않은 상태에서) 재귀적으러 처리해야될 듯
 async function operateWhenExistingPastSchedule (requestedSchedule) {
     let scheduleState = requestedSchedule.state;
     let pastScheduleId = requestedSchedule.past_schedule_id;
@@ -67,6 +70,63 @@ async function checkAlreadyAcceptedSchedule (pastSchedule) {
     }
 }
 
+async function makeOccurNotificationToStudentOrTrainer (iAm, requestedSchedule) {
+    let newNotification = makeNotificationAfterMakingSchedule(iAm, requestedSchedule);
+    notificationRepository.createNewNotification(newNotification);
+}
+
+async function makeNotificationAfterMakingSchedule (iAm, requestedSchedule) {
+    let newNotification = {};
+    let notificationTypeAndOriginDate = makeADistinctionNotificationType(requestedSchedule);
+    newNotification.to_whom = makeADistinctionWhereRequestingBy(iAm);
+    newNotification.type = requestedSchedule.state;
+    newNotification.schedule_id = requestedSchedule.id;
+    newNotification.student_id = requestedSchedule.student_id;
+    newNotification.trainer_id = requestedSchedule.trainer_id;
+    newNotification.request_date = requestedSchedule.date;
+    newNotification.type = notificationTypeAndOriginDate.type;
+    newNotification.origin_date = notificationTypeAndOriginDate.origin_date;
+    newNotification.contents = await makeNotificationContent(newNotification);
+    return newNotification;
+}
+
+function makeADistinctionWhereRequestingBy (iAm) {
+    let to_whom;
+    if (iAm === 'student')
+        to_whom = 0;
+    else if (iAm === 'trainer')
+        to_whom = 1;
+    return to_whom;
+}
+
+async function makeADistinctionNotificationType (requestedSchedule) {
+    let notificationTypeAndOriginDate = {};
+    switch (requestedSchedule.state) {
+        case 0:
+            if(requestedSchedule.past_schedule_id === -1)
+                notificationTypeAndOriginDate.type = 0;
+            else {
+                let pastSchedule = await scheduleRepository.findScheduleUsingScheduleId(requestedSchedule.past_schedule_id);
+                notificationTypeAndOriginDate.type = 1;
+                notificationTypeAndOriginDate.origin_date = pastSchedule.date;
+            }
+            break;
+
+        case 1:
+            notificationTypeAndOriginDate.type = 2;
+            break;
+
+        case 3:
+            notificationTypeAndOriginDate.type = 3;
+            break;
+
+        default:
+            break;
+    }
+    return notificationTypeAndOriginDate;
+}
+
+
 
 module.exports = {
     findAllSchedulesOfStudent: async function (studentId) {
@@ -79,15 +139,22 @@ module.exports = {
 
     findAllSchedulesOfTrainer: async function (trainerId) {
         return await scheduleRepository.findAllScheduleOfTrainerUsingTrainerId(trainerId)
+            .then(result => {
+                return result;
+            })
             .catch(err => {
                 console.log(err);
                 throw new Error(err);
             });
     },
 
-    makeNewSchedule: async function (newSchedule) {
+    makeNewSchedule: async function (iAm, newSchedule) {
         await decideUpdatingPastSchedule(newSchedule);
         return await scheduleRepository.createNewSchedule(newSchedule)
+            .then(result => {
+                makeOccurNotificationToStudentOrTrainer(iAm, result);
+                return result;
+            })
             .catch(err => {
                 console.log(err);
                 throw new Error(err);
@@ -95,18 +162,33 @@ module.exports = {
     },
 
     // TODO: check when updating memo.
+    // TODO: start pt, end pt?
     // TODO: 혹시 mysql hook 으로 처리 할 수 있을까?
-    updateScheduleWhenAcceptingOrRejecting: async function (scheduleId, updateSchedule) {
+    updateScheduleWhenAcceptingOrRejecting: async function (scheduleId, iAm, updateSchedule) {
         decideUpdatingPastSchedule(updateSchedule);
         let requestedScheduleState = updateSchedule.state;
         if(requestedScheduleState === 1) {
             return await scheduleRepository.updateScheduleStateWhenAcceptingRequest(scheduleId)
+                .then(result => {
+                    makeOccurNotificationToStudentOrTrainer(iAm, updateSchedule)
+                        .catch(err => {
+                            throw new Error(err);
+                        });
+                    return result;
+                })
                 .catch(err => {
                     console.error(err);
                     throw new Error(err);
                 });
         } else if (requestedScheduleState === 3) {
             return await scheduleRepository.deleteScheduleUsingScheduleId(scheduleId)
+                .then(result => {
+                    makeOccurNotificationToStudentOrTrainer(iAm, updateSchedule)
+                        .catch(err => {
+                            throw new Error(err);
+                        });
+                    return result;
+                })
                 .catch(err => {
                     console.error(err);
                     throw new Error(err);
