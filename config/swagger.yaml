@@ -779,7 +779,7 @@ paths:
           in: "path"
           type: number
           required: true
-        - name: "requestTo"
+        - name: "iAm"
           in: "query"
           type: string
           enum:

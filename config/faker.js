@@ -5,8 +5,9 @@ const studentRepository = require('../repositories/studentRepository');
 const ptRepository = require('../repositories/ptRepository');
 const bannerRepository = require('../repositories/bannerRepository');
 const trainerScheduleRepository = require('../repositories/trainerScheduleRepository');
-const notificationService = require('../services/notificationService');
+const notificationRepository = require('../repositories/notificationRepository');
 const scheduleRepository = require('../repositories/scheduleRepository');
+const make_notification_context = require('../modules/make_notification_content');
 
 module.exports = {
     makeFakeData: async function() {
@@ -66,12 +67,15 @@ module.exports = {
             obj.to_whom = i % 2;
             obj.reject_message = faker.lorem.sentence();
             var randomType = obj.type = faker.random.number(4);
-            if(randomType === 2)
+            if(randomType === 1)
                 obj.origin_date = faker.date.recent();
+            else if (randomType === 4)
+                obj.type = 6;
             obj.request_date = faker.date.future(1);
             obj.trainer_id = (i % 5) + 1;
             obj.student_id = ((20 - i) % 5) + 1;
-            await notificationService.makeNewNotificationDecidingStudentOrTrainer(obj);
+            obj.contents = await make_notification_context(obj);
+            await notificationRepository.createNewNotification(obj);
         }
 
         // create pt
