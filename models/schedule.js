@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         past_schedule_id: DataTypes.INTEGER,
         trainer_id: DataTypes.INTEGER,
         student_id: DataTypes.INTEGER,
-        pt_id: DataTypes.INTEGER
+        pt_id: DataTypes.INTEGER,
+        trainer_schedule_id: DataTypes.INTEGER
     })
 };

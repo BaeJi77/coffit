@@ -13,7 +13,6 @@ const studentRepository = require('../repositories/studentRepository');
  * 1: request changing pt reservation
  * 2: accept pt reservation
  * 3: reject pt reservation or changing reservation
- * TODO: 4: start pt, 5: end pt
  * 6: create pt feedback
  */
 
@@ -56,7 +55,6 @@ function makeContentWhnRejectPtReservation(requestNotification, trainerName, stu
 
 
 module.exports = async (newNotification) => {
-    //TODO: 반환 Date 형식 이쁘게 바꾸기.
     let trainerName;
     let studentName;
     await trainerRepository.findTrainerUsingTrainerId(newNotification.trainer_id)
