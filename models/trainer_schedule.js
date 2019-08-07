@@ -4,7 +4,9 @@ module.exports = (sequelize, DataTypes) => {
         available: {
             type: DataTypes.BOOLEAN,
             defaultValue: true
-        }
+        },
+        trainer_id: DataTypes.INTEGER,
+        schedule_id: DataTypes.INTEGER
     }, {
         timestamps: true
     })

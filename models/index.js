@@ -42,24 +42,28 @@ db.Pt = require('./pt')(sequelize, Sequelize);
 db.Banner = require('./banner')(sequelize, Sequelize);
 db.TrainerSchedule = require('./trainer_schedule')(sequelize, Sequelize);
 db.Notification = require('./notification')(sequelize, Sequelize);
+db.Schedule = require('./schedule')(sequelize, Sequelize);
 
-db.Trainer.hasMany(db.TrainerPicture);
+db.Trainer.hasMany(db.TrainerPicture, {foreignKey: 'trainer_id'});
 db.TrainerPicture.belongsTo(db.Trainer);
 
-db.Trainer.hasMany(db.Pt);
+db.Trainer.hasMany(db.Pt, {foreignKey: 'trainer_id'});
 db.Pt.belongsTo(db.Trainer);
 
-db.Student.hasMany(db.Pt);
+db.Student.hasMany(db.Pt, {foreignKey: 'trainer_id'});
 db.Pt.belongsTo(db.Student);
 
-db.Trainer.hasMany(db.TrainerSchedule);
+db.Trainer.hasMany(db.TrainerSchedule, {foreignKey: 'trainer_id'});
 db.TrainerSchedule.belongsTo(db.Trainer);
 
-db.Trainer.hasMany(db.Notification);
+db.Trainer.hasMany(db.Notification, {foreignKey: 'trainer_id'});
 db.Notification.belongsTo(db.Trainer);
 
-db.Student.hasMany(db.Notification);
+db.Student.hasMany(db.Notification, {foreignKey: 'student_id'});
 db.Notification.belongsTo(db.Student);
+
+db.Pt.hasMany(db.Schedule, {foreignKey: 'pt_id'});
+db.Schedule.belongsTo(db.Pt);
 
 db.Op = Sequelize.Op;
 

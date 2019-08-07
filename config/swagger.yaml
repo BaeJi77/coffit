@@ -745,16 +745,16 @@ paths:
               $ref: "#/definitions/Notification"
 
   /schedules:
-    get:
-      tags:
-        - "schedule"
-      summary: "get all schedules"
-      description: "Show all schedules"
-      responses:
-        200:
-          description: "Success"
-          schema:
-            $ref: '#/definitions/Schedule'
+#    get:
+#      tags:
+#        - "schedule"
+#      summary: "get all schedules"
+#      description: "Show all schedules"
+#      responses:
+#        200:
+#          description: "Success"
+#          schema:
+#            $ref: '#/definitions/Schedule'
     post:
       tags:
         - "schedule"
@@ -770,29 +770,53 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/Schedule'
+  /schedules/{scheduleId}:
     put: # 수락이든 거절이든 notification 만들기 # 이제 pt 시작하고 안하고를 업데이트
       tags:
         - "schedule"
       parameters:
-        - name: "requestTo"
+        - name: scheduleId
+          in: "path"
+          type: number
+          required: true
+        - name: "iAm"
           in: "query"
           type: string
           enum:
             - "trainer"
-            - "strudent"
+            - "student"
         - name: "body"
           in: "body"
           required: true
           schema:
             $ref: '#/definitions/Schedule'
-      summary: "Trainer accept student request schedule."
+      summary: "Accept student request schedule. Or reject request"
       description: ""
       responses:
         200:
           description: ""
           schema:
             $ref: '#/definitions/Schedule'
-  /schedules/students/{id}:
+    delete:
+      tags:
+        - "schedule"
+      parameters:
+        - name: scheduleId
+          in: "path"
+          type: number
+          required: true
+      summary: "Students or trainers request deleting schedule"
+      response:
+        200:
+          schema:
+            type: object
+            properties:
+              id:
+                type: number
+              state:
+                type: string
+                default: "success"
+  /schedules/students/{studentId}:
     get:
       tags:
         - "schedule"
@@ -809,7 +833,7 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/Schedule'
-  /schedules/trainer/{id}:
+  /schedules/trainers/{trainerId}:
     get:
       tags:
         - "schedule"
@@ -926,6 +950,9 @@ definitions:
       trainer_id: #FK
         type: "integer"
         format: "int64"
+      schedule_id:
+        type: integer
+        format: int64
 
   Student:
     type: "object"
@@ -1012,10 +1039,10 @@ definitions:
         format: "date"
       start_time:
         type: "integer"
-        format: "time"
+        format: time
       end_time:
         type: "integer"
-        format: "time"
+        format: time
       memo:
         type: "string"
       created_at:
@@ -1030,9 +1057,12 @@ definitions:
       trainer_id:
         type: "integer"
         format: "int64"
-      PT_id: #FK
+      pt_id: #FK
         type: "integer"
         format: "int64"
+      trainer_schedule_id:
+        type: integer
+        format: int64
 
   Banner:
     type: object

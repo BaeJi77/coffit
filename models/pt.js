@@ -9,7 +9,9 @@ module.exports = (sequelize, DataTypes) => {
         pt_room: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4
-        }
+        },
+        trainer_id: DataTypes.INTEGER,
+        student_id: DataTypes.INTEGER
     }, {
         timestamps: true
     })
