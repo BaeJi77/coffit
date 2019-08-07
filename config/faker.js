@@ -5,7 +5,9 @@ const studentRepository = require('../repositories/studentRepository');
 const ptRepository = require('../repositories/ptRepository');
 const bannerRepository = require('../repositories/bannerRepository');
 const trainerScheduleRepository = require('../repositories/trainerScheduleRepository');
-const notificationService = require('../services/notificationService');
+const notificationRepository = require('../repositories/notificationRepository');
+const scheduleRepository = require('../repositories/scheduleRepository');
+const make_notification_context = require('../modules/make_notification_content');
 
 module.exports = {
     makeFakeData: async function() {
@@ -27,7 +29,7 @@ module.exports = {
                 var obj = {};
                 obj.picture_url = faker.image.imageUrl();
                 obj.trainerId = i;
-                await trainerPictureRepository.createTrainerPicture(obj);
+                trainerPictureRepository.createTrainerPicture(obj);
             }
         }
 
@@ -43,47 +45,131 @@ module.exports = {
             await studentRepository.createStudent(obj);
         }
 
+        // create banner
+        for(var i = 0 ; i < 5 ; i++) {
+            var obj = {};
+            obj.picture_url = faker.image.imageUrl();
+            obj.thumbnail_url = faker.image.imageUrl();
+            bannerRepository.createNewBanner(obj);
+        }
+
+        // create trainer schedule
+        for(var j = 1 ; j <= 5 ; j++) {
+            for(var i = 0 ; i < 20 ; i++) {
+                var obj = {};
+                obj.start_time = Date.now() + 3000000 * i;
+                obj.available = true;
+                obj.trainer_id = j;
+                trainerScheduleRepository.createNewTrainerSchedule(obj);
+            }
+        }
+
+        // create notification data
+        for(var i = 1 ; i <= 20 ; i++) {
+            var obj = {};
+            obj.to_whom = i % 2;
+            obj.reject_message = faker.lorem.sentence();
+            var randomType = obj.type = faker.random.number(4);
+            if(randomType === 1)
+                obj.origin_date = faker.date.recent();
+            else if (randomType === 4)
+                obj.type = 6;
+            obj.request_date = faker.date.future(1);
+            obj.trainer_id = (i % 5) + 1;
+            obj.student_id = ((20 - i) % 5) + 1;
+            obj.contents = await make_notification_context(obj);
+            await notificationRepository.createNewNotification(obj);
+        }
+
         // create pt
         for(var i = 1 ; i <= 5 ; i++) {
             var obj = {};
             obj.state = faker.random.number(1);
             obj.price = faker.finance.account();
             obj.total_number = 8;
-            obj.rest_number = i;
+            obj.rest_number = i + 1;
             obj.start_date = faker.date.recent();
             obj.end_date = faker.date.future(1);
-            obj.studentId = i;
-            obj.trainerId = 6-i;
-            await ptRepository.createNewPt(obj);
+            obj.student_id = i;
+            obj.trainer_id = 6-i;
+            ptRepository.createNewPt(obj);
         }
 
-        // create banner
-        for(var i = 0 ; i < 5 ; i++) {
-            var obj = {};
-            obj.picture_url = faker.image.imageUrl();
-            obj.thumbnail_url = faker.image.imageUrl();
-            await bannerRepository.createNewBanner(obj);
-        }
+        // create schedule data
+        var cnt = 0;
+        for(var i = 1 ; i <= 5 ; i++) {
+            for(var j = 0 ; j < i ; j++) {
+                var obj = {};
+                obj.state = 4;
+                obj.date = faker.date.past();
+                obj.start_time = "17:00";
+                obj.end_time = "17:30";
+                obj.memo = faker.lorem.sentence();
+                obj.past_schedule_id = -1;
+                obj.trainer_id = i;
+                obj.student_id = 6 - i;
+                obj.pt_id = i;
+                var obj2 = {};
+                obj2.start_time = obj.date;
+                obj2.available = false;
+                obj2.trainer_id = i;
+                obj2.schedule_id = cnt+1;
 
-        // create trainer schedule
-        for(var i = 0 ; i < 20 ; i++) {
-            var obj = {};
-            obj.start_time = Date.now() + 30000 * i;
-            obj.available = i%2 === 0;
-            await trainerScheduleRepository.createNewTrainerSchedule(obj);
-        }
+                await trainerScheduleRepository.createNewTrainerSchedule(obj2)
+                    .then(result => {
+                        obj.trainer_schedule_id = result.id;
+                        scheduleRepository.createNewSchedule(obj);
+                    });
+                cnt++;
+            }
 
-        for(var i = 1 ; i <= 20 ; i++) {
             var obj = {};
-            obj.toWhom = i % 2;
-            obj.rejectMessage = faker.lorem.sentence();
-            var randomType = obj.type = faker.random.number(4);
-            if(randomType === 2)
-                obj.originDate = faker.date.recent();
-            obj.requestDate = faker.date.future(1);
-            obj.trainerId = (i % 5) + 1;
-            obj.studentId = ((20 - i) % 5) + 1;
-            await notificationService.makeNewNotificationDecidingStudentOrTrainer(obj);
+            obj.state = 2;
+            obj.date = faker.date.future();
+            obj.start_time = "17:00";
+            obj.end_time = "17:30";
+            obj.memo = faker.lorem.sentence();
+            obj.past_schedule_id = -1;
+            obj.trainer_id = i;
+            obj.student_id = 6 - i;
+            obj.pt_id = i;
+
+            var obj2 = {};
+            obj2.start_time = obj.date;
+            obj2.available = false;
+            obj2.trainer_id = i;
+            obj2.schedule_id = cnt+1;
+
+            await trainerScheduleRepository.createNewTrainerSchedule(obj2)
+                .then(result => {
+                    obj.trainer_schedule_id = result.id;
+                    scheduleRepository.createNewSchedule(obj);
+                });
+            cnt++;
+
+            var obj = {};
+            obj.state = 0;
+            obj.date = faker.date.recent();
+            obj.start_time = "17:00";
+            obj.end_time = "17:30";
+            obj.memo = faker.lorem.sentence();
+            obj.past_schedule_id = cnt;
+            obj.trainer_id = i;
+            obj.student_id = 6 - i;
+            obj.pt_id = i;
+
+            var obj2 = {};
+            obj2.start_time = obj.date;
+            obj2.available = false;
+            obj2.trainer_id = i;
+            obj2.schedule_id = cnt+1;
+
+            await trainerScheduleRepository.createNewTrainerSchedule(obj2)
+                .then(result => {
+                    obj.trainer_schedule_id = result.id;
+                    scheduleRepository.createNewSchedule(obj);
+                });
+            cnt++;
         }
     }
 };

@@ -12,6 +12,7 @@ var ptRouter = require('./routes/ptRouter');
 var homeRouter = require('./routes/homeRouter');
 var trainerScheduleRouter = require('./routes/trainerScheduleRouter');
 var notificationRouter = require('./routes/notificationRouter');
+var scheduleRouter = require('./routes/scheduleRouter');
 
 
 var app = express();
@@ -55,6 +56,7 @@ app.use('/pts', ptRouter);
 app.use('/home', homeRouter);
 app.use('/trainerSchedules', trainerScheduleRouter);
 app.use('/notifications', notificationRouter);
+app.use('/schedules', scheduleRouter);
 
 
 // catch 404 and forward to error handler
