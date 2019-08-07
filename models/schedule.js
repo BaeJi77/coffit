@@ -1,5 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('schedule', {
+        is_trainer: DataTypes.BOOLEAN,
         state: DataTypes.INTEGER,
         date: DataTypes.DATE,
         start_time: DataTypes.TIME,

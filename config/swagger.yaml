@@ -1031,6 +1031,8 @@ definitions:
       id: #PK
         type: "integer"
         format: "int64"
+      is_trainer:
+        type: boolean
       state:
         type: "integer"
         format: "int64"
