@@ -1,7 +1,7 @@
-var moment = require('moment');
-
 const scheduleRepository = require('../repositories/scheduleRepository');
 const notificationRepository = require('../repositories/notificationRepository');
+const trainerScheduleRepository = require('../repositories/trainerScheduleRepository');
+const ptRepository = require('../repositories/ptRepository');
 const makeNotificationContent = require('../modules/make_notification_content');
 
 /**
@@ -126,6 +126,49 @@ async function makeADistinctionNotificationType (requestedSchedule) {
     return notificationTypeAndOriginDate;
 }
 
+async function decideWhatDoUpdatingUsingScheduleState (scheduleId, iAm, updateSchedule) {
+    let updatingResult = {};
+    let requestedScheduleState = updateSchedule.state;
+    switch (requestedScheduleState) {
+        case 1:
+            updatingResult = await scheduleRepository.updateScheduleStateWhenAcceptingRequest(scheduleId)
+                .then(result => {
+                    makeOccurNotificationToStudentOrTrainer(iAm, updateSchedule);
+                    return result;
+                });
+            if(updateSchedule.past_schedule_id !== -1) {
+                let pastSchedule = await scheduleRepository.findScheduleUsingScheduleId(updateSchedule.past_schedule_id);
+                updatingResult = await trainerScheduleRepository
+                    .updateTrainerScheduleAvailableToAvailableStateInParameterValue(pastSchedule.trainer_schedule_id, true);
+            }
+            break;
+
+        case 3:
+            updatingResult = await scheduleRepository.deleteScheduleUsingScheduleId(scheduleId)
+                .then(result => {
+                    makeOccurNotificationToStudentOrTrainer(iAm, updateSchedule);
+                    return result;
+                });
+            if(updateSchedule.past_schedule_id !== -1) {
+                let pastSchedule = await scheduleRepository.findScheduleUsingScheduleId(updateSchedule.past_schedule_id);
+                updatingResult = await trainerScheduleRepository
+                    .updateTrainerScheduleAvailableToAvailableStateInParameterValue(pastSchedule.trainer_schedule_id, true);
+            }
+
+            break;
+
+        case 4:
+            updatingResult = await scheduleRepository.updateScheduleStateWhenTrainerAttendPt(scheduleId);
+            break;
+
+        case 5:
+            ptRepository.decreaseRestPtNumberAfterPt(updateSchedule.pt_id);
+            updatingResult = await scheduleRepository.updateScheduleStateWhenFinishedPt(scheduleId);
+            break;
+    }
+    return updatingResult
+}
+
 
 
 module.exports = {
@@ -153,6 +196,8 @@ module.exports = {
         return await scheduleRepository.createNewSchedule(newSchedule)
             .then(result => {
                 makeOccurNotificationToStudentOrTrainer(iAm, result);
+                trainerScheduleRepository
+                    .updateTrainerScheduleAvailableToAvailableStateInParameterValue(result.trainer_schedule_id, false);
                 return result;
             })
             .catch(err => {
@@ -165,39 +210,22 @@ module.exports = {
     // TODO: start pt, end pt?
     // TODO: 혹시 mysql hook 으로 처리 할 수 있을까?
     updateScheduleWhenAcceptingOrRejecting: async function (scheduleId, iAm, updateSchedule) {
-        decideUpdatingPastSchedule(updateSchedule);
-        let requestedScheduleState = updateSchedule.state;
-        if(requestedScheduleState === 1) {
-            return await scheduleRepository.updateScheduleStateWhenAcceptingRequest(scheduleId)
-                .then(result => {
-                    makeOccurNotificationToStudentOrTrainer(iAm, updateSchedule)
-                        .catch(err => {
-                            throw new Error(err);
-                        });
-                    return result;
-                })
-                .catch(err => {
-                    console.error(err);
-                    throw new Error(err);
-                });
-        } else if (requestedScheduleState === 3) {
-            return await scheduleRepository.deleteScheduleUsingScheduleId(scheduleId)
-                .then(result => {
-                    makeOccurNotificationToStudentOrTrainer(iAm, updateSchedule)
-                        .catch(err => {
-                            throw new Error(err);
-                        });
-                    return result;
-                })
-                .catch(err => {
-                    console.error(err);
-                    throw new Error(err);
-                });
-        }
+        await decideWhatDoUpdatingUsingScheduleState(scheduleId, iAm, updateSchedule)
+            .then(result => {
+                decideUpdatingPastSchedule(updateSchedule);
+                return result;
+            })
+            .catch(err => {
+                throw new Error(err);
+            });
     },
 
     deleteSchedule: async function (scheduleId) {
         return await scheduleRepository.deleteScheduleUsingScheduleId(scheduleId)
+            .then(result => {
+                trainerScheduleRepository
+                    .updateTrainerScheduleAvailableToAvailableStateInParameterValue(result.trainer_schedule_id, true);
+            })
             .catch(err => {
                 console.error(err);
                 throw new Error(err);

@@ -52,6 +52,26 @@ module.exports = {
         })
     },
 
+    updateScheduleStateWhenTrainerAttendPt: async function (scheduleId) {
+        return await Schedule.update({
+            state: 4
+        }, {
+            where: {
+                id: scheduleId
+            }
+        })
+    },
+
+    updateScheduleStateWhenFinishedPt: async function (scheduleId) {
+        return await Schedule.update({
+            state: 5
+        }, {
+            where: {
+                id: scheduleId
+            }
+        })
+    },
+
     deleteScheduleUsingScheduleId: async function (scheduleId) {
         return await Schedule.destroy({
             where: {
