@@ -17,27 +17,27 @@ const studentRepository = require('../repositories/studentRepository');
  */
 
 function changeDateFormatToMakeEasyToRead (previousDate) {
-    return moment(previousDate).utc().format('YYYY-MM-DD HH:mm');
+    return moment(previousDate).utc().format('MM-DD HH:mm');
 }
 
 
 function makeContentWhenCreatingPtFeedBack() {
-    return "트레이너의 한마디가 등록되었어요. 지금 확인해보실래요?"
+    return "트레이너의 한마디가 등록되었어요."
 }
 
 function makeContentWhenRequestingPtReservation(requestNotification, trainerName, studentName) {
     if(requestNotification.to_whom === 0) {
-        return trainerName + "트레이너 님이 " + changeDateFormatToMakeEasyToRead(requestNotification.request_date) + "로 PT를 요청했습니다. 가능할까요?"
+        return trainerName + "트레이너 님이 " + changeDateFormatToMakeEasyToRead(requestNotification.request_date) + "로 PT를 요청했습니다."
     } else {
-        return studentName + " 회원님이 " + changeDateFormatToMakeEasyToRead(requestNotification.request_date) + "로 PT를 요청했습니다. 가능할까요?"
+        return studentName + " 회원님이 " + changeDateFormatToMakeEasyToRead(requestNotification.request_date) + "로 PT를 요청했습니다."
     }
 }
 
 function makeContentWhenRequestingChangingPtReservation(requestNotification, trainerName, studentName) {
     if(requestNotification.to_whom === 0) {
-        return trainerName + "트레이너 님이 " + changeDateFormatToMakeEasyToRead(requestNotification.origin_date) + "에서 " + changeDateFormatToMakeEasyToRead(requestNotification.request_date) + "으로 PT를 변경 요청했습니다. 가능할까요?"
+        return trainerName + "트레이너 님이 " + changeDateFormatToMakeEasyToRead(requestNotification.origin_date) + "에서 " + changeDateFormatToMakeEasyToRead(requestNotification.request_date) + "으로 PT를 변경 요청했습니다."
     } else {
-        return studentName + " 회원님이 " + changeDateFormatToMakeEasyToRead(requestNotification.origin_date)+ "에서 " + changeDateFormatToMakeEasyToRead(requestNotification.request_date) + "으로 PT를 변경 요청했습니다. 가능할까요?"
+        return studentName + " 회원님이 " + changeDateFormatToMakeEasyToRead(requestNotification.origin_date)+ "에서 " + changeDateFormatToMakeEasyToRead(requestNotification.request_date) + "으로 PT를 변경 요청했습니다."
     }
 }
 
@@ -47,9 +47,9 @@ function makeContentWhenAcceptPtReservation(requestNotification) {
 
 function makeContentWhnRejectPtReservation(requestNotification, trainerName, studentName) {
     if(requestNotification.to_whom === 0) {
-        return trainerName + " 트레이너님이 일정이 맞지 요청이 거절되었습니다. 아래 메세지를 확인해주세요.";
+        return trainerName + " 트레이너님이 일정이 맞지 요청을 거절하였습니다.";
     } else {
-        return studentName + " 회원님이 일정이 맞지 요청이 거절되었습니다. 아래 메세지를 확인해주세요.";
+        return studentName + " 회원님이 일정이 맞지 요청을 거절하였습니다.";
     }
 }
 

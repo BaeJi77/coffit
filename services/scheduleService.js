@@ -71,14 +71,14 @@ async function checkAlreadyAcceptedSchedule (pastSchedule) {
 }
 
 async function makeOccurNotificationToStudentOrTrainer (iAm, requestedSchedule) {
-    let newNotification = makeNotificationAfterMakingSchedule(iAm, requestedSchedule);
+    let newNotification = await makeNotificationAfterMakingSchedule(iAm, requestedSchedule);
     notificationRepository.createNewNotification(newNotification);
 }
 
 async function makeNotificationAfterMakingSchedule (iAm, requestedSchedule) {
     let newNotification = {};
-    let notificationTypeAndOriginDate = makeADistinctionNotificationType(requestedSchedule);
-    newNotification.to_whom = makeADistinctionWhereRequestingBy(iAm);
+    let notificationTypeAndOriginDate = await makeADistinctionNotificationType(requestedSchedule);
+    newNotification.to_whom = await makeADistinctionWhereRequestingBy(iAm);
     newNotification.type = requestedSchedule.state;
     newNotification.schedule_id = requestedSchedule.id;
     newNotification.student_id = requestedSchedule.student_id;
@@ -154,7 +154,6 @@ async function decideWhatDoUpdatingUsingScheduleState (scheduleId, iAm, updateSc
                 updatingResult = await trainerScheduleRepository
                     .updateTrainerScheduleAvailableToAvailableStateInParameterValue(pastSchedule.trainer_schedule_id, true);
             }
-
             break;
 
         case 4:
@@ -207,7 +206,6 @@ module.exports = {
     },
 
     // TODO: check when updating memo.
-    // TODO: start pt, end pt?
     // TODO: 혹시 mysql hook 으로 처리 할 수 있을까?
     updateScheduleWhenAcceptingOrRejecting: async function (scheduleId, iAm, updateSchedule) {
         await decideWhatDoUpdatingUsingScheduleState(scheduleId, iAm, updateSchedule)
@@ -230,5 +228,13 @@ module.exports = {
                 console.error(err);
                 throw new Error(err);
             });
+    },
+
+    updateSchedule: async function(scheduleId, requestUpdateSchedule) {
+        return await scheduleRepository.updateSchedule(scheduleId, requestUpdateSchedule)
+            .catch(err => {
+                console.error(err);
+                throw new Error(err);
+            })
     }
 };

@@ -78,5 +78,15 @@ module.exports = {
                 id: scheduleId
             }
         })
+    },
+
+    updateSchedule: async function(scheduleId, requestUpdateSchedule) {
+        return await Schedule.update({
+           requestUpdateSchedule
+        }, {
+            where: {
+                id: scheduleId
+            }
+        })
     }
 };
