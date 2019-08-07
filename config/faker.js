@@ -100,6 +100,7 @@ module.exports = {
         for(var i = 1 ; i <= 5 ; i++) {
             for(var j = 0 ; j < i ; j++) {
                 var obj = {};
+                obj.is_trainer = j % 2 === 0;
                 obj.state = 4;
                 obj.date = faker.date.past();
                 obj.start_time = "17:00";
@@ -124,6 +125,7 @@ module.exports = {
             }
 
             var obj = {};
+            obj.is_trainer = i % 2 === 0;
             obj.state = 2;
             obj.date = faker.date.future();
             obj.start_time = "17:00";
@@ -148,6 +150,7 @@ module.exports = {
             cnt++;
 
             var obj = {};
+            obj.is_trainer = i % 2 === 0;
             obj.state = 0;
             obj.date = faker.date.recent();
             obj.start_time = "17:00";

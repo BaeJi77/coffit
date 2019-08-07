@@ -6,19 +6,21 @@ const scheduleService = require('../services/scheduleService');
 
 router.post('/', makeNewSchedule);
 async function makeNewSchedule(req, res, next) {
-    await scheduleService.makeNewSchedule(req.query.iAm, req.body)
+    let iAm = req.body.is_trainer === true ? "trainer" : "student";
+    await scheduleService.makeNewSchedule(iAm, req.body)
         .then(result => {
             res.status(204).send(result);
         })
         .catch(err => {
             console.error(err);
-            throw new Error(err);
+            next(new Error(err));
         });
 }
 
 router.put('/:scheduleId', updateSchedule);
 async function updateSchedule(req, res, next) {
-    await scheduleService.updateScheduleWhenAcceptingOrRejecting(req.params.scheduleId, req.query.iAm, req.body)
+    let iAm = req.body.is_trainer === true ? "trainer" : "student";
+    await scheduleService.updateScheduleWhenAcceptingOrRejecting(req.params.scheduleId, iAm, req.body)
         .then(result => {
             res.status(204).json(result);
         })
@@ -54,7 +56,7 @@ async function getTrainerSchedule (req, res, next) {
         })
         .catch(err => {
             console.error(err);
-            throw new Error(err);
+            next(new Error(err));
         });
 }
 
@@ -66,9 +68,22 @@ async function getStudentSchedule (req, res, next) {
         })
         .catch(err => {
             console.error(err);
-            throw new Error(err);
+            next(new Error(err));
         });
 }
+
+router.put('/memos/:scheduleId', updateScheduleMemo);
+async function updateScheduleMemo(req, res, next) {
+    await scheduleService.updateSchedule(req.params.scheduleId, req.body)
+        .then(result => {
+            res.status(200).send(result);
+        })
+        .catch(err => {
+            console.error(err);
+            next(new Error(err));
+        });
+}
+
 
 
 module.exports = router;
