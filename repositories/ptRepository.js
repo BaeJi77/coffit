@@ -1,11 +1,29 @@
 const {Pt} = require('../models');
+const {Schedule} = require('../models');
 
 module.exports = {
-    findAllPtsOfStudent: async function(studentId) {
+    findAllStudentIdUsingTrainerId: async function(trainerId) {
         return await Pt.findAll({
             where: {
-                studentId: studentId
+                trainer_id: trainerId
             }
+        }).then(pts => {
+            let studentIdArray = [];
+            pts.forEach(item => {
+                studentIdArray.push(item.student_id);
+            })
+            return studentIdArray;
+        })
+    },
+
+    findOnePtsOfStudent: async function(studentId) {
+        return await Pt.findOne({
+            where: {
+                studentId: studentId
+            },
+            include: [{
+                model: Schedule
+            }]
         })
     },
 
@@ -13,7 +31,10 @@ module.exports = {
         return await Pt.findAll({
             where: {
                 trainerId: trainerId
-            }
+            },
+            include: [{
+                model: Schedule
+            }]
         })
     },
 

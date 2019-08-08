@@ -1,17 +1,29 @@
 const {Student} = require('../models');
+const {Pt} = require('../models');
 const {Op} = require('../models');
 
 module.exports = {
-    // PT에서 trainerID와 같은 pt object 중에 student id를 확인하여서 그 애들을 모두 보여주기?
-    // 하나하나 찾기 조금 그렇지 않나? 조금 더 빠르게 할 수 있는 방법은?
-    // TODO: PT table 완성 후 로직 만들기
-    findAllStudentIncludingTrainerId: async function(trainerId) {
-        return await Student.findAll();
+    findAllStudentUsingStudentIdArray: async function(studentIdArray) {
+        return await Student.findAll({
+            where: {
+                id: {
+                    [Op.or]: studentIdArray
+                }
+            }
+        });
     },
 
-    // TODO: PT table 완성 후 로직 만들기
-    findAllStudentOfTrainerSearchingStudentName: async function() {
-        return await Student.findAll();
+    findAllStudentOfTrainerSearchingStudentName: async function(studentIdArray, studentName) {
+        return await Student.findAll({
+            where: {
+                id: {
+                    [Op.or]: studentIdArray
+                },
+                username: {
+                    [Op.like]: "%"+studentName+"%"
+                }
+            }
+        });
     },
 
     findStudentUsingStudentId: async function(studentId) {

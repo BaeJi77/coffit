@@ -7,6 +7,7 @@ const bannerRepository = require('../repositories/bannerRepository');
 const trainerScheduleRepository = require('../repositories/trainerScheduleRepository');
 const notificationRepository = require('../repositories/notificationRepository');
 const scheduleRepository = require('../repositories/scheduleRepository');
+const ptCommentRepository = require('../repositories/ptCommentRepository');
 const make_notification_context = require('../modules/make_notification_content');
 
 module.exports = {
@@ -78,6 +79,7 @@ module.exports = {
             obj.trainer_id = (i % 5) + 1;
             obj.student_id = ((20 - i) % 5) + 1;
             obj.contents = await make_notification_context(obj);
+            obj.schedule_id = i;
             await notificationRepository.createNewNotification(obj);
         }
 
@@ -173,6 +175,13 @@ module.exports = {
                     scheduleRepository.createNewSchedule(obj);
                 });
             cnt++;
+        }
+
+        for(var i = 1 ; i <= 5 ; i++) {
+            var obj = {};
+            obj.comment = faker.lorem.sentence();
+            obj.pt_id = i;
+            ptCommentRepository.createNewPtComment(obj);
         }
     }
 };

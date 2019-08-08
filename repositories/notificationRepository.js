@@ -1,4 +1,5 @@
 const {Notification} = require('../models');
+const {Schedule} = require('../models');
 
 module.exports = {
     // TODO: FCM 연동하여서 알람 내용과 같이 push 알람 가도록
