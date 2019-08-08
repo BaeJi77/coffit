@@ -1,11 +1,34 @@
 const notificationRepository = require('../repositories/notificationRepository');
+const scheduleRepository =require('../repositories/scheduleRepository');
+
+async function addScheduleToNotifications (notifications) {
+    let notificationAddedSchedule = [];
+    for (var i = 0 ; i < notifications.length ; i++) {
+        let scheduleId = notifications[i].schedule_id;
+        await notifications[i].setDataValue('schedule', await scheduleRepository.findScheduleUsingScheduleId(scheduleId));
+        await notificationAddedSchedule.push(notifications[i]);
+    }
+    return notificationAddedSchedule
+}
 
 module.exports = {
     findStudentNotification: async function(studentId) {
-        return await notificationRepository.findAllNotificationOfCertainStudent(studentId);
+        try {
+            let studentNotifications = await notificationRepository.findAllNotificationOfCertainStudent(studentId);
+            return await addScheduleToNotifications(studentNotifications);
+        } catch (e) {
+            console.error(e);
+            throw new Error(e);
+        }
     },
 
     findTrainerNotification: async function(trainerId) {
-        return await notificationRepository.findAllNotificationOfCertainTrainer(trainerId);
+        try {
+            let trainerNotifications = await notificationRepository.findAllNotificationOfCertainTrainer(trainerId);
+            return await addScheduleToNotifications(trainerNotifications);
+        } catch (e) {
+            console.error(e);
+            throw new Error(e);
+        }
     }
 };

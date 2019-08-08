@@ -31,8 +31,9 @@ async function updateFcmToken(req, res, next) {
 
 router.get('/trainers/:trainerId', getAllStudentOfTrainerAndSearching);
 async function getAllStudentOfTrainerAndSearching(req, res, next) {
+    let trainerId = req.params.trainerId;
     let searchStudentName = req.query.studentName;
-    res.status(200).send(await studentService.findAllStudentOfTrainerOrSearchedStudents(searchStudentName));
+    res.status(200).send(await studentService.findAllStudentOfTrainerOrSearchedStudents(trainerId, searchStudentName));
 }
 
 

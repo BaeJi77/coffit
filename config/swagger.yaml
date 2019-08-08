@@ -72,7 +72,7 @@ components:
           type: "integer"
           format: "int64"
           description: "FK"
-        PTComment:
+        ptComments:
           $ref: "#/definitions/PTComment"
         schedules:
           type: array
@@ -574,7 +574,12 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/Notification"
+              type: object
+              properties:
+                notification:
+                  $ref: "#/definitions/Notification"
+                schedule:
+                  $ref: "#/definitions/Schedule"
   /notifications/trainers/{traienrId}:
     get:
       tags:
@@ -988,7 +993,7 @@ definitions:
         format: int64
       comment:
         type: string
-      PT_id:
+      pt_id:
         type: integer
         format: int64
       created_at:
