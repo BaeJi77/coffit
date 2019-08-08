@@ -195,6 +195,7 @@ module.exports = {
 
     makeNewSchedule: async function (iAm, newSchedule) {
         await decideUpdatingPastSchedule(newSchedule);
+        console.log(iAm, newSchedule);
         return await scheduleRepository.createNewSchedule(newSchedule)
             .then(result => {
                 makeOccurNotificationToStudentOrTrainer(iAm, result);

@@ -574,7 +574,12 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/Notification"
+              type: object
+              properties:
+                notification:
+                  $ref: "#/definitions/Notification"
+                schedule:
+                  $ref: "#/definitions/Schedule"
   /notifications/trainers/{traienrId}:
     get:
       tags:

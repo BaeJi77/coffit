@@ -79,6 +79,7 @@ module.exports = {
             obj.trainer_id = (i % 5) + 1;
             obj.student_id = ((20 - i) % 5) + 1;
             obj.contents = await make_notification_context(obj);
+            obj.schedule_id = i;
             await notificationRepository.createNewNotification(obj);
         }
 
