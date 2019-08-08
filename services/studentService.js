@@ -1,4 +1,5 @@
-const studentRespository = require('../repositories/studentRepository');
+const studentRepository = require('../repositories/studentRepository');
+const ptRepository = require('../repositories/ptRepository');
 
 var isUndefined = require('is-undefined');
 
@@ -12,29 +13,29 @@ function setPictureInObject(addPictureObject, pictureObject) {
 module.exports = {
     makeNewStudent: async function(newStudentInformation, profilePicture) {
         newStudentInformation = setPictureInObject(newStudentInformation, profilePicture);
-        return await studentRespository.createStudent(newStudentInformation);
+        return await studentRepository.createStudent(newStudentInformation);
     },
 
     updateStudentUsingStudentId: async function(studentId, updateStudentInformation, profilePicture) {
         updateStudentInformation = setPictureInObject(updateStudentInformation, profilePicture);
-        return await studentRespository.updateStudent(studentId, updateStudentInformation)
+        return await studentRepository.updateStudent(studentId, updateStudentInformation)
     },
 
     updateFcmTokenOfStudent: async function(studentId, FcmToken) {
         console.log(FcmToken);
-        return await studentRespository.updateStudentFcmToken(studentId, FcmToken);
+        return await studentRepository.updateStudentFcmToken(studentId, FcmToken);
     },
 
     findCertainStudent: async function (studentId) {
-        return await studentRespository.findStudentUsingStudentId(studentId);
+        return await studentRepository.findStudentUsingStudentId(studentId);
     },
 
-    // TODO: After make schedule table, Please implement.
-    findAllStudentOfTrainerOrSearchedStudents: async function (studentName) {
+    findAllStudentOfTrainerOrSearchedStudents: async function (trainerId, studentName) {
+        let studentIdArray = await ptRepository.findAllStudentIdUsingTrainerId(trainerId);
         if(isUndefined(studentName)) {
-            return await studentRespository.findAllStudentIncludingTrainerId();
+            return await studentRepository.findAllStudentUsingStudentIdArray(studentIdArray);
         } else {
-            return await studentRespository.findAllStudentOfTrainerSearchingStudentName();
+            return await studentRepository.findAllStudentOfTrainerSearchingStudentName(studentIdArray, studentName);
         }
     },
 };

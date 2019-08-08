@@ -1,6 +1,14 @@
 const {TrainerSchedule} = require('../models');
 
 module.exports = {
+    findAllTrainerScheduleOfTrainer: async function(trainerId) {
+        return await TrainerSchedule.findAll({
+            where: {
+                trainer_id: trainerId
+            }
+        })
+    },
+
     createNewTrainerSchedule: async function(newTrainerScheduleInformation) {
         return await TrainerSchedule.create(newTrainerScheduleInformation);
     },
