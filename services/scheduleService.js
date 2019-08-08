@@ -2,6 +2,7 @@ const scheduleRepository = require('../repositories/scheduleRepository');
 const notificationRepository = require('../repositories/notificationRepository');
 const trainerScheduleRepository = require('../repositories/trainerScheduleRepository');
 const ptRepository = require('../repositories/ptRepository');
+const trainerRepository = require('../repositories/trainerRepository');
 const makeNotificationContent = require('../modules/make_notification_content');
 
 /**
@@ -180,11 +181,16 @@ module.exports = {
     },
 
     findAllSchedulesOfTrainer: async function (trainerId) {
-        return await scheduleRepository.findAllScheduleOfTrainerUsingTrainerId(trainerId)
-            .catch(err => {
-                console.log(err);
-                throw new Error(err);
-            });
+        let trainerScheduleAndAvailableTime = {};
+        try {
+            trainerScheduleAndAvailableTime.trainer = await trainerRepository.findTrainerUsingTrainerId(trainerId);
+            trainerScheduleAndAvailableTime.schedules = await scheduleRepository.findAllScheduleOfTrainerUsingTrainerId(trainerId);
+            trainerScheduleAndAvailableTime.availableTime = await trainerScheduleRepository.findAllTrainerScheduleOfTrainer(trainerId);
+        } catch (e) {
+            console.error(e);
+            throw new Error(e);
+        }
+        return trainerScheduleAndAvailableTime;
     },
 
     makeNewSchedule: async function (iAm, newSchedule) {
