@@ -1,4 +1,5 @@
 const {Trainer} = require('../models');
+const {TrainerPicture} = require('../models');
 const {Op} = require('../models');
 
 module.exports = {
@@ -11,7 +12,10 @@ module.exports = {
         return await Trainer.findOne({
             where:{
                 id: trainerId
-            }
+            },
+            include: [{
+                model: TrainerPicture
+            }]
         });
     },
 
@@ -38,9 +42,7 @@ module.exports = {
     },
 
     updateTrainerFcmToken: async function(trainerId, FcmToken) {
-        return await Trainer.update({
-            fcm_token: FcmToken
-        }, {
+        return await Trainer.update(FcmToken, {
             where: {
                 id: trainerId
             }

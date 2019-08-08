@@ -76,7 +76,7 @@ router.put('/memos/:scheduleId', updateScheduleMemo);
 async function updateScheduleMemo(req, res, next) {
     await scheduleService.updateSchedule(req.params.scheduleId, req.body)
         .then(result => {
-            res.status(200).send(result);
+            res.status(204).send(result);
         })
         .catch(err => {
             console.error(err);
