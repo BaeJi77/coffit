@@ -3,10 +3,6 @@ var router = express.Router();
 
 const notificationService = require('../services/notificationService');
 
-router.post('/', createNewNotification);
-async function createNewNotification(req, res, next) {
-    res.status(201).send(await notificationService.makeNewNotificationDecidingStudentOrTrainer(req.body));
-}
 
 router.get('/students/:studentId', getStudentNotifications);
 async function getStudentNotifications(req, res, next) {

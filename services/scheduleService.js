@@ -181,9 +181,6 @@ module.exports = {
 
     findAllSchedulesOfTrainer: async function (trainerId) {
         return await scheduleRepository.findAllScheduleOfTrainerUsingTrainerId(trainerId)
-            .then(result => {
-                return result;
-            })
             .catch(err => {
                 console.log(err);
                 throw new Error(err);

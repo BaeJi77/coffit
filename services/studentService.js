@@ -31,7 +31,6 @@ module.exports = {
 
     // TODO: After make schedule table, Please implement.
     findAllStudentOfTrainerOrSearchedStudents: async function (studentName) {
-        // studentName is undefined? -> check condition
         if(isUndefined(studentName)) {
             return await studentRespository.findAllStudentIncludingTrainerId();
         } else {

@@ -20,7 +20,7 @@ async function getStudentProfile(req, res, next) {
 router.put('/:studentId', upload.single('profilePicture'), updateStudent);
 async function updateStudent(req, res, next) {
     let studentId = req.params.studentId;
-    res.status(201).send(await studentService.updateStudentUsingStudentId(studentId, req.body, req.file));
+    res.status(204).send(await studentService.updateStudentUsingStudentId(studentId, req.body, req.file));
 }
 
 router.post('/:studentId/token', updateFcmToken);
@@ -29,7 +29,7 @@ async function updateFcmToken(req, res, next) {
     res.status(201).send(await studentService.updateFcmTokenOfStudent(studentId, req.body));
 }
 
-router.get('/trainers/:studentId', getAllStudentOfTrainerAndSearching);
+router.get('/trainers/:trainerId', getAllStudentOfTrainerAndSearching);
 async function getAllStudentOfTrainerAndSearching(req, res, next) {
     let searchStudentName = req.query.studentName;
     res.status(200).send(await studentService.findAllStudentOfTrainerOrSearchedStudents(searchStudentName));
