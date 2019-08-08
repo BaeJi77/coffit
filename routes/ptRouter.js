@@ -6,7 +6,7 @@ const ptServie = require('../services/ptService');
 
 router.get('/students/:studentId', getAllPtsOfStudent);
 async function getAllPtsOfStudent(req, res, next) {
-    let studentId = req.params.studentId
+    let studentId = req.params.studentId;
     res.status(200).send(await ptServie.findAllPtsOfStudentUsingStudentId(studentId));
 }
 

@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: "This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters."
-  version: "1.0"
+  version: "2.0"
   title: "COFFIT API"
   termsOfService: "http://swagger.io/terms/"
   contact:
@@ -9,7 +9,7 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "127.0.0.1:3000"
+host: "http://www.coffit.com"
 basePath: "/"
 tags:
   - name: "trainer"
@@ -122,7 +122,7 @@ components:
         updated_at:
           type: integer
           format: date
-        trainer_accditional_picture:
+        trainer_pictures:
           type: array
           items:
             $ref: "#/definitions/TrainerPicture"
@@ -224,7 +224,7 @@ paths:
             items:
               $ref: "#/definitions/Trainer"
 
-  /trainers/{Id}: # trainer picture 추가하기
+  /trainers/{trainerId}:
     get:
       tags:
         - "trainer"
@@ -234,7 +234,7 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: "Id"
+        - name: "trainerId"
           in: "path"
           description: "ID of trainer"
           required: true
@@ -275,61 +275,8 @@ paths:
           description: "your request applied"
         405:
           description: "Invalid input"
-#  /trainers/{Id}/profilePicture:
-#    post:
-#      tags:
-#        - "trainer"
-#      summary: "Already exist file remove and update. but, when not exist profile picture, upload picture"
-#      description: "Already exist file remove and update. but, when not exist profile picture, upload picture"
-#      operationId: "uploadFile"
-#      consumes:
-#        - "multipart/form-data"
-#      produces:
-#        - "application/json"
-#      parameters:
-#        - name: "Id"
-#          in: "path"
-#          description: "ID of trainer to update"
-#          required: true
-#          type: "integer"
-#          format: "int64"
-#        - name: "file"
-#          in: "formData"
-#          description: "file to upload"
-#          required: false
-#          type: "file"
-#      responses:
-#        200:
-#          description: "successful operation"
-#  /trainers/{Id}/subPictures:
-#    post:
-#      tags:
-#        - "trainer"
-#      summary: "This is activity picture collorection. If already exist file remove and update. but, when not exist profile picture, upload picture"
-#      description: ""
-#      operationId: "uploadSubPicture"
-#      consumes:
-#        - "multipart/form-data"
-#      produces:
-#        - "application/json"
-#      parameters:
-#        - name: "Id"
-#          in: "path"
-#          description: "ID of trainer to update"
-#          required: true
-#          type: "integer"
-#          format: "int64"
-#        - name: "pictures"
-#          in: "formData"
-#          description: "array of file to upload"
-#          required: true
-#          type: array
-#          items:
-#            type: string
-#      responses:
-#        200:
-#          description: "successful operation"
-  /trainers/{Id}/token:
+
+  /trainers/{trainerId}/token:
     post:
       tags:
         - "trainer"
@@ -339,17 +286,20 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: "Id"
+        - name: "trainerId"
           in: "path"
           description: "ID of trainer"
           required: true
           type: "integer"
           format: "int64"
-        - name: "token"
-          in: "path"
+        - name: "body"
+          in: "body"
           description: "token of trainer"
           required: true
-          type: "string"
+          type: object
+          properties:
+            fcm_token:
+              type: string
       responses:
         201:
           description: "token saved successfully!!"
@@ -377,32 +327,7 @@ paths:
         405:
           description: "Invalid input"
 
-  /students: # 검색으로 학생 찾기
-#    get:
-#      tags:
-#        - "student"
-#      summary: "Search certain student using student name"
-#      description: "Search certain student information and student schedule using student name"
-#      operationId: "findStudentUsingStudentId"
-#      produces:
-#        - "application/json"
-#      parameters:
-#        - name: "studentName"
-#          in: "query"
-#          description: "student name"
-#          required: true
-#          type: "string"
-#      responses:
-#        200:
-#          description: "successful operation"
-#          schema:
-#            type: array
-#            items:
-#              $ref: "#/components/schemas/StudentWithSchedules"
-#        400:
-#          description: "Invalid ID supplied"
-#        404:
-#          description: "Not found"
+  /students:
     post:
       tags:
         - "student"
@@ -413,7 +338,7 @@ paths:
         - name: "body"
           in: "body"
           required: true
-          shema:
+          schema:
             $ref: "#/definitions/Student"
       responses:
         201:
@@ -422,18 +347,19 @@ paths:
         404:
           description: "Not found"
 
-  /students/trainers/{id}: # 트레이너가 가지고 있는 학생 보여주기
+  /students/trainers/{trainerId}: # 트레이너가 가지고 있는 학생 보여주기
     get:
       tags:
         - "student"
       summary: "Get all student including certain trainer"
       description: "Get student information using trainer id"
       parameters:
-        - name: "id"
+        - name: "trainerId"
           in: "path"
           required: true
           type: integer
           format: int64
+          description: "id of trainer"
         - name: "studentName"
           in: "query"
           required: false
@@ -452,7 +378,7 @@ paths:
           description: "Invalid ID supplied"
         404:
           description: "Not found"
-  /students/{Id}: # student 자신 정보 보기 위한 경우
+  /students/{studentId}: # student 자신 정보 보기 위한 경우
     get:
       tags:
         - "student"
@@ -462,7 +388,7 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: "Id"
+        - name: "studentId"
           in: "path"
           description: "ID of student"
           required: true
@@ -478,7 +404,6 @@ paths:
                 $ref: "#/definitions/Student"
               PTAndSchedule:
                 $ref: "#/components/schemas/PTwithScheduleAndComment"
-
         400:
           description: "Invalid ID supplied"
         404:
@@ -492,46 +417,28 @@ paths:
       produces:
         - "application/json"
       consumes:
+        - "application/json"
         - "multipart/form-data"
       parameters:
-        - name: "Id"
+        - name: "studentId"
           in: "path"
           description: "ID of student"
           required: true
           type: "integer"
           format: "int64"
-        - name: "username"
-          in: "path"
-          description: "name of student"
+        - name: "body"
+          in: "body"
+          description: "update student information"
           required: true
-          type: "string"
-        - name: "age"
-          in: "path"
-          description: "age of student"
-          required: true
-          type: "integer"
-          format: "int64"
-        - name: "picture"
-          in: "formData"
-          description: "picture of student"
-          required: false
-          type: "string"
-        - name: "gender"
-          in: "path"
-          description: "gender of student"
-          required: true
-          type: "string"
-        - name: "token"
-          in: "formData"
-          description: "token of student"
-          required: false
-          type: "string"
+          schema:
+            type: object
+            $ref: "#/definitions/Student"
       responses:
         201:
           description: "successful operation"
         405:
           description: "Invalid input"
-  /students/{Id}/token:
+  /students/{studentId}/token:
     post:
       tags:
         - "student"
@@ -547,31 +454,23 @@ paths:
           required: true
           type: "integer"
           format: "int64"
-        - name: "token"
-          in: "path"
+        - name: "body"
+          in: "body"
           description: "token of student"
           required: true
-          type: "string"
+          type: object
+          properties:
+            fcm_token:
+              type: string
       responses:
         201:
           description: "token saved successfully!!"
+          schema:
+            $ref: "#/definitions/Student"
         405:
           description: "Invalid input"
 
-  /PTs:
-#    get:
-#      tags:
-#        - "PT"
-#      summary: "Get all PT list"
-#      description: "Get all PT, Nessary student id using session or JWT"
-#      operationId: "getAllPT"
-#      produces:
-#        - "application/json"
-#      responses:
-#        200:
-#          description: "Success!!"
-#          schema:
-#            $ref: "#/components/schemas/PTwithScheduleAndComment"
+  /pts:
     post:
       tags:
         - "PT"
@@ -592,35 +491,12 @@ paths:
           description: "Invalid ID supplied"
         404:
           description: "Trainer not found"
-    put: # PT시간이 지나 남은 PT 시간 조정 -> 스케쥴에서 시간체크해서 처리하는 로직으로?
-      tags:
-        - "PT"
-      summary : "update PT information after PT"
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "hello world"
-          required: true
-          schema:
-            type: "object"
-            properties:
-              id:
-                type: integer
-      responses:
-        200:
-          description: "Success!!"
-          schema:
-            $ref: "#/definitions/PT"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Trainer not found"
-  /PTs/students/{id}:
+  /pts/students/{studentId}:
     get:
       tags:
         - "PT"
       parameters:
-        - name: "id"
+        - name: "studentId"
           in: "path"
           description: "ID of student"
           required: true
@@ -636,12 +512,12 @@ paths:
           description: "Success!!"
           schema:
             $ref: "#/components/schemas/PTwithScheduleAndComment"
-  /PTs/trainers/{id}:
+  /pts/trainers/{trainerId}:
     get:
       tags:
         - "PT"
       parameters:
-        - name: "id"
+        - name: "trainerId"
           in: "path"
           description: "ID of trainer"
           required: true
@@ -658,7 +534,7 @@ paths:
           schema:
             $ref: "#/components/schemas/PTwithScheduleAndComment"
 
-  /PTComment:
+  /ptComment:
     put:
       tags:
         - "PTComment"
@@ -677,34 +553,12 @@ paths:
           schema:
             $ref: "#/definitions/PTComment"
 
-  /notifications: #type에 따라서 어떤 메세지 내용이 될지 만드는 로직 필요
-    post:
-      tags:
-        - "notification"
-      parameters:
-        - name: "body"
-          in : "body"
-          description: "Obey notification table convention"
-          required: true
-          schema:
-            $ref: "#/definitions/Notification"
-      summary: "Create new notification"
-      description: ""
-      produces:
-        - "application/json"
-      responses:
-        201:
-          description: "Success!!"
-          schema:
-            $ref: "#/definitions/Notification"
-        400:
-          description: "fail"
-  /notifications/students/{id}:
+  /notifications/students/{studentId}:
     get:
       tags:
         - "notification"
       parameters:
-        - name: "id"
+        - name: "studentId"
           in: "path"
           description: "ID of student"
           required: true
@@ -721,12 +575,12 @@ paths:
             type: array
             items:
               $ref: "#/definitions/Notification"
-  /notifications/trainers/{id}:
+  /notifications/trainers/{traienrId}:
     get:
       tags:
         - "notification"
       parameters:
-        - name: "id"
+        - name: "trainerId"
           in: "path"
           description: "ID of trainer"
           required: true
@@ -745,16 +599,6 @@ paths:
               $ref: "#/definitions/Notification"
 
   /schedules:
-#    get:
-#      tags:
-#        - "schedule"
-#      summary: "get all schedules"
-#      description: "Show all schedules"
-#      responses:
-#        200:
-#          description: "Success"
-#          schema:
-#            $ref: '#/definitions/Schedule'
     post:
       tags:
         - "schedule"
@@ -779,12 +623,6 @@ paths:
           in: "path"
           type: number
           required: true
-        - name: "iAm"
-          in: "query"
-          type: string
-          enum:
-            - "trainer"
-            - "student"
         - name: "body"
           in: "body"
           required: true
@@ -806,22 +644,15 @@ paths:
           type: number
           required: true
       summary: "Students or trainers request deleting schedule"
-      response:
-        200:
-          schema:
-            type: object
-            properties:
-              id:
-                type: number
-              state:
-                type: string
-                default: "success"
+      responses:
+        204:
+          description: "success!!"
   /schedules/students/{studentId}:
     get:
       tags:
         - "schedule"
       parameters:
-        - name: "id"
+        - name: "studentId"
           in: "path"
           description: "ID of student"
           required: true
@@ -838,7 +669,7 @@ paths:
       tags:
         - "schedule"
       parameters:
-        - name: "id"
+        - name: "trainerId"
           in: "path"
           description: "ID of trainer"
           required: true
@@ -861,6 +692,30 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/TrainerSchedule'
+  /schedule/memos/{scheduleId}:
+    put:
+      tags:
+        - "schedule"
+      parameters:
+        - in: "path"
+          name: "scheduleId"
+          required: true
+          description: "is updated target schedule id"
+          type: integer
+        - in: "body"
+          name: "body"
+          require: true
+          description: "Include trainer memo about pt"
+          schema:
+            type: object
+            properties:
+              memo:
+                type: string
+      summary: "trainer request updating memo"
+      responses:
+        204:
+          description: "success"
+
 
 securityDefinitions:
   petstore_auth:
