@@ -55,15 +55,18 @@ module.exports = {
         }
 
         // create trainer schedule
+        var tempArray = [];
         for(var j = 1 ; j <= 5 ; j++) {
             for(var i = 0 ; i < 20 ; i++) {
                 var obj = {};
                 obj.start_time = Date.now() + 3000000 * i;
                 obj.available = true;
                 obj.trainer_id = j;
-                trainerScheduleRepository.createNewTrainerSchedule(obj);
+                tempArray.push(obj);
+
             }
         }
+        trainerScheduleRepository.createNewTrainerSchedule(tempArray);
 
         // create notification data
         for(var i = 1 ; i <= 20 ; i++) {
