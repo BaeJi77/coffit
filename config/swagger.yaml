@@ -830,7 +830,11 @@ definitions:
       picture:
         type: "string"
       gender:
-        type: "string"
+        type: string
+        enum:
+          - '남성'
+          - '여성'
+          - '대답을 원하지 않음'
       phone_number:
         type: string
         pattern: '^\d{3}-\d{4}-\d{4}$'
@@ -951,15 +955,13 @@ definitions:
       id: #PK
         type: integer
         format: int64
-      towhom:
+      to_whom:
         type: integer
         format: int32
         enum:
           - 0 #Sending student
           - 1 #Sending trainer
       contents:
-        type: string
-      rejectMessage:
         type: string
       type:
         type: integer

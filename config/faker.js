@@ -10,17 +10,24 @@ const scheduleRepository = require('../repositories/scheduleRepository');
 const ptCommentRepository = require('../repositories/ptCommentRepository');
 const make_notification_context = require('../modules/make_notification_content');
 
+let trainerNames = ['이지수', '배지훈', '정은석', '오우택', '강대명'];
+let trainerSummaries = ['홈트 한계를 극복하긴 위한 모두를 위한', '우리 모두 건강한 몸을 위해', '개발자를 위한 건강 챙기기', '버킷서울가기 부끄럽지 않은 몸', '우리 모두 바디스페이스에서 만나요~!'];
+let trainerProfilePirtures = ['https://coffit.s3.ap-northeast-2.amazonaws.com/%E1%84%89%E1%85%AE%E1%84%8C%E1%85%B5+1.jpg', 'https://coffit.s3.ap-northeast-2.amazonaws.com/%E1%84%82%E1%85%A1%E1%86%B7%E1%84%8C%E1%85%A1+%E1%84%90%E1%85%B3%E1%84%85%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%82%E1%85%A51.jpg', 'https://coffit.s3.ap-northeast-2.amazonaws.com/%E1%84%82%E1%85%A1%E1%86%B7%E1%84%8C%E1%85%A1+%E1%84%90%E1%85%B3%E1%84%85%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%82%E1%85%A5+4.jpg', 'https://coffit.s3.ap-northeast-2.amazonaws.com/%E1%84%82%E1%85%A1%E1%86%B7%E1%84%8C%E1%85%A1+%E1%84%90%E1%85%B3%E1%84%85%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%82%E1%85%A5+3.jpg', 'https://coffit.s3.ap-northeast-2.amazonaws.com/%E1%84%82%E1%85%A1%E1%86%B7%E1%84%8C%E1%85%A1+%E1%84%90%E1%85%B3%E1%84%85%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%82%E1%85%A5+2.png']
+let studentNames = ['신민욱', '공채원', '강성찬', '류동훈', '김민수'];
+
 module.exports = {
     makeFakeData: async function() {
         //create trainer
         for (var i = 0; i < 5; i++) {
             var obj = {};
-            obj.username = faker.name.findName();
-            obj.price = faker.finance.account();
-            obj.carrer = faker.lorem.sentences(3, 3);
-            obj.picture_url = faker.image.imageUrl();
+            obj.username = trainerNames[i];
+            obj.price = 30000;
+            obj.summary = trainerSummaries[i];
+            obj.career = '저 운동 잘해요. 믿고 오세요!';
+            obj.picture_url = trainerProfilePirtures[i];
             obj.phone_number = faker.phone.phoneNumberFormat();
-            obj.total_star = faker.random.number(1000);
+            obj.num_review = faker.random.number(20);
+            obj.total_star = obj.num_review * (i+1);
             await trainerRepository.createTrainer(obj);
         }
 
@@ -37,9 +44,9 @@ module.exports = {
         // create student
         for (var i = 0; i < 5; i++) {
             var obj = {};
-            obj.username = faker.name.findName();
+            obj.username = studentNames[i];
             obj.email = faker.internet.email();
-            obj.age = faker.random.number(100);
+            obj.age = faker.random.number(40);
             obj.picture_url = faker.image.imageUrl();
             obj.phone_number = faker.phone.phoneNumberFormat();
             obj.gender = i % 2 === 0 ? '남성' : '여성';
@@ -55,15 +62,18 @@ module.exports = {
         }
 
         // create trainer schedule
+        var tempArray = [];
         for(var j = 1 ; j <= 5 ; j++) {
             for(var i = 0 ; i < 20 ; i++) {
                 var obj = {};
                 obj.start_time = Date.now() + 3000000 * i;
                 obj.available = true;
                 obj.trainer_id = j;
-                trainerScheduleRepository.createNewTrainerSchedule(obj);
+                tempArray.push(obj);
+
             }
         }
+        trainerScheduleRepository.createNewTrainerSchedule(tempArray);
 
         // create notification data
         for(var i = 1 ; i <= 20 ; i++) {
