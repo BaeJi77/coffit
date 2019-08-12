@@ -1,6 +1,14 @@
 const {Schedule} = require('../models');
 
 module.exports = {
+    findAllSchedulesUsingPtId: async function(ptId) {
+        return await Schedule.findAll({
+            where: {
+                pt_id: ptId
+            }
+        })
+    },
+
     findAllScheduleOfStudentUsingStudentId: async function (studentId) {
         return await Schedule.findAll({
             where: {

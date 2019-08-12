@@ -11,7 +11,7 @@ module.exports = {
             let studentIdArray = [];
             pts.forEach(item => {
                 studentIdArray.push(item.student_id);
-            })
+            });
             return studentIdArray;
         })
     },
@@ -20,11 +20,8 @@ module.exports = {
         return await Pt.findOne({
             where: {
                 studentId: studentId
-            },
-            include: [{
-                model: Schedule
-            }]
-        })
+            }
+        });
     },
 
     findAllPtsOfTrainer: async function(trainerId) {
