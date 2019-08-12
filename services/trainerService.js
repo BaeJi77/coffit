@@ -32,6 +32,8 @@ async function checkActivityPicturesIsNull (trainerId, activityPictures) {
 
 module.exports = {
     findAllTrainersOrderByRecognition: async function() {
+        let result = await trainerRepository.findAllTrainers();
+        console.log(result);
         return await trainerRepository.findAllTrainers();
     },
 
