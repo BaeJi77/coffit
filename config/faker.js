@@ -1,4 +1,6 @@
 const faker = require('faker');
+const moment = require('moment');
+
 const trainerRepository = require('../repositories/trainerRepository');
 const trainerPictureRepository = require('../repositories/trainerPictureRepository');
 const studentRepository = require('../repositories/studentRepository');
@@ -24,6 +26,7 @@ module.exports = {
             obj.price = 30000;
             obj.summary = trainerSummaries[i];
             obj.career = '저 운동 잘해요. 믿고 오세요!';
+            obj.description = '언제나 끝까지 운동하는 방법 COFFIT 대표';
             obj.picture_url = trainerProfilePirtures[i];
             obj.phone_number = faker.phone.phoneNumberFormat();
             obj.num_review = faker.random.number(20);
@@ -56,8 +59,9 @@ module.exports = {
         // create banner
         for(var i = 0 ; i < 5 ; i++) {
             var obj = {};
-            obj.picture_url = faker.image.imageUrl();
-            obj.thumbnail_url = faker.image.imageUrl();
+            // 사진 제대로 된 거 하나.
+            obj.picture_url = "https://coffit.s3.ap-northeast-2.amazonaws.com/%E1%84%89%E1%85%A9%E1%84%86%E1%85%A1+logo.jpg";
+            obj.thumbnail_url = "https://coffit.s3.ap-northeast-2.amazonaws.com/%E1%84%89%E1%85%A9%E1%84%86%E1%85%A1+logo.jpg";
             bannerRepository.createNewBanner(obj);
         }
 
@@ -70,13 +74,12 @@ module.exports = {
                 obj.available = true;
                 obj.trainer_id = j;
                 tempArray.push(obj);
-
             }
         }
         trainerScheduleRepository.createNewTrainerSchedule(tempArray);
 
         // create notification data
-        for(var i = 1 ; i <= 20 ; i++) {
+        for(var i = 1 ; i <= 15 ; i++) {
             var obj = {};
             obj.to_whom = i % 2;
             obj.reject_message = faker.lorem.sentence();
@@ -97,11 +100,11 @@ module.exports = {
         for(var i = 1 ; i <= 5 ; i++) {
             var obj = {};
             obj.state = faker.random.number(1);
-            obj.price = faker.finance.account();
+            obj.price = 30000 * 8;
             obj.total_number = 8;
             obj.rest_number = i + 1;
             obj.start_date = faker.date.recent();
-            obj.end_date = faker.date.future(1);
+            obj.end_date = moment(obj.start_date).add('1', 'M').format();
             obj.student_id = i;
             obj.trainer_id = 6-i;
             ptRepository.createNewPt(obj);
@@ -110,27 +113,29 @@ module.exports = {
         // create schedule data
         var cnt = 0;
         for(var i = 1 ; i <= 5 ; i++) {
-            for(var j = 0 ; j < i ; j++) {
+            for (var j = 0; j < i; j++) {
                 var obj = {};
                 obj.is_trainer = j % 2 === 0;
                 obj.state = 4;
-                obj.date = faker.date.past();
+                obj.date = moment(faker.date.past()).format('YYYY-MM-DD 17:00:00'); // 정시간에 딱 맞춰서
                 obj.start_time = "17:00";
                 obj.end_time = "17:30";
-                obj.memo = faker.lorem.sentence();
+                obj.memo = "저번에 스퀘드 자세가 별로라서 이번에 조금 더 자세히 봐야될 듯, 푸쉬 업 20개, 프랭키 30초 정도 했음";
                 obj.past_schedule_id = -1;
                 obj.trainer_id = i;
                 obj.student_id = 6 - i;
                 obj.pt_id = i;
+                var tempArray = [];
                 var obj2 = {};
                 obj2.start_time = obj.date;
                 obj2.available = false;
                 obj2.trainer_id = i;
-                obj2.schedule_id = cnt+1;
+                obj2.schedule_id = cnt + 1;
+                tempArray.push(obj2);
 
-                await trainerScheduleRepository.createNewTrainerSchedule(obj2)
+                await trainerScheduleRepository.createNewTrainerSchedule(tempArray)
                     .then(result => {
-                        obj.trainer_schedule_id = result.id;
+                        obj.trainer_schedule_id = result[0].id;
                         scheduleRepository.createNewSchedule(obj);
                     });
                 cnt++;
@@ -139,24 +144,26 @@ module.exports = {
             var obj = {};
             obj.is_trainer = i % 2 === 0;
             obj.state = 2;
-            obj.date = faker.date.future();
-            obj.start_time = "17:00";
-            obj.end_time = "17:30";
+            obj.date = moment().subtract('7', 'D').format('YYYY-MM-DD 17:00:00');
+            // obj.start_time = "17:00";
+            // obj.end_time = "17:30";
             obj.memo = faker.lorem.sentence();
             obj.past_schedule_id = -1;
             obj.trainer_id = i;
             obj.student_id = 6 - i;
             obj.pt_id = i;
 
+            var tempArray = [];
             var obj2 = {};
             obj2.start_time = obj.date;
             obj2.available = false;
             obj2.trainer_id = i;
-            obj2.schedule_id = cnt+1;
+            obj2.schedule_id = cnt + 1;
+            tempArray.push(obj2);
 
-            await trainerScheduleRepository.createNewTrainerSchedule(obj2)
+            await trainerScheduleRepository.createNewTrainerSchedule(tempArray)
                 .then(result => {
-                    obj.trainer_schedule_id = result.id;
+                    obj.trainer_schedule_id = result[0].id;
                     scheduleRepository.createNewSchedule(obj);
                 });
             cnt++;
@@ -164,24 +171,26 @@ module.exports = {
             var obj = {};
             obj.is_trainer = i % 2 === 0;
             obj.state = 0;
-            obj.date = faker.date.recent();
-            obj.start_time = "17:00";
-            obj.end_time = "17:30";
+            obj.date = moment().subtract('4', 'D').format('YYYY-MM-DD 17:00:00');
+            // obj.start_time = "17:00";
+            // obj.end_time = "17:30";
             obj.memo = faker.lorem.sentence();
             obj.past_schedule_id = cnt;
             obj.trainer_id = i;
             obj.student_id = 6 - i;
             obj.pt_id = i;
 
+            var tempArray = [];
             var obj2 = {};
             obj2.start_time = obj.date;
             obj2.available = false;
             obj2.trainer_id = i;
-            obj2.schedule_id = cnt+1;
+            obj2.schedule_id = cnt + 1;
+            tempArray.push(obj2);
 
-            await trainerScheduleRepository.createNewTrainerSchedule(obj2)
+            await trainerScheduleRepository.createNewTrainerSchedule(tempArray)
                 .then(result => {
-                    obj.trainer_schedule_id = result.id;
+                    obj.trainer_schedule_id = result[0].id;
                     scheduleRepository.createNewSchedule(obj);
                 });
             cnt++;

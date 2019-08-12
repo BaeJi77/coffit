@@ -1,18 +1,19 @@
 const ptRepository = require('../repositories/ptRepository');
 const ptCommentRepository = require('../repositories/ptCommentRepository');
+const scheduleRepository = require('../repositories/scheduleRepository');
 
 
 module.exports = {
     findOnePtsOfStudentUsingStudentId: async function(studentId) {
-        let ptOfStudentAndPtComment;
+        let ptOfStudentAndPtComment = {};
         try {
-            ptOfStudentAndPtComment = await ptRepository.findOnePtsOfStudent(studentId);
-            await ptOfStudentAndPtComment.setDataValue('ptComment', await ptCommentRepository.findMostRecentlyPtComment(ptOfStudentAndPtComment.id));
+            ptOfStudentAndPtComment.pt = await ptRepository.findOnePtsOfStudent(studentId);
+            ptOfStudentAndPtComment.schedules = await scheduleRepository.findAllSchedulesUsingPtId(ptOfStudentAndPtComment.pt.id);
+            ptOfStudentAndPtComment.ptComment = await ptCommentRepository.findMostRecentlyPtComment(ptOfStudentAndPtComment.pt.id);
         } catch (e) {
             console.error(e);
             throw new Error(e);
         }
-        console.log(ptOfStudentAndPtComment.ptComment);
         return ptOfStudentAndPtComment;
     },
 
@@ -21,6 +22,7 @@ module.exports = {
     },
 
     makeNewPt: async function(newPtInformation) {
+        newPtInformation.price = newPtInformation.price * newPtInformation.total_number;
         return await ptRepository.createNewPt(newPtInformation);
     },
 

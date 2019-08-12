@@ -10,7 +10,8 @@
     "collate": "utf8_general_ci",
     "define": {
       "timestamps": true,
-      "underscored": true
+      "underscored": true,
+      "underscoredAll": true
     }
   },
   "test": {
