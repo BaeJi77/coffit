@@ -1,6 +1,8 @@
 const {Pt} = require('../models');
 const {Schedule} = require('../models');
 
+const {Op} = require('../models');
+
 module.exports = {
     findAllStudentIdUsingTrainerId: async function(trainerId) {
         return await Pt.findAll({
@@ -39,12 +41,15 @@ module.exports = {
         return await Pt.create(newPtInformation);
     },
 
-    closePtsPassedEndDate: async function(ptId) {
+    closePtsPassedEndDate: async function() {
         return await Pt.update({
-            state: 0
+            state: 1
         }, {
             where: {
-                id: ptId
+                state: 0,
+                end_date: {
+                    [Op.lte]: Date.now()
+                }
             }
         })
     },

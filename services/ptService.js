@@ -2,6 +2,8 @@ const ptRepository = require('../repositories/ptRepository');
 const ptCommentRepository = require('../repositories/ptCommentRepository');
 const scheduleRepository = require('../repositories/scheduleRepository');
 
+const moment = require('moment');
+
 
 module.exports = {
     findOnePtsOfStudentUsingStudentId: async function(studentId) {
@@ -22,13 +24,8 @@ module.exports = {
     },
 
     makeNewPt: async function(newPtInformation) {
+        newPtInformation.end_date =
         newPtInformation.price = newPtInformation.price * newPtInformation.total_number;
         return await ptRepository.createNewPt(newPtInformation);
-    },
-
-    // TODO: Job schedule 통해서 12시 마다 체크.
-    updatePtWhenEndDateIsPassed: async function(ptId) {
-        // 만약 end_date가 있는 스케줄이 존재하는 경우?? 어떻게 할꺼니?
-        return await ptRepository.closePtsPassedEndDate(ptId);
-    },
+    }
 };
