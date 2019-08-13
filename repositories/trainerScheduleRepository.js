@@ -10,6 +10,17 @@ module.exports = {
         })
     },
 
+    deleteAllTrainerScheduleIsPassedDate: async function (firstTime, lastTime) {
+        return await TrainerSchedule.destroy({
+            where: {
+                start_time: {
+                    [Op.gte]: firstTime,
+                    [Op.lte]: lastTime
+                },
+            }
+        })
+    },
+
     deleteAllTrainerScheduleCertainDateAvailableIsTrue: async function(trainerId, certainStartOnDay, certainEndOnDay) {
         return await TrainerSchedule.destroy({
             where: {
