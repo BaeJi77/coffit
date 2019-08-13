@@ -29,6 +29,8 @@ sequelize.sync({
 });
 
 
+const scheduler = require('./modules/node_scheduler');
+
 //swagger api
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load("./config/swagger.yaml");

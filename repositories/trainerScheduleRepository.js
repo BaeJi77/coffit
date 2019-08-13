@@ -10,13 +10,13 @@ module.exports = {
         })
     },
 
-    deleteAllTrainerScheduleCertainDateAvailableIsTrue: async function(trainerId, certainStartOnday, certainEndOnday) {
+    deleteAllTrainerScheduleCertainDateAvailableIsTrue: async function(trainerId, certainStartOnDay, certainEndOnDay) {
         return await TrainerSchedule.destroy({
             where: {
                 trainer_id: trainerId,
                 start_time: {
-                    [Op.gte]: certainStartOnday,
-                    [Op.lte]: certainEndOnday
+                    [Op.gte]: certainStartOnDay,
+                    [Op.lte]: certainEndOnDay
                 },
                 available: true
             }
