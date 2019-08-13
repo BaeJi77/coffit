@@ -6,12 +6,20 @@ const notificationService = require('../services/notificationService');
 
 router.get('/students/:studentId', getStudentNotifications);
 async function getStudentNotifications(req, res, next) {
-    res.status(200).send(await notificationService.findStudentNotification(req.params.studentId));
+    try {
+        res.status(200).send(await notificationService.findStudentNotification(req.params.studentId));    
+    } catch (err) {
+        next(err);
+    }
 }
 
 router.get('/trainers/:trainerId', getTrainerNotifications);
 async function getTrainerNotifications(req, res, next) {
-    res.status(200).send(await notificationService.findTrainerNotification(req.params.trainerId));
+    try {
+        res.status(200).send(await notificationService.findTrainerNotification(req.params.trainerId));
+    } catch (err) {
+        next(err);
+    }
 }
 
 
