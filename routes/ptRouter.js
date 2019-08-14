@@ -12,8 +12,7 @@ async function getAllPtsOfStudent(req, res, next) {
             res.status(200).send(result);
         })
         .catch(err => {
-            console.error(err);
-            next(new Error(err));
+            next(err);
         });
 }
 
@@ -25,8 +24,7 @@ async function getAllPtsOfTrainer(req, res, next) {
             res.status(200).send(result);
         })
         .catch(err => {
-            console.error(err);
-            next(new Error(err));
+            next(err);
         });
 }
 
@@ -37,8 +35,7 @@ async function postNewPt(req, res, next) {
             res.status(200).send(result);
         })
         .catch(err => {
-            console.error(err);
-            next(new Error(err));
+            next(err);
         });
 }
 
