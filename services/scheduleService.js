@@ -173,11 +173,11 @@ async function decideWhatDoUpdatingUsingScheduleState (scheduleId, iAm, updateSc
 
 module.exports = {
     findAllSchedulesOfStudent: async function (studentId) {
-        return await scheduleRepository.findAllScheduleOfStudentUsingStudentId(studentId)
-            .catch(err => {
-                console.error(err);
-                throw new Error(err);
-            });
+        try {
+            return await scheduleRepository.findAllScheduleOfStudentUsingStudentId(studentId)
+        } catch (e) {
+            throw e;
+        }
     },
 
     findAllSchedulesOfTrainer: async function (trainerId) {
@@ -187,58 +187,58 @@ module.exports = {
             trainerScheduleAndAvailableTime.schedules = await scheduleRepository.findAllScheduleOfTrainerUsingTrainerId(trainerId);
             trainerScheduleAndAvailableTime.availableTime = await trainerScheduleRepository.findAllTrainerScheduleOfTrainer(trainerId);
         } catch (e) {
-            console.error(e);
-            throw new Error(e);
+            throw e;
         }
         return trainerScheduleAndAvailableTime;
     },
 
     makeNewSchedule: async function (iAm, newSchedule) {
-        await decideUpdatingPastSchedule(newSchedule);
-        console.log(iAm, newSchedule);
-        return await scheduleRepository.createNewSchedule(newSchedule)
-            .then(result => {
-                makeOccurNotificationToStudentOrTrainer(iAm, result);
-                trainerScheduleRepository
-                    .updateTrainerScheduleAvailableToAvailableStateInParameterValue(result.trainer_schedule_id, false);
-                return result;
-            })
-            .catch(err => {
-                console.log(err);
-                throw new Error(err);
-            });
+        try {
+            await decideUpdatingPastSchedule(newSchedule);
+            return await scheduleRepository.createNewSchedule(newSchedule)
+                .then(async result => {
+                    await makeOccurNotificationToStudentOrTrainer(iAm, result);
+                    await trainerScheduleRepository
+                        .updateTrainerScheduleAvailableToAvailableStateInParameterValue(result.trainer_schedule_id, false);
+                    return result;
+                })
+        } catch (e) {
+            throw e;
+        }
     },
 
     // TODO: check when updating memo.
     // TODO: 혹시 mysql hook 으로 처리 할 수 있을까?
     updateScheduleWhenAcceptingOrRejecting: async function (scheduleId, iAm, updateSchedule) {
-        await decideWhatDoUpdatingUsingScheduleState(scheduleId, iAm, updateSchedule)
-            .then(result => {
-                decideUpdatingPastSchedule(updateSchedule);
-                return result;
-            })
-            .catch(err => {
-                throw new Error(err);
-            });
+        try {
+            await decideWhatDoUpdatingUsingScheduleState(scheduleId, iAm, updateSchedule)
+                .then(async result => {
+                    await decideUpdatingPastSchedule(updateSchedule);
+                    return result;
+                })
+        } catch (e) {
+            throw e;
+        }
     },
 
     deleteSchedule: async function (scheduleId) {
-        return await scheduleRepository.deleteScheduleUsingScheduleId(scheduleId)
-            .then(result => {
-                trainerScheduleRepository
-                    .updateTrainerScheduleAvailableToAvailableStateInParameterValue(result.trainer_schedule_id, true);
-            })
-            .catch(err => {
-                console.error(err);
-                throw new Error(err);
-            });
+        try {
+            return await scheduleRepository.deleteScheduleUsingScheduleId(scheduleId)
+                .then(async result => {
+                    await trainerScheduleRepository
+                        .updateTrainerScheduleAvailableToAvailableStateInParameterValue(result.trainer_schedule_id, true);
+                    return result;
+                })
+        } catch (e) {
+            throw e;
+        }
     },
 
     updateSchedule: async function(scheduleId, requestUpdateSchedule) {
-        return await scheduleRepository.updateSchedule(scheduleId, requestUpdateSchedule)
-            .catch(err => {
-                console.error(err);
-                throw new Error(err);
-            })
+        try {
+            return await scheduleRepository.updateSchedule(scheduleId, requestUpdateSchedule)
+        } catch (e) {
+            throw e;
+        }
     }
 };
