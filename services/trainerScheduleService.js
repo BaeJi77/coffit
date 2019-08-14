@@ -14,8 +14,7 @@ module.exports = {
             await trainerScheduleRepository.deleteAllTrainerScheduleCertainDateAvailableIsTrue(newTrainerSchedule[0].trainer_id, startDate, endDate);
             return await trainerScheduleRepository.createNewTrainerSchedule(newTrainerSchedule);
         } catch (e) {
-            console.error(e);
-            throw new Error(e);
+            throw e;
         }
     }
 };

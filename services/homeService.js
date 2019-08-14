@@ -14,8 +14,12 @@ async function decideSearchConditionUsingTrainerName(trainerName) {
 module.exports = {
     findAllTrainerAndAdvertisingBanner: async function(trainerName) {
         let allTrainerAndBanner = {};
-        allTrainerAndBanner.trainer_list = await decideSearchConditionUsingTrainerName(trainerName);
-        allTrainerAndBanner.banner = await bannerRepository.findAllBanner();
-        return allTrainerAndBanner;
+        try {
+            allTrainerAndBanner.trainer_list = await decideSearchConditionUsingTrainerName(trainerName);
+            allTrainerAndBanner.banner = await bannerRepository.findAllBanner();
+            return allTrainerAndBanner;
+        } catch (err) {
+            throw err;
+        }
     }
 };

@@ -11,8 +11,7 @@ async function createNewPtComment(req, res, next) {
             res.status(201).send(result);
         })
         .catch(err => {
-            console.error(err);
-            next(new Error(err));
+            next(err);
         })
 }
 
