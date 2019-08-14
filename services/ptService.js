@@ -13,19 +13,26 @@ module.exports = {
             ptOfStudentAndPtComment.schedules = await scheduleRepository.findAllSchedulesUsingPtId(ptOfStudentAndPtComment.pt.id);
             ptOfStudentAndPtComment.ptComment = await ptCommentRepository.findMostRecentlyPtComment(ptOfStudentAndPtComment.pt.id);
         } catch (e) {
-            console.error(e);
-            throw new Error(e);
+            throw e;
         }
         return ptOfStudentAndPtComment;
     },
 
     findAllPtsOfTrainerUsingTrainerId: async function(trainerId) {
-        return await ptRepository.findAllPtsOfTrainer(trainerId);
+        try {
+            return await ptRepository.findAllPtsOfTrainer(trainerId);
+        } catch (e) {
+            throw e;
+        }
     },
 
     makeNewPt: async function(newPtInformation) {
-        newPtInformation.end_date =
-        newPtInformation.price = newPtInformation.price * newPtInformation.total_number;
-        return await ptRepository.createNewPt(newPtInformation);
+        try {
+            newPtInformation.end_date = moment(newPtInformation.start_date).add(1, 'M').format();
+            newPtInformation.price = newPtInformation.price * newPtInformation.total_number;
+            return await ptRepository.createNewPt(newPtInformation);
+        } catch (e) {
+            throw e;
+        }
     }
 };

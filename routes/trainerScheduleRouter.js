@@ -10,7 +10,7 @@ async function makeNewTrainerSchedule(req, res, next) {
             res.status(201).send(trainerSchedules);
         })
         .catch(err => {
-            next(new Error(err));
+            next(err);
         })
 }
 

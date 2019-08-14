@@ -12,8 +12,7 @@ async function makeNewSchedule(req, res, next) {
             res.status(204).send(result);
         })
         .catch(err => {
-            console.error(err);
-            next(new Error(err));
+            next(err);
         });
 }
 
@@ -25,8 +24,7 @@ async function updateSchedule(req, res, next) {
             res.status(204).json(result);
         })
         .catch(err => {
-            console.error(err);
-            next(new Error(err));
+            next(err);
         })
 }
 
@@ -43,8 +41,7 @@ async function deleteSchedule (req, res, next) {
             });
         })
         .catch(err => {
-            console.error(err);
-            next(new Error(err));
+            next(err);
         });
 }
 
@@ -55,8 +52,7 @@ async function getTrainerSchedule (req, res, next) {
             res.status(200).send(result);
         })
         .catch(err => {
-            console.error(err);
-            next(new Error(err));
+            next(err);
         });
 }
 
@@ -67,8 +63,7 @@ async function getStudentSchedule (req, res, next) {
             res.status(200).send(result);
         })
         .catch(err => {
-            console.error(err);
-            next(new Error(err));
+            next(err);
         });
 }
 
@@ -79,11 +74,9 @@ async function updateScheduleMemo(req, res, next) {
             res.status(204).send(result);
         })
         .catch(err => {
-            console.error(err);
-            next(new Error(err));
+            next(err);
         });
 }
-
 
 
 module.exports = router;

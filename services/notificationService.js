@@ -17,8 +17,7 @@ module.exports = {
             let studentNotifications = await notificationRepository.findAllNotificationOfCertainStudent(studentId);
             return await addScheduleToNotifications(studentNotifications);
         } catch (e) {
-            console.error(e);
-            throw new Error(e);
+            throw e;
         }
     },
 
@@ -27,8 +26,7 @@ module.exports = {
             let trainerNotifications = await notificationRepository.findAllNotificationOfCertainTrainer(trainerId);
             return await addScheduleToNotifications(trainerNotifications);
         } catch (e) {
-            console.error(e);
-            throw new Error(e);
+            throw e;
         }
     }
 };
