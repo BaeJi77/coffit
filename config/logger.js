@@ -1,52 +1,35 @@
-var winston = require('winston');
-var winstonDaily = require('winston-daily-rotate-file');
-var moment = require('moment');
+var { createLogger, format, transports } = require('winston');
 
-function customTimeStamp() {
-    return moment().format('YYYY-MM-DD HH:mm:ss');
-}
 
-var logger = new (winston.loggers) ({
+var logger = createLogger({
+    format: format.combine(
+        format.timestamp({
+            format: "YYYY-MM-DD HH:mm:ss"
+        }),
+        format.json()
+    ),
     transports: [
-        new (winstonDaily) ({
-            name: 'info-log',
-            filename: '~/log/daily',
-            datePattern: 'YYYY-MM-dd.log',
-            level: 'info',
-            colorize: false,
-            showLevel: true,
-            json: true,
-            timestamp: customTimeStamp
+        new transports.Console({
+            level: "info",
+            format: format.combine(
+                format.colorize(),
+                format.printf(
+                    info => `${info.timestamp} [${info.level.toUpperCase()}]: ${info.message}`
+                )
+            )
         }),
-        new (winston.transports.Console) ({
-            name: 'info-console',
-            colorize: true,
-            level: 'info',
-            showLevel: true,
-            json: true,
-            timestamp: customTimeStamp
-        })
-    ],
-    exceptionHandlers: [
-        new (winstonDaily) ({
-            name: 'exception-log',
-            filename: '~/log/exception',
-            datePattern: 'YYYY-MM-dd.log',
-            colorize: false,
+        new transports.DailyRotateFile({
             level: 'error',
-            showLevel: true,
-            json: true,
-            timestamp: customTimeStamp
+            filename: './log/%DATE%_error.log',
+            datePattern: 'YYYY-MM-DD'
         }),
-        new (winston.transports.Console) ({
-            name: 'exception-console',
-            colorize: true,
-            level: 'error',
-            showLevel: true,
-            json: true,
-            timestamp: customTimeStamp
+        new transports.DailyRotateFile({
+            level: 'info',
+            filename: './log/%DATE%.log',
+            datePattern: 'YYYY-MM-DD'
         })
     ]
 });
+
 
 module.exports = logger;
