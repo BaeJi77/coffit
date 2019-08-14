@@ -15,6 +15,12 @@ async function createActivityPictures (trainerId, activityPictures) {
     }
 }
 
+async function checkActivityPicturesIsNull (trainerId, activityPictures) {
+    if(!isUndefined(activityPictures)){
+        await createActivityPictures(trainerId, activityPictures);
+    }
+}
+
 // Check request information Specifically picture_url column and request file in profilePicture object
 function updateProfilePicture (requestTrainerInformation, profilePicture) {
     if (isUndefined(profilePicture)) {
@@ -24,42 +30,61 @@ function updateProfilePicture (requestTrainerInformation, profilePicture) {
     }
 }
 
-async function checkActivityPicturesIsNull (trainerId, activityPictures) {
-    if(!isUndefined(activityPictures)){
-        await createActivityPictures(trainerId, activityPictures);
-    }
+async function getPictureUrl (requestTrainer, trainerPictures) {
+    let profilePicture = trainerPictures['profilePicture']; // 하나는 반드시 보내도록 들어옴 => 사진 안넣으면 에러임;
+    let picture_url = updateProfilePicture(requestTrainer, profilePicture);
+    return picture_url;
+}
+
+async function decideMakingTrainerActivityPictures (trainerId, trainerPictures) {
+    let activityPictures = trainerPictures['activityPictures'];
+    await checkActivityPicturesIsNull(trainerId, activityPictures);
 }
 
 module.exports = {
     findAllTrainersOrderByRecognition: async function() {
-        let result = await trainerRepository.findAllTrainers();
-        console.log(result);
-        return await trainerRepository.findAllTrainers();
+        try {
+            return await trainerRepository.findAllTrainers();
+        } catch (e) {
+            throw e;
+        }
     },
 
     findCertainTrainer: async function(trainerId) {
-        return await trainerRepository.findTrainerUsingTrainerId(trainerId);
+        try {
+            return await trainerRepository.findTrainerUsingTrainerId(trainerId);
+        } catch (e) {
+            throw e;
+        }
     },
 
     // TODO: Refactoring registerNewTrainer, updateTrainerProfile. Because having Same format.
     registerNewTrainer: async function(newTrainerInformation, trainerPictures) {
-        let profilePicture = trainerPictures['profilePicture']; // 하나는 반드시 보내도록 들어옴 => 사진 안넣으면 에러임;
-        let activityPictures = trainerPictures['activityPictures'];
-        newTrainerInformation.picture_url = updateProfilePicture(newTrainerInformation, profilePicture);
-        let createTrainerResult = await trainerRepository.createTrainer(newTrainerInformation);
-        await checkActivityPicturesIsNull(createTrainerResult.id, activityPictures);
-        return createTrainerResult;
+        try {
+            newTrainerInformation.picture_url = await getPictureUrl(newTrainerInformation, trainerPictures);
+            let newTrainer = await trainerRepository.createTrainer(newTrainerInformation);
+            await decideMakingTrainerActivityPictures(newTrainer.id, trainerPictures);
+            return newTrainer;
+        } catch (e) {
+            throw e;
+        }
     },
 
     updateTrainerProfile: async function(trainerId, updateTrainerInformationInRequest, trainerPictures) {
-        let profilePicture = trainerPictures['profilePicture']; // 하나는 반드시 보내도록 들어옴 => 사진 안넣으면 에러임;
-        let activityPictures = trainerPictures['activityPictures'];
-        updateTrainerInformationInRequest.picture_url = updateProfilePicture(updateTrainerInformationInRequest, profilePicture);
-        await checkActivityPicturesIsNull(trainerId, activityPictures);
-        return await trainerRepository.updateTrainer(trainerId, updateTrainerInformationInRequest);;
+        try {
+            updateTrainerInformationInRequest.picture_url = await getPictureUrl(updateTrainerInformationInRequest, trainerPictures);
+            await decideMakingTrainerActivityPictures(trainerId, trainerPictures);
+            return await trainerRepository.updateTrainer(trainerId, updateTrainerInformationInRequest);;
+        } catch (e) {
+            throw e;
+        }
     },
 
     updateFcmTokenOfTrainer: async function(trainerId, FcmToken) {
-        return await trainerRepository.updateTrainerFcmToken(trainerId, FcmToken);
+        try {
+            return await trainerRepository.updateTrainerFcmToken(trainerId, FcmToken);
+        } catch (e) {
+            throw e;
+        }
     }
 };
