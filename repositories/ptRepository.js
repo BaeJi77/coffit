@@ -1,5 +1,6 @@
 const {Pt} = require('../models');
 const {Schedule} = require('../models');
+const {Student} = require('../models');
 
 const {Op} = require('../models');
 
@@ -33,8 +34,10 @@ module.exports = {
             },
             include: [{
                 model: Schedule
+            }, {
+                model: Student
             }]
-        })
+        });
     },
 
     createNewPt: async function(newPtInformation) {
