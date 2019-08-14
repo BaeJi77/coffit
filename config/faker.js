@@ -99,14 +99,14 @@ module.exports = {
         // create pt
         for(var i = 1 ; i <= 5 ; i++) {
             var obj = {};
-            obj.state = faker.random.number(1);
+            obj.state = 0;
             obj.price = 30000 * 8;
             obj.total_number = 8;
             obj.rest_number = i + 1;
             obj.start_date = faker.date.recent();
             obj.end_date = moment(obj.start_date).add('1', 'M').format();
             obj.student_id = i;
-            obj.trainer_id = 6-i;
+            obj.trainer_id = 1;
             ptRepository.createNewPt(obj);
         }
 
@@ -120,16 +120,16 @@ module.exports = {
                 obj.date = moment(faker.date.past()).format('YYYY-MM-DD 17:00:00'); // 정시간에 딱 맞춰서
                 obj.start_time = "17:00";
                 obj.end_time = "17:30";
-                obj.memo = "저번에 스퀘드 자세가 별로라서 이번에 조금 더 자세히 봐야될 듯, 푸쉬 업 20개, 프랭키 30초 정도 했음";
+                obj.memo = "저번에 스쿼트 자세가 별로라서 이번에 조금 더 자세히 봐야될 듯, 푸쉬 업 20개, 프랭키 30초 정도 했음";
                 obj.past_schedule_id = -1;
-                obj.trainer_id = i;
+                obj.trainer_id = 1;
                 obj.student_id = 6 - i;
                 obj.pt_id = i;
                 var tempArray = [];
                 var obj2 = {};
                 obj2.start_time = obj.date;
                 obj2.available = false;
-                obj2.trainer_id = i;
+                obj2.trainer_id = 1;
                 obj2.schedule_id = cnt + 1;
                 tempArray.push(obj2);
 
@@ -141,42 +141,41 @@ module.exports = {
                 cnt++;
             }
 
-            var obj = {};
-            obj.is_trainer = i % 2 === 0;
-            obj.state = 2;
-            obj.date = moment().subtract('7', 'D').format('YYYY-MM-DD 17:00:00');
-            // obj.start_time = "17:00";
-            // obj.end_time = "17:30";
-            obj.memo = faker.lorem.sentence();
-            obj.past_schedule_id = -1;
-            obj.trainer_id = i;
-            obj.student_id = 6 - i;
-            obj.pt_id = i;
-
-            var tempArray = [];
-            var obj2 = {};
-            obj2.start_time = obj.date;
-            obj2.available = false;
-            obj2.trainer_id = i;
-            obj2.schedule_id = cnt + 1;
-            tempArray.push(obj2);
-
-            await trainerScheduleRepository.createNewTrainerSchedule(tempArray)
-                .then(result => {
-                    obj.trainer_schedule_id = result[0].id;
-                    scheduleRepository.createNewSchedule(obj);
-                });
-            cnt++;
+            // var obj = {};
+            // obj.is_trainer = i % 2 === 0;
+            // obj.state = 2;
+            // obj.date = moment().subtract(6, 'd').format('YYYY-MM-DD 17:00:00');
+            // console.log(obj.date);
+            // // obj.start_time = "17:00";
+            // // obj.end_time = "17:30";
+            // obj.memo = faker.lorem.sentence();
+            // obj.past_schedule_id = -1;
+            // obj.trainer_id = 1;
+            // obj.student_id = 6 - i;
+            // obj.pt_id = i;
+            //
+            // var tempArray = [];
+            // var obj2 = {};
+            // obj2.start_time = obj.date;
+            // obj2.available = false;
+            // obj2.trainer_id = 1;
+            // obj2.schedule_id = cnt + 1;
+            // tempArray.push(obj2);
+            //
+            // await trainerScheduleRepository.createNewTrainerSchedule(tempArray)
+            //     .then(result => {
+            //         obj.trainer_schedule_id = result[0].id;
+            //         scheduleRepository.createNewSchedule(obj);
+            //     });
+            // cnt++;
 
             var obj = {};
             obj.is_trainer = i % 2 === 0;
             obj.state = 0;
-            obj.date = moment().subtract('4', 'D').format('YYYY-MM-DD 17:00:00');
-            // obj.start_time = "17:00";
-            // obj.end_time = "17:30";
+            obj.date = moment().format('YYYY-MM-DD 17:00:00');
             obj.memo = faker.lorem.sentence();
             obj.past_schedule_id = cnt;
-            obj.trainer_id = i;
+            obj.trainer_id = 1;
             obj.student_id = 6 - i;
             obj.pt_id = i;
 
@@ -184,16 +183,17 @@ module.exports = {
             var obj2 = {};
             obj2.start_time = obj.date;
             obj2.available = false;
-            obj2.trainer_id = i;
+            obj2.trainer_id = 1;
             obj2.schedule_id = cnt + 1;
             tempArray.push(obj2);
 
             await trainerScheduleRepository.createNewTrainerSchedule(tempArray)
-                .then(result => {
+                .then((result) => {
                     obj.trainer_schedule_id = result[0].id;
                     scheduleRepository.createNewSchedule(obj);
                 });
             cnt++;
+
         }
 
         for(var i = 1 ; i <= 5 ; i++) {
