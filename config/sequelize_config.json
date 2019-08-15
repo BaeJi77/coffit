@@ -10,7 +10,7 @@
     "collate": "utf8_general_ci",
     "define": {
       "timestamps": true,
-      "underscored": true,
+      "underscored": true
     }
   },
   "test": {
@@ -24,7 +24,7 @@
     "collate": "utf8_general_ci",
     "define": {
       "timestamps": true,
-      "underscored": true,
+      "underscored": true
     }
   },
   "production": {
@@ -38,7 +38,7 @@
     "collate": "utf8_general_ci",
     "define": {
       "timestamps": true,
-      "underscored": true,
+      "underscored": true
     }
   }
 }

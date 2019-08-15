@@ -1,12 +1,14 @@
 var { createLogger, format, transports } = require('winston');
-
+require('winston-daily-rotate-file');
 
 var logger = createLogger({
     format: format.combine(
         format.timestamp({
             format: "YYYY-MM-DD HH:mm:ss"
         }),
-        format.json()
+        format.json(),
+        format.prettyPrint(),
+        format.colorize()
     ),
     transports: [
         new transports.Console({

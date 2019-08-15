@@ -3,17 +3,18 @@ var router = express.Router();
 
 const homeService = require('../services/homeService');
 
+const logger = require('../config/logger');
+
 router.get('/', getHomePage);
 async function getHomePage(req, res, next) {
     let searchTrainerName = req.query.trainerName;
-    await homeService.findAllTrainerAndAdvertisingBanner(searchTrainerName)
-        .then(trainerAndBanners => {
-
-            res.status(200).send(trainerAndBanners);
-        })
-        .catch(err => {
-            next(err);
-        })
+    try {
+        logger.info('[homeRouter] search trainer Name is : ' + searchTrainerName);
+        let trainersAndBanners = await homeService.findAllTrainerAndAdvertisingBanner(searchTrainerName);
+        res.status(200).send(trainersAndBanners);
+    } catch (e) {
+        next(e);
+    }
 }
 
 module.exports = router;
