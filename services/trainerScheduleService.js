@@ -8,6 +8,7 @@ async function makeDateTimeTypeToOnlyDate (dateTimeType) {
 
 module.exports = {
     makeNewTrainerAvailableDate: async function(newTrainerSchedule) {
+        console.log(newTrainerSchedule);
         let startDate = await makeDateTimeTypeToOnlyDate(newTrainerSchedule[0].start_time);
         let endDate = moment(startDate).add(1, 'd').format('YYYY-MM-DD 00:00:00');
         try {
