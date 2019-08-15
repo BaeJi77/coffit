@@ -14,8 +14,5 @@ module.exports = (sequelize, DataTypes) => {
         num_review: DataTypes.INTEGER,
         access_token: DataTypes.STRING,
         fcm_token: DataTypes.STRING
-    }, {
-        timestamps: true,
-        underscored: true
     })
 };
