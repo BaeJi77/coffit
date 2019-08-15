@@ -19,7 +19,7 @@ module.exports = {
         try {
             allTrainerAndBanner.trainer_list = await decideSearchConditionUsingTrainerName(trainerName);
             allTrainerAndBanner.banner = await bannerRepository.findAllBanner();
-            logger.info('[homeService] Success find trainers and banner');
+            logger.info('[homeService] [findAllTrainerAndAdvertisingBanner] Success find trainers and banner');
             return allTrainerAndBanner;
         } catch (err) {
             throw err;

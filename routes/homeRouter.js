@@ -9,7 +9,7 @@ router.get('/', getHomePage);
 async function getHomePage(req, res, next) {
     let searchTrainerName = req.query.trainerName;
     try {
-        logger.info('[homeRouter] search trainer Name is : ' + searchTrainerName);
+        logger.info('[homeRouter] [getHomePage]  search trainer Name is : ' + searchTrainerName);
         let trainersAndBanners = await homeService.findAllTrainerAndAdvertisingBanner(searchTrainerName);
         res.status(200).send(trainersAndBanners);
     } catch (e) {
