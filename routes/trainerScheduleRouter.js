@@ -5,7 +5,7 @@ const trainerScheduleService = require('../services/trainerScheduleService');
 
 router.post('/', makeNewTrainerSchedule);
 async function makeNewTrainerSchedule(req, res, next) {
-    await trainerScheduleService.makeNewTrainerAvailableDate(req.body)
+    await trainerScheduleService.makeNewTrainerAvailableDate(req.body.availableTime)
         .then(trainerSchedules => {
             res.status(201).send(trainerSchedules);
         })
