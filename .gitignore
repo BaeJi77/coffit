@@ -4,3 +4,4 @@
 
 config/aws_s3.json
 ~/
+.nyc_output
