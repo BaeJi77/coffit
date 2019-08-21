@@ -223,12 +223,11 @@ module.exports = {
 
     deleteSchedule: async function (scheduleId) {
         try {
-            return await scheduleRepository.deleteScheduleUsingScheduleId(scheduleId)
-                .then(async result => {
-                    await trainerScheduleRepository
-                        .updateTrainerScheduleAvailableToAvailableStateInParameterValue(result.trainer_schedule_id, true);
-                    return result;
-                })
+            let targetSchedule = await scheduleRepository.findScheduleUsingScheduleId(scheduleId);
+            let deleteScheduleCount = await scheduleRepository.deleteScheduleUsingScheduleId(scheduleId);
+            await trainerScheduleRepository
+                .updateTrainerScheduleAvailableToAvailableStateInParameterValue(targetSchedule.trainer_schedule_id, true);
+            return deleteScheduleCount;
         } catch (e) {
             throw e;
         }
