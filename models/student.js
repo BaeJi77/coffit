@@ -14,7 +14,5 @@ module.exports = (sequelize, DataTypes) => {
         phone_number: DataTypes.STRING,
         fcm_token: DataTypes.STRING,
         access_token: DataTypes.STRING
-    }, {
-        timestamps: true
     })
 };

@@ -3,4 +3,6 @@
 .DS_Store
 
 config/aws_s3.json
+/log
 ~/
+.nyc_output

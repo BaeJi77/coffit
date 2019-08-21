@@ -10,6 +10,7 @@
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-winston": "^3.3.0",
     "faker": "^4.1.0",
     "http-errors": "~1.6.3",
     "is-undefined": "^1.0.10",
@@ -23,12 +24,17 @@
     "pug": "2.0.0-beta11",
     "sequelize": "^5.13.1",
     "sequelize-cli": "^5.5.0",
+    "sinon": "^7.4.1",
     "swagger-jsdoc": "^3.4.0",
     "swagger-ui-express": "^4.0.7",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^3.10.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.2.0"
+    "mocha": "^6.2.0",
+    "node-mocks-http": "^1.7.6",
+    "nyc": "^14.1.1"
   }
 }
