@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var requestLogger = require('morgan');
 var logger = require('./config/logger');
+var expressLogger = require('./config/express_logger');
 
 
 var indexRouter = require('./routes/index');
@@ -51,10 +52,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // store request user information
-app.use((req, res, next) => {
-  logger.info(req.headers);
-  next();
-});
+app.use(expressLogger.logger);
 
 //router
 app.use('/', indexRouter);
@@ -71,6 +69,8 @@ app.use('/schedules', scheduleRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+// app.use(expressLogger.errorLogger);
 
 // error handler
 app.use(function(err, req, res, next) {

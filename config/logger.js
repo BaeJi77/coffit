@@ -1,23 +1,26 @@
 var { createLogger, format, transports } = require('winston');
 require('winston-daily-rotate-file');
 
+const logFormat = format.printf(info => `${info.timestamp} ${info.level}: ${JSON.stringify(info.message, null, 2)}`);
+
 var logger = createLogger({
+    level: 'info',/**/
     format: format.combine(
-        format.timestamp({
-            format: "YYYY-MM-DD HH:mm:ss"
-        }),
+        format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
+        // Format the metadata object
+        format.metadata({fillExcept: ['message', 'level', 'timestamp', 'label']}),
         format.json(),
         format.prettyPrint(),
-        format.colorize()
+        format.colorize(),
+        format.splat()
     ),
+
     transports: [
         new transports.Console({
-            level: "info",
+            level: "debug",
             format: format.combine(
                 format.colorize(),
-                format.printf(
-                    info => `${info.timestamp} [${info.level.toUpperCase()}]: ${info.message}`
-                )
+                logFormat
             )
         }),
         new transports.DailyRotateFile({
