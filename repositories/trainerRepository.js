@@ -5,7 +5,9 @@ const {Op} = require('../models');
 module.exports = {
     //TODO: Order하는 경우 service단에서 정렬? 일단 리뷰 만들면 확인해보자.
     findAllTrainers: async function() {
-        return await Trainer.findAll();
+        return await Trainer.findAll({
+            raw: true
+        });
     },
 
     findTrainerUsingTrainerId: async function(trainerId) {
@@ -25,7 +27,9 @@ module.exports = {
                 username: {
                     [Op.like]: "%"+trainerName+"%"
                 }
-            }
+            },
+        }, {
+            raw: true
         })
     },
 

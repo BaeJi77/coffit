@@ -10,6 +10,7 @@
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-winston": "^3.3.0",
     "faker": "^4.1.0",
     "http-errors": "~1.6.3",
     "is-undefined": "^1.0.10",
@@ -26,6 +27,8 @@
     "sinon": "^7.4.1",
     "swagger-jsdoc": "^3.4.0",
     "swagger-ui-express": "^4.0.7",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^3.10.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {

@@ -1,5 +1,7 @@
 const {PtComment} = require('../models');
 
+const logger = require('../config/logger');
+
 module.exports = {
     findMostRecentlyPtComment: async function(ptId) {
         return await PtComment.findOne({
@@ -14,6 +16,8 @@ module.exports = {
     },
 
     createNewPtComment: async function(newPtComment) {
+        logger.info('[ptCommentRepository.js] [createNewPtComment] Call createNewPtComment');
+        logger.info(newPtComment);
         return await PtComment.create(newPtComment);
     }
 };

@@ -7,7 +7,5 @@ module.exports = (sequelize, DataTypes) => {
         },
         trainer_id: DataTypes.INTEGER,
         schedule_id: DataTypes.INTEGER
-    }, {
-        timestamps: true
     })
 };
