@@ -7,7 +7,7 @@ async function addScheduleToNotifications (notifications) {
     let notificationAddedSchedule = [];
     for (var i = 0 ; i < notifications.length ; i++) {
         let scheduleId = notifications[i].schedule_id;
-        await notifications[i].setDataValue('schedule', await scheduleRepository.findScheduleUsingScheduleId(scheduleId));
+        notifications[i].schedule = await scheduleRepository.findScheduleUsingScheduleId(scheduleId);
         await notificationAddedSchedule.push(notifications[i]);
     }
     return notificationAddedSchedule
@@ -18,7 +18,7 @@ module.exports = {
         try {
             let studentNotifications = await notificationRepository.findAllNotificationOfCertainStudent(studentId);
             let notificationAddedSchedule = await addScheduleToNotifications(studentNotifications);
-            logger.info('[notificationService] [findStudentNotification] Success find student notification');
+            logger.info('[notificationService.js] [findStudentNotification] Success find student notification');
             return notificationAddedSchedule;
         } catch (e) {
             throw e;
@@ -28,7 +28,7 @@ module.exports = {
     findTrainerNotification: async function(trainerId) {
         try {
             let trainerNotifications = await notificationRepository.findAllNotificationOfCertainTrainer(trainerId);
-            logger.info('[notificationService] [findTrainerNotification] Success find trainer notification');
+            logger.info('[notificationService.js] [findTrainerNotification] Success find trainer notification');
             return await addScheduleToNotifications(trainerNotifications);
         } catch (e) {
             throw e;
