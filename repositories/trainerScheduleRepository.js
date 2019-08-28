@@ -44,8 +44,9 @@ module.exports = {
         return await TrainerSchedule.bulkCreate(newTrainerScheduleInformation);
     },
 
-    // TODO: schedule logic에서 반드시 어떻게 바꿀지 확인해서 state에 값 넣어주기.
     updateTrainerScheduleAvailableToAvailableStateInParameterValue: async function(trainerScheduleId, availableState) {
+        logger.info('[trainerScheduleRepository.js] [updateTrainerScheduleAvailableToAvailableStateInParameterValue] update available state');
+        logger.info('trainerId : %d, updateStateValue: %s', trainerScheduleId, availableState);
         return await TrainerSchedule.update({
             available: availableState
         }, {
