@@ -3,16 +3,17 @@ var router = express.Router();
 
 const ptCommentService = require('../services/ptCommentService');
 
+const logger = require('../config/logger');
 
 router.post('/', createNewPtComment);
 async function createNewPtComment(req, res, next) {
-    await ptCommentService.createNewPtComment(req.body)
-        .then(result => {
-            res.status(201).send(result);
-        })
-        .catch(err => {
-            next(err);
-        })
+    try {
+        logger.info('[ptCommentRouter] [createNewPtComment] make new PTComment');
+        logger.info(req.body);
+        await ptCommentService.createNewPtComment(req.body);
+    } catch (e) {
+        next(e);
+    }
 }
 
 
