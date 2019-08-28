@@ -6,10 +6,10 @@ async function makeDateTimeTypeToOnlyDate (dateTimeType) {
     return moment(dateTimeType).format('YYYY-MM-DD 00:00:00');
 }
 
-async function changeTrainerScheduleStratTime (trainerSchedules) {
+async function changeTrainerScheduleStartTime (trainerSchedules) {
     let trainerScheduleUpdatedStartTime = [];
     for (const trainerSchedule of trainerSchedules) {
-        trainerSchedule.start_time = moment(trainerSchedule.start_time).subtract(9, 'h');
+        trainerSchedule.start_time = moment(trainerSchedule.start_time).subtract(9, 'h').format('YYYY-MM-DD HH:mm:ss');
         trainerScheduleUpdatedStartTime.push(trainerSchedule);
     }
     return trainerScheduleUpdatedStartTime;
@@ -17,11 +17,9 @@ async function changeTrainerScheduleStratTime (trainerSchedules) {
 
 module.exports = {
     makeNewTrainerAvailableDate: async function(newTrainerSchedules) {
-        console.log(newTrainerSchedules);
         let startDate = await makeDateTimeTypeToOnlyDate(newTrainerSchedules[0].start_time);
         let endDate = moment(startDate).add(1, 'd').format('YYYY-MM-DD 00:00:00');
-        let trainerScheduleChangedStartTime = await changeTrainerScheduleStratTime(newTrainerSchedules);
-        console.log(trainerScheduleChangedStartTime);
+        let trainerScheduleChangedStartTime = await changeTrainerScheduleStartTime(newTrainerSchedules);
         try {
             await trainerScheduleRepository.deleteAllTrainerScheduleCertainDateAvailableIsTrue(newTrainerSchedules[0].trainer_id, startDate, endDate);
             return await trainerScheduleRepository.createNewTrainerSchedule(trainerScheduleChangedStartTime);

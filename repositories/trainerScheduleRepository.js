@@ -1,6 +1,8 @@
 const {TrainerSchedule} = require('../models');
 const {Op} = require('../models');
 
+const logger = require('../config/logger');
+
 module.exports = {
     findAllTrainerScheduleOfTrainer: async function(trainerId) {
         return await TrainerSchedule.findAll({
@@ -22,6 +24,8 @@ module.exports = {
     },
 
     deleteAllTrainerScheduleCertainDateAvailableIsTrue: async function(trainerId, certainStartOnDay, certainEndOnDay) {
+        logger.info('[trainerScheduleRepository.js] [deleteAllTrainerScheduleCertainDateAvailableIsTrue] Call destroy all previous trainer schedule was requested in the past');
+        logger.info('trainerId: %d, startOnDay: %s, endOnDay: %s', trainerId, certainStartOnDay, certainEndOnDay);
         return await TrainerSchedule.destroy({
             where: {
                 trainer_id: trainerId,
@@ -35,6 +39,8 @@ module.exports = {
     },
 
     createNewTrainerSchedule: async function(newTrainerScheduleInformation) {
+        logger.info('[trainerScheduleRepository.js] [createNewTrainerSchedule] Call new trainer schedule');
+        logger.info(newTrainerScheduleInformation);
         return await TrainerSchedule.bulkCreate(newTrainerScheduleInformation);
     },
 
