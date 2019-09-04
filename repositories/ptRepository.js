@@ -14,9 +14,8 @@ module.exports = {
             }
         }).then(pts => {
             let studentIdArray = [];
-            pts.forEach(item => {
-                studentIdArray.push(item.student_id);
-            });
+            for (pt of pts)
+                studentIdArray.push(pt.student_id);
             return studentIdArray;
         })
     },
@@ -49,6 +48,7 @@ module.exports = {
     },
 
     closePtsPassedEndDate: async function() {
+        logger.info('[ptRepository] [closePtsPassedEndDate] pt is closed, when pt end date is passed');
         return await Pt.update({
             state: 1
         }, {

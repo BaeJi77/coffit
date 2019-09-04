@@ -25,7 +25,7 @@ tags:
   - name: "schedule"
     description: "Operation about PT schedule"
   - name: "login"
-    description: "User login our service"
+    description: "User login our services"
   - name: "PTComment"
     description: "Trainer write comment when the PT finished."
   - name: "trainerSchedule"
@@ -178,7 +178,7 @@ paths:
     post:
       tags:
         - "login"
-      summary: "login diffrent service like kakoa, google"
+      summary: "login diffrent services like kakoa, google"
       produces:
         - "application/json"
       responses:

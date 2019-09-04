@@ -2,6 +2,8 @@ const {Student} = require('../models');
 const {Pt} = require('../models');
 const {Op} = require('../models');
 
+const logger = require('../config/logger');
+
 module.exports = {
     findAllStudentUsingStudentIdArray: async function(studentIdArray) {
         logger.info('[studentRepository] [findAllStudentUsingStudentIdArray] find certain student. studentIds: %s', studentIdArray.toString());
