@@ -1,5 +1,7 @@
 const {Schedule} = require('../models');
 
+const logger = require('../config/logger');
+
 module.exports = {
     findAllSchedulesUsingPtId: async function(ptId) {
         return await Schedule.findAll({
@@ -37,10 +39,13 @@ module.exports = {
     },
 
     createNewSchedule: async function (newSchedule) {
+        logger.info('[scheduleRepository.js] [createNewSchedule] make new schedule');
+        logger.info(newSchedule);
         return await Schedule.create(newSchedule);
     },
 
     updateScheduleStateWhenAcceptingRequest: async function (scheduleId) {
+        logger.info('[scheduleRepository.js] [updateScheduleStateWhenAcceptingRequest] accept request schedule. scheduleId: %d', scheduleId);
         return await Schedule.update({
             state: 1
         }, {
@@ -51,6 +56,7 @@ module.exports = {
     },
 
     updateScheduleStateWhenRequestAnotherDate: async function (scheduleId) {
+        logger.info('[scheduleRepository.js] [updateScheduleStateWhenRequestAnotherDate] request another schedule. scheduleId: %d', scheduleId);
         return await Schedule.update({
             state: 2
         }, {
@@ -61,6 +67,7 @@ module.exports = {
     },
 
     updateScheduleStateWhenTrainerAttendPt: async function (scheduleId) {
+        logger.info('[scheduleRepository.js] [updateScheduleStateWhenTrainerAttendPt] trainer enter the room. scheduleId: %d', scheduleId);
         return await Schedule.update({
             state: 4
         }, {
@@ -71,6 +78,7 @@ module.exports = {
     },
 
     updateScheduleStateWhenFinishedPt: async function (scheduleId) {
+        logger.info('[scheduleRepository.js] [updateScheduleStateWhenFinishedPt] finish the pt. scheduleId: %d', scheduleId);
         return await Schedule.update({
             state: 5
         }, {
@@ -81,6 +89,7 @@ module.exports = {
     },
 
     deleteScheduleUsingScheduleId: async function (scheduleId) {
+        logger.info('[scheduleRepository.js] [deleteScheduleUsingScheduleId] remove schedule. scheduleId: %d', scheduleId);
         return await Schedule.destroy({
             where: {
                 id: scheduleId
@@ -89,6 +98,7 @@ module.exports = {
     },
 
     updateSchedule: async function(scheduleId, requestUpdateSchedule) {
+        logger.info('[scheduleRepository.js] [updateSchedule] update simple schedule. scheduleId: %d', scheduleId);
         return await Schedule.update(requestUpdateSchedule, {
             where: {
                 id: scheduleId
