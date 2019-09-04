@@ -79,7 +79,7 @@ async function makeOccurNotificationToStudentOrTrainer (iAm, requestedSchedule) 
 async function makeNotificationAfterMakingSchedule (iAm, requestedSchedule) {
     let newNotification = {};
     let notificationTypeAndOriginDate = await makeADistinctionNotificationType(requestedSchedule);
-    newNotification.to_whom = await makeADistinctionWhereRequestingBy(iAm);
+    newNotification.to_whom = makeADistinctionWhereRequestingBy(iAm);
     newNotification.type = requestedSchedule.state;
     newNotification.schedule_id = requestedSchedule.id;
     newNotification.student_id = requestedSchedule.student_id;
@@ -127,7 +127,7 @@ async function makeADistinctionNotificationType (requestedSchedule) {
     return notificationTypeAndOriginDate;
 }
 
-async function decideWhatDoUpdatingUsingScheduleState (scheduleId, iAm, updateSchedule) {
+async function decideToUpdatingWhatUsingScheduleState (scheduleId, iAm, updateSchedule) {
     let updatingResult = {};
     let requestedScheduleState = updateSchedule.state;
     switch (requestedScheduleState) {
@@ -196,24 +196,22 @@ module.exports = {
         try {
             await decideUpdatingPastSchedule(newSchedule);
             return await scheduleRepository.createNewSchedule(newSchedule)
-                .then(async result => {
-                    await makeOccurNotificationToStudentOrTrainer(iAm, result);
-                    await trainerScheduleRepository
-                        .updateTrainerScheduleAvailableToAvailableStateInParameterValue(result.trainer_schedule_id, false);
-                    return result;
+                .then(async newSchedule => {
+                    makeOccurNotificationToStudentOrTrainer(iAm, newSchedule);
+                    trainerScheduleRepository
+                        .updateTrainerScheduleAvailableToAvailableStateInParameterValue(newSchedule.trainer_schedule_id, false);
+                    return newSchedule;
                 })
         } catch (e) {
             throw e;
         }
     },
 
-    // TODO: check when updating memo.
-    // TODO: 혹시 mysql hook 으로 처리 할 수 있을까?
     updateScheduleWhenAcceptingOrRejecting: async function (scheduleId, iAm, updateSchedule) {
         try {
-            await decideWhatDoUpdatingUsingScheduleState(scheduleId, iAm, updateSchedule)
+            return await decideToUpdatingWhatUsingScheduleState(scheduleId, iAm, updateSchedule)
                 .then(async result => {
-                    await decideUpdatingPastSchedule(updateSchedule);
+                    decideUpdatingPastSchedule(updateSchedule);
                     return result;
                 })
         } catch (e) {
@@ -224,9 +222,12 @@ module.exports = {
     deleteSchedule: async function (scheduleId) {
         try {
             let targetSchedule = await scheduleRepository.findScheduleUsingScheduleId(scheduleId);
-            let deleteScheduleCount = await scheduleRepository.deleteScheduleUsingScheduleId(scheduleId);
-            await trainerScheduleRepository
-                .updateTrainerScheduleAvailableToAvailableStateInParameterValue(targetSchedule.trainer_schedule_id, true);
+            let deleteScheduleCount = await scheduleRepository.deleteScheduleUsingScheduleId(scheduleId)
+                .then(deleteCount => {
+                    trainerScheduleRepository
+                        .updateTrainerScheduleAvailableToAvailableStateInParameterValue(targetSchedule.trainer_schedule_id, true);
+                return deleteCount;
+            });
             return deleteScheduleCount;
         } catch (e) {
             throw e;
