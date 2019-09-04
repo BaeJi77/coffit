@@ -10,7 +10,7 @@ async function createNewPtComment(req, res, next) {
     try {
         logger.info('[ptCommentRouter] [createNewPtComment] make new PTComment');
         logger.info(req.body);
-        await ptCommentService.createNewPtComment(req.body);
+        res.status(201).send(await ptCommentService.createNewPtComment(req.body));
     } catch (e) {
         next(e);
     }
