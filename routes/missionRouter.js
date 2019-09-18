@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const generatePreSignedUrl = require('../modules/generatePreSignedUrl');
+const generatePreSignedUrl = require('../modules/generate_preSignedUrl');
 
 router.get('/', getPresignedUrl);
 async function getPresignedUrl(req, res, next) {

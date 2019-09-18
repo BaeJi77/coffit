@@ -65,8 +65,8 @@ app.use('/home', homeRouter);
 app.use('/trainerSchedules', trainerScheduleRouter);
 app.use('/notifications', notificationRouter);
 app.use('/schedules', scheduleRouter);
-app.use('/ptComment', ptCommentRouter);
-app.use('/mission', missionRouter);
+app.use('/ptComments', ptCommentRouter);
+app.use('/missions', missionRouter);
 
 
 // catch 404 and forward to error handler
