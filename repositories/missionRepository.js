@@ -9,7 +9,6 @@ module.exports = {
         return await Mission.bulkCreate(newMission);
     },
 
-    // TODO: Remove all mission between selected date
     deleteAllMissionBetweenSelectedDate: async function(ptId, startDate, endDate) {
         logger.info('[missionRepository.js] [deleteAllMissionBetweenSelectedDate] Call destroy all mission when trainer make new mission');
         logger.info('ptId: %d, startDate: %s, endDate: %s', ptId, startDate, endDate);
