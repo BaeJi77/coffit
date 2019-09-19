@@ -49,6 +49,9 @@ module.exports = {
     findAllStudentOfTrainerOrSearchedStudents: async function (trainerId, studentName) {
         try {
             let studentIdArray = await ptRepository.findAllStudentIdUsingTrainerId(trainerId);
+            if (studentIdArray.length === 0)
+                return [];
+
             if(isUndefined(studentName)) {
                 return await studentRepository.findAllStudentUsingStudentIdArray(studentIdArray);
             } else {
