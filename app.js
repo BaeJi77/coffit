@@ -25,9 +25,10 @@ const faker = require('./config/faker');
 //init sequelize
 var sequelize = require('./models').sequelize;
 sequelize.sync({
+  force: false,
   logging: console.log
 }).then(() => {
-  faker.makeFakeData();
+  // faker.makeFakeData();
 });
 
 

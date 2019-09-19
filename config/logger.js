@@ -7,8 +7,6 @@ var logger = createLogger({
     level: 'info',/**/
     format: format.combine(
         format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
-        // Format the metadata object
-        format.metadata({fillExcept: ['message', 'level', 'timestamp', 'label']}),
         format.json(),
         format.prettyPrint(),
         format.colorize(),

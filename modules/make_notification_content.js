@@ -55,16 +55,11 @@ function makeContentWhnRejectPtReservation(requestNotification, trainerName, stu
 
 
 module.exports = async (newNotification) => {
-    let trainerName;
-    let studentName;
-    await trainerRepository.findTrainerUsingTrainerId(newNotification.trainer_id)
-        .then(result => {
-            trainerName = result.username;
-        });
-    await studentRepository.findStudentUsingStudentId(newNotification.student_id)
-        .then(result => {
-            studentName = result.username;
-        });
+    let trainerInformation = await trainerRepository.findTrainerUsingTrainerId(newNotification.trainer_id);
+    let studentInformation = await studentRepository.findStudentUsingStudentId(newNotification.student_id);
+
+    let trainerName = trainerInformation.username;
+    let studentName = studentInformation.username;
     let notificationContent;
     switch (newNotification.type) {
         case 0:

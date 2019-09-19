@@ -3,17 +3,18 @@ const ptRepository = require('../repositories/ptRepository');
 
 var isUndefined = require('is-undefined');
 
-function setPictureInObject(addPictureObject, pictureObject) {
+function setPictureUrl(addPictureObject, pictureObject) {
+    let pictureUrl;
     if(!isUndefined(pictureObject)) {
-        addPictureObject.picture_url = pictureObject.location;
+        pictureUrl = pictureObject.location;
     }
-    return addPictureObject;
+    return pictureUrl;
 }
 
 module.exports = {
     makeNewStudent: async function(newStudentInformation, profilePicture) {
         try {
-            newStudentInformation = setPictureInObject(newStudentInformation, profilePicture);
+            newStudentInformation.picture_url = setPictureUrl(newStudentInformation, profilePicture);
             return await studentRepository.createStudent(newStudentInformation);
         } catch (e) {
             throw e;
@@ -22,7 +23,7 @@ module.exports = {
 
     updateStudentUsingStudentId: async function(studentId, updateStudentInformation, profilePicture) {
         try {
-            updateStudentInformation = setPictureInObject(updateStudentInformation, profilePicture);
+            updateStudentInformation.picture_url = setPictureUrl(updateStudentInformation, profilePicture);
             return await studentRepository.updateStudent(studentId, updateStudentInformation)
         } catch (e) {
             throw e;

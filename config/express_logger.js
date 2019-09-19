@@ -12,7 +12,6 @@ module.exports = {
             })
         ],
         format: winston.format.combine(
-            winston.format.colorize(),
             winston.format.json(),
             winston.format.prettyPrint()
         ),
