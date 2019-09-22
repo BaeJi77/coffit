@@ -10,7 +10,7 @@ module.exports = {
     getPostPreSignedUrl: async function (exerciseVideoId, videoFormat) {
         let preSignedUrlObject;
         let param = preSignedConfig.get('postPreSignedUrlConfig');
-        param.Fields.key = exerciseVideoId + "." + videoFormat;
+        param.Fields.key = "missions/origin/" + exerciseVideoId + "." + videoFormat;
         await s3.createPresignedPost(param, (err, data) => {
             if (err) {
                 logger.error(err);
@@ -24,13 +24,13 @@ module.exports = {
 
     getAccessPreSignedUrl: function (keyName) {
         let param = preSignedConfig.get('getPreSignedUrlConfig');
-        param.key = keyName;
+        param.key = "missions/origin/" + keyName + ".mp4";
         return s3.getSignedUrl('getObject', param);
     },
 
     deleteS3Object: function (keyName) {
         let param = preSignedConfig.get('getS3Bucket');
-        param.Delete.Key = "missions/origin/" + keyName;
+        param.Delete.Key = "missions/origin/" + keyName + ".mp4"; // We must convert video format to mp4
         return s3.deleteObject(param, (err, data) => {
             if(err) {
                 logger.error(err);
