@@ -7,10 +7,10 @@ aws.config.loadFromPath(__dirname+'/../config/aws_s3.json');
 const s3 = new aws.S3();
 
 module.exports = {
-    getPostPreSignedUrl: async function (exerciseVideoId) {
+    getPostPreSignedUrl: async function (exerciseVideoId, videoFormat) {
         let preSignedUrlObject;
         let param = preSignedConfig.get('postPreSignedUrlConfig');
-        param.Fields.key = exerciseVideoId;
+        param.Fields.key = exerciseVideoId + "." + videoFormat;
         await s3.createPresignedPost(param, (err, data) => {
             if (err) {
                 logger.error(err);

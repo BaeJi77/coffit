@@ -3,7 +3,10 @@ module.exports = (sequelize, DataTypes) => {
         date: DataTypes.DATE,
         rate: DataTypes.INTEGER,
         comment: DataTypes.STRING,
-        has_video: DataTypes.BOOLEAN,
+        has_video: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
         contents: DataTypes.STRING,
         trainer_id: DataTypes.INTEGER,
         student_id: DataTypes.INTEGER,
