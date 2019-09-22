@@ -1,22 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-const generatePreSignedUrl = require('../modules/generate_preSignedUrl');
 const missionService = require('../services/missionService');
 
 const logger = require('../config/logger');
-
-router.get('/preUrl', getPreSignedUrl);
-async function getPreSignedUrl(req, res, next) {
-    try {
-        logger.info('[missionRouter] [getPreSignedUrl] get aws s3 pre signed url');
-        let preSignedObject = await generatePreSignedUrl.getPostPreSignedUrl(req, res);
-        logger.info(preSignedObject);
-        res.status(200).send(preSignedObject);
-    } catch (e) {
-        next(e);
-    }
-}
 
 router.post('/', makeNewMission);
 async function makeNewMission(req, res, next) {
