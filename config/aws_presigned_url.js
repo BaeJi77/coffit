@@ -8,7 +8,7 @@ const config = convict({
         Bucket: bucketName,
         Expires: 30 * minute,
         Fields: {
-            key: 'missions/origin/' + Date.now()
+            key: 'missions/origin/'
         },
         conditions: [
             {acl: 'public-read'},
@@ -21,6 +21,10 @@ const config = convict({
     getPreSignedUrlConfig: {
         Bucket: bucketName,
         Expires: 5 * minute
+    },
+
+    getS3Bucket: {
+        Bucket: bucketName
     }
 });
 
