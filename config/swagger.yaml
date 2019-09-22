@@ -199,6 +199,41 @@ components:
           type: array
           items:
             $ref: "#/definitions/ExerciseVideo"
+    MissionWithVideoFormat:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        videoFormat:
+          type: string
+        date:
+          type: integer
+          format: date
+        rate:
+          type: integer
+          format: int64
+        has_video:
+          type: boolean
+        comment:
+          type: string
+        contents:
+          type: string
+        pt_id:
+          type: integer
+          format: int64
+        trainer_id:
+          type: integer
+          format: int64
+        student_Id:
+          type: integer
+          format: int64
+        created_at:
+          type: integer
+          format: date
+        updated_at:
+          type: integer
+          format: date
     AwsS3PreSignedUrlInformation:
       type: object
       properties:
@@ -787,7 +822,7 @@ paths:
     post:
       tags:
         - "mission"
-      paramaters:
+      parameters:
         - in: "body"
           name: "body"
           reqeuired: true
@@ -803,7 +838,7 @@ paths:
     get:
       tags:
         - "mission"
-      paramaters:
+      parameters:
         - in: "path"
           name: "missionId"
           reqeuired: true
@@ -817,7 +852,7 @@ paths:
     put:
       tags:
         - "mission"
-      paramaters:
+      parameters:
         - in: "path"
           name: "missionId"
           reqeuired: true
@@ -832,13 +867,13 @@ paths:
     get:
       tags:
         - "mission"
-      paramaters:
+      parameters:
         - in: "path"
           name: "studentId"
           reqeuired: true
           type: integer
       summary: "find all mission of student"
-      response:
+      responses:
         201:
           description: "success"
           schema:
@@ -850,12 +885,12 @@ paths:
     post:
       tags:
         - "exerciseVideo"
-      paramaters:
+      parameters:
         - in: "body"
           name: "body"
           reqeuired: true
           schema:
-            $ref: '#/definitions/exerciseVideo'
+            $ref: '#/components/schemas/MissionWithVideoFormat'
       summary: "make new exerciseVideo And return aws s3 presigned url"
       responses:
         201:
@@ -866,7 +901,7 @@ paths:
     put:
       tags:
         - "exerciseVideo"
-      paramaters:
+      parameters:
         - in: "path"
           name: "exerciseVideoId"
           required: true
@@ -883,12 +918,11 @@ paths:
       responses:
         204:
           description: "success"
-          schema:
-            $ref: '#/definitions/ExerciseVideo'
+          type: integer
     delete:
       tags:
         - "exerciseVideo"
-      paramaters:
+      parameters:
         - in: "path"
           name: "exerciseVideoId"
           required: true
