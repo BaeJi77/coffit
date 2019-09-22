@@ -1225,6 +1225,8 @@ definitions:
         format: int64
       url:
         type: string
+      key_name:
+        type: string
       thumbnail_url:
         type: string
       mission_id:
