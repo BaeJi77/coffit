@@ -632,6 +632,24 @@ paths:
             $ref: "#/components/schemas/PTwithScheduleAndComment"
 
   /ptComment:
+    post:
+      tags:
+        - "PTComment"
+      parameters:
+        - name: "body"
+          in: "body"
+          schema:
+            $ref: "#/definitions/PTComment"
+      summary: "Trainer make new comment."
+      description: "The original comment disappears and trainer write a new comment."
+      produces:
+        - "application/json"
+      responses:
+        201:
+          description: "Success!!"
+          schema:
+            $ref: "#/definitions/PTComment"
+  /ptComment/{ptCommentId}:
     put:
       tags:
         - "PTComment"
@@ -640,12 +658,12 @@ paths:
           in: "body"
           schema:
             $ref: "#/definitions/PTComment"
-      summary: "Trainer update new comment."
-      description: "The original comment disappears and trainer write a new comment."
+      summary: "Trainer update comment."
+      description: "Update comment using ptCommentId"
       produces:
         - "application/json"
       responses:
-        200:
+        204:
           description: "Success!!"
           schema:
             $ref: "#/definitions/PTComment"
@@ -927,7 +945,11 @@ paths:
           name: "exerciseVideoId"
           required: true
           type: integer
-      summary: "add time tag about video."
+        - in: "query"
+          name: "missionId"
+          required: true
+          type: integer
+      summary: "remove exercise video."
       responses:
         204:
           description: "success"
