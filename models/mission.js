@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         },
+        is_converted: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
         contents: DataTypes.STRING,
         trainer_id: DataTypes.INTEGER,
         student_id: DataTypes.INTEGER,

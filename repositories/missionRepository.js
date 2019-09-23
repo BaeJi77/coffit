@@ -50,5 +50,27 @@ module.exports = {
                 id: missionId
             }
         })
+    },
+
+    updateHasVideoToTrue: async function (missionId) {
+        logger.info('[missionRepository.js] [updateHasVideoToTrue] update has_video column to true. missionId: %d', missionId);
+        return await Mission.update({
+            has_video: true
+        }, {
+            where: {
+                id: missionId
+            }
+        })
+    },
+
+    updateIsConvertedToTrue: async function (missionId) {
+        logger.info('[missionRepository.js] [updateIsConvertedToTrue] update is_converted column to true. missionId: %d', missionId);
+        return await Mission.update({
+            is_converted: true
+        }, {
+            where: {
+                id: missionId
+            }
+        })
     }
 };
