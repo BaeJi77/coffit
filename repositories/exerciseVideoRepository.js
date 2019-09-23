@@ -3,6 +3,14 @@ const {ExerciseVideo} = require('../models');
 const logger = require('../config/logger');
 
 module.exports = {
+    findCertainExerciseVideo: async function(exerciseVideoId) {
+        return await ExerciseVideo.findOne({
+            where: {
+                id: exerciseVideoId
+            }
+        })
+    },
+
     createNewExerciseVideo: async function(newExerciseVideo) {
         logger.info('[exerciseVideoRepository.js] [createNewExerciseVideo] Call createNewExerciseVideo method');
         logger.info(newExerciseVideo);
