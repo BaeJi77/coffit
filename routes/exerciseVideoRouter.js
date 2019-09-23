@@ -32,9 +32,10 @@ async function updateExerciseVideo (req, res, next) {
 router.delete('/:exerciseVideoId', deleteExerciseVideo);
 async function deleteExerciseVideo (req, res, next) {
     let exerciseVideoId = req.params.exerciseVideoId;
+    let missionId = req.query.missionId;
     try {
-        logger.info('[exerciseVideoRouter] [deleteExerciseVideo] delete exerciseVideo. exerciseVideoId: %d', exerciseVideoId);
-        res.status(204).json(await exerciseVideoService.removeExerciseVideo(exerciseVideoId));
+        logger.info('[exerciseVideoRouter] [deleteExerciseVideo] delete exerciseVideo. exerciseVideoId: %d, missionId: %d', exerciseVideoId, missionId);
+        res.status(204).json(await exerciseVideoService.removeExerciseVideo(exerciseVideoId, missionId));
     } catch (e) {
         next(e);
     }

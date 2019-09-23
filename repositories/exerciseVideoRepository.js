@@ -20,6 +20,7 @@ module.exports = {
     },
 
     deleteExerciseVideo: async function(exerciseVideoId) {
+        logger.info('[exerciseVideoRepository.js] [deleteExerciseVideo] delete exerciseVideo object. exerciseVideoId: %d', exerciseVideoId);
         return await ExerciseVideo.destroy({
             where: {
                 id: exerciseVideoId
