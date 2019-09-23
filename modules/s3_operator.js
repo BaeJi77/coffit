@@ -22,15 +22,15 @@ module.exports = {
         return preSignedUrlObject;
     },
 
-    getAccessPreSignedUrl: function (keyName) {
+    getAccessPreSignedUrl: function (exerciseVideoId) {
         let param = preSignedConfig.get('getPreSignedUrlConfig');
-        param.key = "missions/origin/" + keyName + ".mp4";
+        param.Key = "missions/origin/" + exerciseVideoId + ".mp4";
         return s3.getSignedUrl('getObject', param);
     },
 
-    deleteS3Object: function (keyName) {
+    deleteS3Object: function (exerciseVideoId) {
         let param = preSignedConfig.get('getS3Bucket');
-        param.Key = "missions/origin/" + keyName + ".mp4"; // We must convert video format to mp4
+        param.Key = "missions/origin/" + exerciseVideoId + ".mp4"; // We must convert video format to mp4
         return s3.deleteObject(param, (err, data) => {
             if(err) {
                 logger.error(err);

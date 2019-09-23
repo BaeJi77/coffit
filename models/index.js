@@ -74,7 +74,7 @@ db.PtComment.belongsTo(db.Pt);
 db.Pt.hasMany(db.Mission, {foreignKey: 'pt_id'});
 db.Mission.belongsTo(db.Pt);
 
-db.Mission.hasMany(db.ExerciseVideo, {foreignKey: 'mission_id'});
+db.Mission.hasOne(db.ExerciseVideo, {foreignKey: 'mission_id'});
 db.ExerciseVideo.belongsTo(db.Mission);
 
 db.Student.hasMany(db.Mission, {foreignKey: 'student_id'});

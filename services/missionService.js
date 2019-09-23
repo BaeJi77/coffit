@@ -1,10 +1,13 @@
 const missionRepository = require('../repositories/missionRepository');
 
+const s3_operator = require('../modules/s3_operator');
 
 module.exports = {
     findMissionDetail: async function(missionId) {
         try {
-            return await missionRepository.findMissionUsingMissionId(missionId);
+            let missionDetail = await missionRepository.findMissionUsingMissionId(missionId);
+            missionDetail.setDataValue('preSignedUrl', await s3_operator.getAccessPreSignedUrl(missionDetail.exerciseVideo.id));
+            return missionDetail;
         } catch (e) {
             throw e;
         }
