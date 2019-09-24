@@ -1,6 +1,4 @@
-const {Student} = require('../models');
-const {Pt} = require('../models');
-const {Op} = require('../models');
+const {Student, Mission, Op} = require('../models');
 
 const logger = require('../config/logger');
 
@@ -12,7 +10,12 @@ module.exports = {
                 id: {
                     [Op.or]: studentIdArray
                 }
-            }
+            },
+            include: [
+                {
+                    model: Mission
+                }
+            ]
         });
     },
 
@@ -27,7 +30,12 @@ module.exports = {
                 username: {
                     [Op.like]: "%"+studentName+"%"
                 }
-            }
+            },
+            include: [
+                {
+                    model: Mission
+                }
+            ]
         });
     },
 

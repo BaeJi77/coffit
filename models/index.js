@@ -44,6 +44,8 @@ db.TrainerSchedule = require('./trainer_schedule')(sequelize, Sequelize);
 db.Notification = require('./notification')(sequelize, Sequelize);
 db.Schedule = require('./schedule')(sequelize, Sequelize);
 db.PtComment = require('./pt_comment')(sequelize, Sequelize);
+db.Mission = require('./mission')(sequelize, Sequelize);
+db.ExerciseVideo = require('./exerciseVideo')(sequelize, Sequelize);
 
 db.Trainer.hasMany(db.TrainerPicture, {foreignKey: 'trainer_id'});
 db.TrainerPicture.belongsTo(db.Trainer);
@@ -68,6 +70,14 @@ db.Schedule.belongsTo(db.Pt);
 
 db.Pt.hasMany(db.PtComment, {foreignKey: 'pt_id'});
 db.PtComment.belongsTo(db.Pt);
+
+db.Pt.hasMany(db.Mission, {foreignKey: 'pt_id'});
+db.Mission.belongsTo(db.Pt);
+
+db.Mission.hasOne(db.ExerciseVideo, {foreignKey: 'mission_id'});
+db.ExerciseVideo.belongsTo(db.Mission);
+
+db.Student.hasMany(db.Mission, {foreignKey: 'student_id'});
 
 db.Op = Sequelize.Op;
 

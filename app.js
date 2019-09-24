@@ -16,6 +16,8 @@ var trainerScheduleRouter = require('./routes/trainerScheduleRouter');
 var notificationRouter = require('./routes/notificationRouter');
 var scheduleRouter = require('./routes/scheduleRouter');
 var ptCommentRouter = require('./routes/ptCommentRouter');
+var missionRouter = require('./routes/missionRouter');
+var exerciseVideoRouter = require('./routes/exerciseVideoRouter');
 
 
 var app = express();
@@ -64,7 +66,9 @@ app.use('/home', homeRouter);
 app.use('/trainerSchedules', trainerScheduleRouter);
 app.use('/notifications', notificationRouter);
 app.use('/schedules', scheduleRouter);
-app.use('/ptComment', ptCommentRouter);
+app.use('/ptComments', ptCommentRouter);
+app.use('/missions', missionRouter);
+app.use('/exerciseVideos', exerciseVideoRouter);
 
 
 // catch 404 and forward to error handler
