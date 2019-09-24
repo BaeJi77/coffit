@@ -16,5 +16,17 @@ async function createNewPtComment(req, res, next) {
     }
 }
 
+router.put('/:ptCommentId', updatePtComment);
+async function updatePtComment(req, res, next) {
+    let ptCommentId = req.params.ptCommentId;
+    try {
+        logger.info('[ptCommentRouter] [updatePtComment] update PTComment. ptCommentId: %d', ptCommentId);
+        logger.info(req.body);
+        res.status(204).send(await ptCommentService.updatePtComment(ptCommentId, req.body));
+    } catch (e) {
+        next(e);
+    }
+}
+
 
 module.exports = router;
