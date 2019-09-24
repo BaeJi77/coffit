@@ -29,18 +29,6 @@ async function updateExerciseVideo (req, res, next) {
     }
 }
 
-router.put('/missions/:exerciseVideoId', updateMissionColumnWhenCompleteConverting);
-async function updateMissionColumnWhenCompleteConverting (req, res, next) {
-    let exerciseVideoId = req.params.exerciseVideoId;
-    try {
-        logger.info('[exerciseVideoRouter] [updateMissionColumnWhenCompleteConverting] update is_converted column to true in mission table . exerciseVideoId: %d', exerciseVideoId);
-        res.status(204).send(await exerciseVideoService.updateIsConvertedValueWhenCompleteVideoConvert(exerciseVideoId));
-    } catch (e) {
-        next(e);
-    }
-}
-
-
 router.delete('/:exerciseVideoId', deleteExerciseVideo);
 async function deleteExerciseVideo (req, res, next) {
     let exerciseVideoId = req.params.exerciseVideoId;

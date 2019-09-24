@@ -22,6 +22,8 @@ module.exports = {
 
     addTimeTag: async function (exerciseVideoId, timeTag) {
         try {
+            let exerciseVideo = await exerciseVideoRepository.findCertainExerciseVideo(exerciseVideoId);
+            await missionRepository.updateIsConvertedToTrue(exerciseVideo.mission_id);
             return await exerciseVideoRepository.updateExerciseVideo(exerciseVideoId, timeTag);
         } catch (e) {
             throw e;
@@ -34,15 +36,6 @@ module.exports = {
             missionRepository.updateHasVideoAndIsConvertedValueToFalse(missionId);
             return await exerciseVideoRepository.deleteExerciseVideo(exerciseVideoId);
         }  catch (e) {
-            throw e;
-        }
-    },
-
-    updateIsConvertedValueWhenCompleteVideoConvert: async function(exerciseVideoId) {
-        try {
-            let exerciseVideo = await exerciseVideoRepository.findCertainExerciseVideo(exerciseVideoId);
-            return await missionRepository.updateIsConvertedToTrue(exerciseVideo.mission_id);
-        } catch (e) {
             throw e;
         }
     }
