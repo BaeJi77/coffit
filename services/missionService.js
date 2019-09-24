@@ -2,6 +2,14 @@ const missionRepository = require('../repositories/missionRepository');
 
 const s3_operator = require('../modules/s3_operator');
 
+function findDeletedDateArray (newMissions) {
+    let deleteDateArray = [];
+    for (mission of newMissions) {
+        deleteDateArray.push(mission.date);
+    }
+    return deleteDateArray;
+}
+
 module.exports = {
     findMissionDetail: async function(missionId) {
         try {
@@ -21,10 +29,10 @@ module.exports = {
         }
     },
 
-    makeNewMission: async function(newMission) {
-        // TODO: add logic that delete previous mission
+    makeNewMission: async function(ptId, newMissions) {
         try {
-            return await missionRepository.createNewMission(newMission);
+            await missionRepository.deleteAllMissionsIncludedArray(ptId ,findDeletedDateArray(newMissions));
+            return await missionRepository.createNewMission(newMissions);
         } catch (e) {
             throw e;
         }

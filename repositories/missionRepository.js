@@ -9,15 +9,14 @@ module.exports = {
         return await Mission.bulkCreate(newMission);
     },
 
-    deleteAllMissionBetweenSelectedDate: async function(ptId, startDate, endDate) {
-        logger.info('[missionRepository.js] [deleteAllMissionBetweenSelectedDate] Call destroy all mission when trainer make new mission');
-        logger.info('ptId: %d, startDate: %s, endDate: %s', ptId, startDate, endDate);
+    deleteAllMissionsIncludedArray: async function(ptId, dateArray) {
+        logger.info('[missionRepository.js] [deleteAllMissionsIncludedArray] Call destroy all missions when trainer make new mission');
+        logger.info('ptId: %d, dateArray: %s', ptId, dateArray.toString());
         return await Mission.destroy({
             where: {
                 pt_id: ptId,
-                start_time: {
-                    [Op.gte]: startDate,
-                    [Op.lte]: endDate
+                date: {
+                    [Op.or]: dateArray
                 }
             }
         })

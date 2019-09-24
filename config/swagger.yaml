@@ -199,6 +199,8 @@ components:
           type: array
           items:
             $ref: "#/definitions/ExerciseVideo"
+        preSignedUrl:
+          type: string
     MissionWithVideoFormat:
       type: object
       properties:
@@ -841,6 +843,11 @@ paths:
       tags:
         - "mission"
       parameters:
+        - in: "query"
+          name: "ptId"
+          required: true
+          type: integer
+          description: "ptId related mission"
         - in: "body"
           name: "body"
           reqeuired: true
@@ -879,8 +886,7 @@ paths:
       responses:
         204:
           description: "success"
-          schema:
-            $ref: "#/definitions/Mission"
+          type: integer
   /misionss/students/{studentId}:
     get:
       tags:

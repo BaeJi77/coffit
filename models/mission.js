@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('mission', {
-        date: DataTypes.DATE,
+        date: DataTypes.DATEONLY,
         rate: DataTypes.INTEGER,
         comment: DataTypes.STRING,
         has_video: {
