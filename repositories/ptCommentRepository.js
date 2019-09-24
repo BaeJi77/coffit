@@ -19,5 +19,13 @@ module.exports = {
         logger.info('[ptCommentRepository.js] [createNewPtComment] Call createNewPtComment');
         logger.info(newPtComment);
         return await PtComment.create(newPtComment);
+    },
+
+    updatePtCommentUsingptCommentId: async function (ptCommentId, updatePtCommentInformation) {
+        return await PtComment.update(updatePtCommentInformation, {
+            where: {
+                id: ptCommentId
+            }
+        })
     }
 };
