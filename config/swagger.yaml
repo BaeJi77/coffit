@@ -30,6 +30,10 @@ tags:
     description: "Trainer write comment when the PT finished."
   - name: "trainerSchedule"
     description: "Trainer available schedule."
+  - name: "mission"
+    description: "Trainer give exercise mission to student"
+  - name: "exerciseVideo"
+    description: "Student upload video related mission"
 
 schemes:
   - "https"
@@ -158,7 +162,102 @@ components:
           type: array
           items:
             $ref: "#/definitions/Schedule"
-
+    MissionWithExerciseVideo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        date:
+          type: integer
+          format: date
+        rate:
+          type: integer
+          format: int64
+        has_video:
+          type: boolean
+        comment:
+          type: string
+        contents:
+          type: string
+        pt_id:
+          type: integer
+          format: int64
+        trainer_id:
+          type: integer
+          format: int64
+        student_Id:
+          type: integer
+          format: int64
+        created_at:
+          type: integer
+          format: date
+        updated_at:
+          type: integer
+          format: date
+        exerciseVideos:
+          type: array
+          items:
+            $ref: "#/definitions/ExerciseVideo"
+        preSignedUrl:
+          type: string
+    MissionWithVideoFormat:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        videoFormat:
+          type: string
+        date:
+          type: integer
+          format: date
+        rate:
+          type: integer
+          format: int64
+        has_video:
+          type: boolean
+        comment:
+          type: string
+        contents:
+          type: string
+        pt_id:
+          type: integer
+          format: int64
+        trainer_id:
+          type: integer
+          format: int64
+        student_Id:
+          type: integer
+          format: int64
+        created_at:
+          type: integer
+          format: date
+        updated_at:
+          type: integer
+          format: date
+    AwsS3PreSignedUrlInformation:
+      type: object
+      properties:
+        url:
+          type: string
+        fields:
+          type: object
+          properties:
+            key:
+              type: string
+            bucket:
+              type: string
+            X-Amz-Algorithm:
+              type: string
+            X-Amz-Credential:
+              type: string
+            X-Amz-Date:
+              type: string
+            Policy:
+              type: string
+            X-Amz-Signature:
+              type: string
 
 paths:
   /login:
@@ -535,6 +634,24 @@ paths:
             $ref: "#/components/schemas/PTwithScheduleAndComment"
 
   /ptComment:
+    post:
+      tags:
+        - "PTComment"
+      parameters:
+        - name: "body"
+          in: "body"
+          schema:
+            $ref: "#/definitions/PTComment"
+      summary: "Trainer make new comment."
+      description: "The original comment disappears and trainer write a new comment."
+      produces:
+        - "application/json"
+      responses:
+        201:
+          description: "Success!!"
+          schema:
+            $ref: "#/definitions/PTComment"
+  /ptComment/{ptCommentId}:
     put:
       tags:
         - "PTComment"
@@ -543,12 +660,12 @@ paths:
           in: "body"
           schema:
             $ref: "#/definitions/PTComment"
-      summary: "Trainer update new comment."
-      description: "The original comment disappears and trainer write a new comment."
+      summary: "Trainer update comment."
+      description: "Update comment using ptCommentId"
       produces:
         - "application/json"
       responses:
-        200:
+        204:
           description: "Success!!"
           schema:
             $ref: "#/definitions/PTComment"
@@ -720,6 +837,129 @@ paths:
       responses:
         204:
           description: "success"
+
+  /missions:
+    post:
+      tags:
+        - "mission"
+      parameters:
+        - in: "query"
+          name: "ptId"
+          required: true
+          type: integer
+          description: "ptId related mission"
+        - in: "body"
+          name: "body"
+          reqeuired: true
+          schema:
+            $ref: '#/definitions/Mission'
+      summary: "make new mission"
+      responses:
+        201:
+          description: "success"
+          schema:
+            $ref: '#/definitions/Mission'
+  /missions/{missionId}:
+    get:
+      tags:
+        - "mission"
+      parameters:
+        - in: "path"
+          name: "missionId"
+          reqeuired: true
+          type: integer
+      summary: "get detail mission information"
+      responses:
+        200:
+          description: "success"
+          schema:
+            $ref: "#/components/schemas/MissionWithExerciseVideo"
+    put:
+      tags:
+        - "mission"
+      parameters:
+        - in: "path"
+          name: "missionId"
+          reqeuired: true
+          type: integer
+      summary: "update mission information. like rate, comment"
+      responses:
+        204:
+          description: "success"
+          type: integer
+  /misionss/students/{studentId}:
+    get:
+      tags:
+        - "mission"
+      parameters:
+        - in: "path"
+          name: "studentId"
+          reqeuired: true
+          type: integer
+      summary: "find all mission of student"
+      responses:
+        201:
+          description: "success"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Mission"
+
+  /exerciseVideos:
+    post:
+      tags:
+        - "exerciseVideo"
+      parameters:
+        - in: "body"
+          name: "body"
+          reqeuired: true
+          schema:
+            $ref: '#/components/schemas/MissionWithVideoFormat'
+      summary: "make new exerciseVideo And return aws s3 presigned url"
+      responses:
+        201:
+          description: "success"
+          schema:
+            $ref: '#/components/schemas/AwsS3PreSignedUrlInformation'
+  /exerciseVideos/{exerciseVideoId}:
+    put:
+      tags:
+        - "exerciseVideo"
+      parameters:
+        - in: "path"
+          name: "exerciseVideoId"
+          required: true
+          type: integer
+        - in: "body"
+          name: "body"
+          reqeuired: true
+          schema:
+            type: object
+            properties:
+              time_tag:
+                type: string
+      summary: "add time tag about video."
+      responses:
+        204:
+          description: "success"
+          type: integer
+    delete:
+      tags:
+        - "exerciseVideo"
+      parameters:
+        - in: "path"
+          name: "exerciseVideoId"
+          required: true
+          type: integer
+        - in: "query"
+          name: "missionId"
+          required: true
+          type: integer
+      summary: "remove exercise video."
+      responses:
+        204:
+          description: "success"
+          type: integer
 
 
 securityDefinitions:
@@ -1005,6 +1245,67 @@ definitions:
         type: integer
         format: date
 
+  Mission:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      date:
+        type: integer
+        format: date
+      rate:
+        type: integer
+        format: int64
+      has_video:
+        type: boolean
+      comment:
+        type: string
+      contents:
+        type: string
+      pt_id:
+        type: integer
+        format: int64
+      trainer_id:
+        type: integer
+        format: int64
+      student_Id:
+        type: integer
+        format: int64
+      created_at:
+        type: integer
+        format: date
+      updated_at:
+        type: integer
+        format: date
+
+  ExerciseVideo:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      url:
+        type: string
+      key_name:
+        type: string
+      thumbnail_url:
+        type: string
+      mission_id:
+        type: integer
+        format: int64
+      trainer_id:
+        type: integer
+        format: int64
+      student_Id:
+        type: integer
+        format: int64
+      created_at:
+        type: integer
+        format: date
+      updated_at:
+        type: integer
+        format: date
 
 
 externalDocs:

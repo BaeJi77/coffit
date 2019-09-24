@@ -3,6 +3,8 @@
 .DS_Store
 
 config/aws_s3.json
+authentication/auth.json
+config/authConfig.js
 /log
 ~/
 .nyc_output
