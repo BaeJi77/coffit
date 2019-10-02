@@ -10,6 +10,9 @@ module.exports = {
         let ptOfStudentAndPtComment = {};
         try {
             ptOfStudentAndPtComment.pt = await ptRepository.findOnePtsOfStudent(studentId);
+            if(!ptOfStudentAndPtComment.pt) {
+                return [];
+            }
             ptOfStudentAndPtComment.schedules = await scheduleRepository.findAllSchedulesUsingPtId(ptOfStudentAndPtComment.pt.id);
             ptOfStudentAndPtComment.ptComment = await ptCommentRepository.findMostRecentlyPtComment(ptOfStudentAndPtComment.pt.id);
         } catch (e) {
