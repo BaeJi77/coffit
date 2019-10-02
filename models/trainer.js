@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             defaultValue: 10000
         },
+        email: DataTypes.STRING,
         career: DataTypes.TEXT,
         description: DataTypes.TEXT,
         summary: DataTypes.TEXT,
