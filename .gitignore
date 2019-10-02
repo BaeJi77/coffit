@@ -3,9 +3,10 @@
 .DS_Store
 
 config/aws_s3.json
-authentication/auth.json
 config/authConfig.js
 config/sentry.json
+config/sequelize_config.json
+authentication/auth.json
 /log
 ~/
 .nyc_output
