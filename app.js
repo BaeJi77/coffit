@@ -5,7 +5,10 @@ var cookieParser = require('cookie-parser');
 var requestLogger = require('morgan');
 var logger = require('./config/logger');
 var expressLogger = require('./config/express_logger');
+const Sentry = require('@sentry/node');
+const sentryConfig = require('./config/sentry');
 
+Sentry.init(sentryConfig);
 
 var indexRouter = require('./routes/index');
 var trainersRouter = require('./routes/trainerRouter');
@@ -21,6 +24,7 @@ var exerciseVideoRouter = require('./routes/exerciseVideoRouter');
 
 
 var app = express();
+app.use(Sentry.Handlers.requestHandler());
 
 const faker = require('./config/faker');
 
@@ -70,13 +74,12 @@ app.use('/ptComments', ptCommentRouter);
 app.use('/missions', missionRouter);
 app.use('/exerciseVideos', exerciseVideoRouter);
 
+app.use(Sentry.Handlers.errorHandler());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+  console.log(createError(404));
 });
-
-// app.use(expressLogger.errorLogger);
 
 // error handler
 app.use(function(err, req, res, next) {
