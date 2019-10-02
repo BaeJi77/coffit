@@ -322,6 +322,53 @@ paths:
             type: array
             items:
               $ref: "#/definitions/Trainer"
+    post:
+      tags:
+        - "trainer"
+      summary: "make new trainers"
+      parameters:
+        - name: "profilePicture"
+          in: "form-data"
+          type: "file"
+          required: true
+          description: "This is profile picture of trainer."
+        - name: "activityPictures"
+          in: "form-data"
+          type: "file"
+          required: true
+          description: "This is trainer activity picture. if sending picture named activityPictures, this field is array."
+        - name: "username"
+          type: "string"
+          in: "form-data"
+        - name: "email"
+          type: "string"
+          in: "form-data"
+        - name: "price"
+          type: "integer"
+          format: "int64"
+          in: "form-data"
+        - name: "career"
+          type: "string"
+          in: "form-data"
+        - name: "description"
+          type: "string"
+          in: "form-data"
+        - name: "summary"
+          type: "string"
+          in: "form-data"
+        - name: "picture_url"
+          type: "string"
+          in: "form-data"
+        - name: "phone_number"
+          type: "string"
+          in: "form-data"
+      produces:
+        - "form-data"
+      responses:
+        201:
+          description: "Success!!"
+          schema:
+            $ref: "#/definitions/Trainer"
 
   /trainers/{trainerId}:
     get:
@@ -431,14 +478,27 @@ paths:
       tags:
         - "student"
       summary: "Make new student"
-      produces:
-        - "application/json"
       parameters:
-        - name: "body"
-          in: "body"
-          required: true
-          schema:
-            $ref: "#/definitions/Student"
+      - name: "profilePicture"
+        in: "form-data"
+        type: "file"
+        required: true
+        description: "This is profile picture of student."
+      - name: "username"
+        type: "string"
+        in: "form-data"
+      - name: "gender"
+        type: "string"
+        in: "form-data"
+        description: "Have to choice in three option that '남성', '여성', '대답을 원하지 않음'"
+      - name: "email"
+        type: "string"
+        in: "form-data"
+      - name: "phone_number"
+        type: "string"
+        in: "form-data"
+      produces:
+        - "form-data"
       responses:
         201:
           schema:
