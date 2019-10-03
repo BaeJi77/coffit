@@ -162,6 +162,25 @@ components:
           type: array
           items:
             $ref: "#/definitions/Schedule"
+    MissionArrayWhenMakeNewMission:
+      type: object
+      properties:
+        missions:
+          type: array
+          items:
+            type: object
+            properties:
+              contents:
+                type: string
+              date:
+                type: integer
+                format: date
+              pt_id:
+                type: integer
+              trainer_id:
+                type: integer
+              student_id:
+                type: integer
     MissionWithExerciseVideo:
       type: object
       properties:
@@ -912,7 +931,7 @@ paths:
           name: "body"
           reqeuired: true
           schema:
-            $ref: '#/definitions/Mission'
+            $ref: '#/components/schemas/MissionArrayWhenMakeNewMission'
       summary: "make new mission"
       responses:
         201:
