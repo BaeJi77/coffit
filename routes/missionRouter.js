@@ -11,7 +11,7 @@ async function makeNewMission(req, res, next) {
     try {
         logger.info('[missionRouter] [makeNewMission] make new mission, ptId: %d', ptId);
         logger.info(req.body);
-        res.status(201).send(await missionService.makeNewMission(ptId, req.body));
+        res.status(201).send(await missionService.makeNewMission(ptId, req.body.missions));
     } catch (e) {
         next(e);
     }
