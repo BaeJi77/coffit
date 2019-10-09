@@ -1,4 +1,5 @@
 const missionRepository = require('../repositories/missionRepository');
+const exerciseVideoRepository = require('../repositories/exerciseVideoRepository');
 
 const s3_operator = require('../modules/s3_operator');
 
@@ -43,6 +44,18 @@ module.exports = {
     updateCommentAndRateInMission: async function(missionId, updateMission) {
         try {
             return await missionRepository.updateMissionUsingMissionId(missionId, updateMission);
+        } catch (e) {
+            throw e;
+        }
+    },
+
+    updateHasVideoColumnAndCheckPastExerciseVideo: async function(missionId, pastExerciseVideoId) {
+        try {
+            if(pastExerciseVideoId){
+                s3_operator.deleteS3Object("missions/origin/" + pastExerciseVideoId, ".mp4");
+                exerciseVideoRepository.deleteExerciseVideo(pastExerciseVideoId);
+            }
+            return await missionRepository.updateHasVideoColumnToTrue(missionId);
         } catch (e) {
             throw e;
         }
