@@ -1,7 +1,7 @@
 const faker = require('faker');
 const moment = require('moment');
 
-const {Trainer, Student, Banner, Pt, Mission} = require('../models');
+const {Trainer, Student, Banner, Pt, Mission, ExerciseVideo} = require('../models');
 
 const trainerRepository = require('../repositories/trainerRepository');
 const trainerPictureRepository = require('../repositories/trainerPictureRepository');
@@ -25,21 +25,84 @@ let studentProfilePictures = ['https://coffit.s3.ap-northeast-2.amazonaws.com/%E
 module.exports = {
     makeFakeData: async function() {
         let studentId, trainerId, ptId, missionId;
-        //create trainer
-        for (var i = 0; i < 1; i++) {
+        return new Promise((async (resolve, reject) => {
+            //create trainer
+            for (var i = 0; i < 1; i++) {
+                var obj = {};
+                obj.id = 1;
+                obj.username = trainerNames[i];
+                obj.price = 30000;
+                obj.summary = trainerSummaries[i];
+                obj.career = '저 운동 잘해요. 믿고 오세요!';
+                obj.description = '언제나 끝까지 운동하는 방법 COFFIT 대표';
+                obj.picture_url = trainerProfilePirtures[i];
+                obj.phone_number = faker.phone.phoneNumberFormat();
+                obj.num_review = faker.random.number(20);
+                obj.total_star = obj.num_review * (i+1);
+                let res = await trainerRepository.createTrainer(obj);
+                trainerId = res.id;
+            }
+
+            // create student
+            for (var i = 0; i < 1; i++) {
+                var obj = {};
+                obj.id = 1;
+                obj.username = studentNames[i];
+                obj.email = faker.internet.email();
+                obj.age = faker.random.number(40);
+                obj.picture_url = studentProfilePictures[i];
+                obj.phone_number = faker.phone.phoneNumberFormat();
+                obj.gender = i % 2 === 0 ? '남성' : '여성';
+                let res = await studentRepository.createStudent(obj);
+                studentId = res.id;
+            }
+
+            // create banner
+            for(var i = 0 ; i < 1 ; i++) {
+                var obj = {};
+                // 사진 제대로 된 거 하나.
+                obj.picture_url = "https://coffit.s3.ap-northeast-2.amazonaws.com/%E1%84%89%E1%85%A9%E1%84%86%E1%85%A1+logo.jpg";
+                obj.thumbnail_url = "https://coffit.s3.ap-northeast-2.amazonaws.com/%E1%84%89%E1%85%A9%E1%84%86%E1%85%A1+logo.jpg";
+                await bannerRepository.createNewBanner(obj);
+            }
+
+            // create pt
+            for(var i = 1 ; i <= 1 ; i++) {
+                var obj = {};
+                obj.id = 1;
+                obj.state = 0;
+                obj.price = 30000 * 8;
+                obj.total_number = 8;
+                obj.rest_number = 8;
+                obj.start_date = faker.date.recent();
+                obj.end_date = moment(obj.start_date).add('1', 'M').format();
+                obj.student_id = studentId;
+                obj.trainer_id = trainerId;
+                let res = await ptRepository.createNewPt(obj);
+                ptId = res.id;
+            }
+
+            var arr = [];
             var obj = {};
-            obj.username = trainerNames[i];
-            obj.price = 30000;
-            obj.summary = trainerSummaries[i];
-            obj.career = '저 운동 잘해요. 믿고 오세요!';
-            obj.description = '언제나 끝까지 운동하는 방법 COFFIT 대표';
-            obj.picture_url = trainerProfilePirtures[i];
-            obj.phone_number = faker.phone.phoneNumberFormat();
-            obj.num_review = faker.random.number(20);
-            obj.total_star = obj.num_review * (i+1);
-            let res = await trainerRepository.createTrainer(obj);
-            trainerId = res.id;
-        }
+            obj.id = 1;
+            obj.date = '2019-10-20';
+            obj.contents = 'oldMission';
+            obj.student_id = studentId;
+            obj.trainer_id = trainerId;
+            obj.pt_id = ptId;
+            arr.push(obj);
+            let missionRes = await missionsRepository.createNewMission(arr);
+            missionId = missionRes[0].id;
+
+            var obj = {};
+            obj.key_name = 'test_video.mp4';
+            obj.student_id = studentId;
+            obj.trainer_id = trainerId;
+            obj.mission_id = missionId;
+            await exerciseVideoRepository.createNewExerciseVideo(obj);
+
+            resolve('good');
+        }));
 
         // //create trainer picture
         // for (var i = 1 ; i <= 5 ; i++ ){
@@ -51,27 +114,6 @@ module.exports = {
         //     }
         // }
 
-        // create student
-        for (var i = 0; i < 1; i++) {
-            var obj = {};
-            obj.username = studentNames[i];
-            obj.email = faker.internet.email();
-            obj.age = faker.random.number(40);
-            obj.picture_url = studentProfilePictures[i];
-            obj.phone_number = faker.phone.phoneNumberFormat();
-            obj.gender = i % 2 === 0 ? '남성' : '여성';
-            let res = await studentRepository.createStudent(obj);
-            studentId = res.id;
-        }
-
-        // create banner
-        for(var i = 0 ; i < 1 ; i++) {
-            var obj = {};
-            // 사진 제대로 된 거 하나.
-            obj.picture_url = "https://coffit.s3.ap-northeast-2.amazonaws.com/%E1%84%89%E1%85%A9%E1%84%86%E1%85%A1+logo.jpg";
-            obj.thumbnail_url = "https://coffit.s3.ap-northeast-2.amazonaws.com/%E1%84%89%E1%85%A9%E1%84%86%E1%85%A1+logo.jpg";
-            await bannerRepository.createNewBanner(obj);
-        }
         //
         // // create trainer schedule
         // var tempArray = [];
@@ -104,36 +146,7 @@ module.exports = {
         //     await notificationRepository.createNewNotification(obj);
         // }
         //
-        // create pt
-        for(var i = 1 ; i <= 1 ; i++) {
-            var obj = {};
-            obj.state = 0;
-            obj.price = 30000 * 8;
-            obj.total_number = 8;
-            obj.rest_number = 8;
-            obj.start_date = faker.date.recent();
-            obj.end_date = moment(obj.start_date).add('1', 'M').format();
-            obj.student_id = studentId;
-            obj.trainer_id = trainerId;
-            let res = await ptRepository.createNewPt(obj);
-            ptId = res.id;
-        }
 
-        var obj = {};
-        obj.date = '2019-10-20';
-        obj.contents = '["팔굽20회", "헬로우20회"]';
-        obj.student_id = studentId;
-        obj.trainer_id = trainerId;
-        obj.pt_id = ptId;
-        let missionRes = await missionsRepository.createNewMission(obj);
-        missionId = missionRes.id;
-
-        var obj = {};
-        obj.key_name = 'test_video.mp4';
-        obj.student_id = studentId;
-        obj.trainer_id = trainerId;
-        obj.mission_id = missionId;
-        await exerciseVideoRepository.createNewExerciseVideo(obj);
 
         //
         // // create schedule data
@@ -231,10 +244,19 @@ module.exports = {
     },
 
     truncateData: async function () {
-        await Trainer.destroy({where:{}});
-        await Student.destroy({where:{}});
-        await Banner.destroy({where:{}});
-        await Pt.destroy({where:{}});
-        await Mission.destroy({where:{}});
+        return new Promise(async (resolve, reject) => {
+            try {
+                await Mission.destroy({where:{}});
+                await Trainer.destroy({where:{}});
+                await Student.destroy({where:{}});
+                await Banner.destroy({where:{}});
+                await Pt.destroy({where:{}});
+                await ExerciseVideo.destroy({where:{}});
+            } catch (e) {
+                reject(e);
+            }
+            resolve('good');
+        });
+
     }
 };
