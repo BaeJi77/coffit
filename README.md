@@ -13,12 +13,13 @@
 
 ## Back-end development Environment
 
-- OS : MacOS Mojave(ver10.14.5)
+- Development OS : MacOS Catalina(ver 10.15)
+- server OS
   - ec2 : ubuntu 18.04
 - DB: mysql
-  - rds : Not construct 
+  - rds : MySQL Community (ver 5.7.22)
 - storage : aws s3
-- Node.js : v12.5.0
+- Node.js : v12.6.0
 
 - Always execute `npm update`.
 
