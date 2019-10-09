@@ -13,7 +13,6 @@ module.exports = {
         try {
             let newExerciseVideo = await exerciseVideoRepository.createNewExerciseVideo(newExerciseVideoInformation);
             updateKeyNameAboutNewExerciseVideo(newExerciseVideo.id, newExerciseVideoInformation.videoFormat);
-            missionRepository.updateHasVideoColumnToTrue(newExerciseVideoInformation.mission_id); // TODO: 나중에 안드로이드 콜백 관련된 내용이 나온 이후에 수정
             return preSignedUrlGenerator.getPostPreSignedUrl(newExerciseVideo.id, newExerciseVideoInformation.videoFormat);
         } catch (e) {
             throw e;

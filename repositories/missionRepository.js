@@ -29,7 +29,10 @@ module.exports = {
             },
             include: [{
                 model: ExerciseVideo
-            }]
+            }],
+            order: [
+                [ExerciseVideo, 'created_at', 'desc']
+            ]
         })
     },
 

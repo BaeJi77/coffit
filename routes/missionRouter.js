@@ -40,6 +40,19 @@ async function updateMission(req, res, next) {
     }
 }
 
+router.put('/hasVideos/:missionId', updateHasVideoColumn);
+async function updateHasVideoColumn(req, res, next) {
+    try {
+        let missionId = req.params.missionId;
+        let pastExerciseVideoId = req.query.pastExerciseVideoId;
+        logger.info('[missionRouter] [updateHasVideoColumn] update has_video column in mission. missionId: %d', missionId);
+        logger.info('pastExerciseVideoId: %d', pastExerciseVideoId);
+        res.status(204).send(await missionService.updateHasVideoColumnAndCheckPastExerciseVideo(missionId, pastExerciseVideoId));
+    } catch (e) {
+        next(e);
+    }
+}
+
 router.get('/students/:studentId', getMissionOfStudent);
 async function getMissionOfStudent(req, res, next) {
     try {

@@ -966,6 +966,24 @@ paths:
         204:
           description: "success"
           type: integer
+  /missions/hasVideos/{missionId}:
+    put:
+      tags:
+        - "mission"
+      parameters:
+        - in: "path"
+          name: "missionId"
+          required: true
+          type: integer
+        - in: "query"
+          name: "pastExerciseVideoId"
+          required: true
+          type: integer
+      summary: "When uploading video to s3, Update has_video column and remove exercise video."
+      responses:
+        204:
+          description: "success"
+          type: integer
   /misionss/students/{studentId}:
     get:
       tags:
@@ -1001,6 +1019,24 @@ paths:
           schema:
             $ref: '#/components/schemas/AwsS3PreSignedUrlInformation'
   /exerciseVideos/{exerciseVideoId}:
+    delete:
+      tags:
+        - "exerciseVideo"
+      parameters:
+        - in: "path"
+          name: "exerciseVideoId"
+          required: true
+          type: integer
+        - in: "query"
+          name: "missionId"
+          required: true
+          type: integer
+      summary: "remove exercise video."
+      responses:
+        204:
+          description: "success"
+          type: integer
+  /exerciseVideos/tags/{exerciseVideoId}:
     put:
       tags:
         - "exerciseVideo"
@@ -1018,23 +1054,6 @@ paths:
               time_tag:
                 type: string
       summary: "add time tag about video."
-      responses:
-        204:
-          description: "success"
-          type: integer
-    delete:
-      tags:
-        - "exerciseVideo"
-      parameters:
-        - in: "path"
-          name: "exerciseVideoId"
-          required: true
-          type: integer
-        - in: "query"
-          name: "missionId"
-          required: true
-          type: integer
-      summary: "remove exercise video."
       responses:
         204:
           description: "success"
