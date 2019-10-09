@@ -72,12 +72,4 @@ describe('homeRouter API test', function() {
                 done();
             });
     })
-
-    // it('should success get detail trainer_list', async () => {
-    //     expect(trainerListAndBanners.trainer_list[0]).to.include({'id': 1});
-    // });
-    //
-    // it('should banner detail picture_url is ULR?', async () => {
-    //     expect(trainerListAndBanners.banner[0].picture_url).to.a('string');
-    // });
 });
