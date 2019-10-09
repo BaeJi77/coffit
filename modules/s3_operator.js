@@ -28,9 +28,9 @@ module.exports = {
         return s3.getSignedUrl('getObject', param);
     },
 
-    deleteS3Object: function (exerciseVideoId) {
+    deleteS3Object: function (keyName, format) {
         let param = preSignedConfig.get('getS3Bucket');
-        param.Key = "missions/origin/" + exerciseVideoId + ".mp4"; // We must convert video format to mp4
+        param.Key = keyName + format; // We must convert video format to mp4
         return s3.deleteObject(param, (err, data) => {
             if(err) {
                 logger.error(err);

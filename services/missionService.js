@@ -14,7 +14,9 @@ module.exports = {
     findMissionDetail: async function(missionId) {
         try {
             let missionDetail = await missionRepository.findMissionUsingMissionId(missionId);
-            missionDetail.setDataValue('preSignedUrl', await s3_operator.getAccessPreSignedUrl(missionDetail.exerciseVideo.id));
+            if(missionDetail.exerciseVideo) {
+                missionDetail.setDataValue('preSignedUrl', await s3_operator.getAccessPreSignedUrl(missionDetail.exerciseVideo.id));
+            }
             return missionDetail;
         } catch (e) {
             throw e;

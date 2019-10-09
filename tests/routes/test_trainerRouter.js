@@ -1,7 +1,19 @@
-var expect = require('chai').expect;
+const should = require('should');
+const supertest = require('supertest');
+const app = require('../../app');
 
-const trainerService = require('../../services/trainerService');
 const {Trainer} = require('../../models');
+const trainerRepository = require('../../repositories/trainerRepository');
+
+/*
+* 1. 트레이너 등록이 잘 되는지?
+* 2. 사진 등록이 잘 되는지?
+* 2-1. 프로필 사진이 잘 들어가는지?
+* 2-2. 활동 사진이 잘 올라가는지?
+* 2-3. 사진 URL이 정확한지? 들어가서 접속 가능한건지?
+* 3. token 등록이 잘 되는지?
+* 4. 트레이너 사진 업데이트 후 url 정보가 잘 바뀌었는지 체크?
+* */
 
 let requestTrainerInformation = {
     username: '소마인',
@@ -10,77 +22,58 @@ let requestTrainerInformation = {
     phone_number: '301-229-7384'
 };
 
-let requestTrainerPictures = {
-    profilePicture: [
-        {
-            fieldname: 'profilePicture',
-            originalname: '나의 책상.jpeg',
-            encoding: '7bit',
-            mimetype: 'image/jpeg',
-            size: 438960,
-            bucket: 'coffit',
-            key: 'images/origin/1566179452216',
-            acl: 'public-read',
-            contentType: 'image/jpeg',
-            contentDisposition: null,
-            storageClass: 'STANDARD',
-            serverSideEncryption: null,
-            metadata: null,
-            location: 'https://coffit.s3.ap-northeast-2.amazonaws.com/images/origin/1566179452216',
-            etag: '"43959bdae73119c5a23df6381d44a029"',
-            versionId: undefined
-        }
-    ],
-    activityPictures: [
-        {
-            fieldname: 'activityPictures',
-            originalname: '스크린샷 2019-07-21 오후 7.28.14.png',
-            encoding: '7bit',
-            mimetype: 'image/png',
-            size: 436796,
-            bucket: 'coffit',
-            key: 'images/origin/1566179452221',
-            acl: 'public-read',
-            contentType: 'image/png',
-            contentDisposition: null,
-            storageClass: 'STANDARD',
-            serverSideEncryption: null,
-            metadata: null,
-            location: 'https://coffit.s3.ap-northeast-2.amazonaws.com/images/origin/1566179452221',
-            etag: '"ec9c7fc23b2d355d3fdbac0eaca0d1b6"',
-            versionId: undefined
-        }
-    ]
-};
 
-describe('trainerRouter test', function() {
-    let allTrainer;
+describe('trainerRouter API test', function() {
+    let newTestTrainer = null;
+    let server = null;
+    let request = null;
+
     before(async () => {
-        allTrainer = await trainerService.findAllTrainersOrderByRecognition();
+        server = app.listen();
+        request = supertest.agent(server);
+        await trainerRepository.createTrainer(requestTrainerInformation)
+            .then(res => {
+                newTestTrainer = res;
+            });
     });
 
-    it('should trainer list is array', async () => {
-        expect(allTrainer).to.a('array');
-    });
-
-    it('should success get trainer detail when requesting good trainer id', async () => {
-        let goodTrainerInformation = await trainerService.findCertainTrainer(1);
-        expect(goodTrainerInformation).to.include({'id': 1});
-    });
-
-    it('should fail get trainer detail when requesting bad trainer id', async () => {
-        let trainerInformationWhenRequestingBadId = await trainerService.findCertainTrainer(-1);
-        expect(trainerInformationWhenRequestingBadId).to.be.a('null');
-    });
-
-
-    it('should success create new trainer', async () => {
-        let newTrainer = await trainerService.registerNewTrainer(requestTrainerInformation, requestTrainerPictures);
-        expect(newTrainer).to.be.a('object');
-        await Trainer.destroy({
+    after(() => {
+        Trainer.destroy({
             where: {
-                id: newTrainer.id
-            }
+                id: newTestTrainer.id
+            },
+        }).then(res => {
+            server.close();
         });
     });
+
+    it('should exist one trainer object that username is "소마인"', (done) => {
+        let requestUrl = '/trainers/' + newTestTrainer.id;
+        request
+            .get(requestUrl)
+            .expect(200)
+            .end((err, res) => {
+                if(err) done(err);
+                let resResult = JSON.parse(res.text);
+                resResult.should.have.value('username', '소마인');
+                done();
+            })
+    });
+
+    it('should success trainer update fcm_token', (done) => {
+        let requestUrl = '/trainers/' + newTestTrainer.id + '/token';
+        let newFcmToken = "helloWorld";
+        request
+            .post(requestUrl)
+            .send({fcm_token: newFcmToken})
+            .expect(201)
+            .end(async (err, res) => {
+                if(err) done(err);
+                let updateTestTrainer = await trainerRepository.findTrainerUsingTrainerId(newTestTrainer.id);
+                updateTestTrainer.fcm_token.should.be.eql(newFcmToken);
+                done();
+            })
+    });
+
+    //TODO: 사진 업로드 관련 테스트 코드 작성
 });
