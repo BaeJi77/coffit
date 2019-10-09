@@ -31,14 +31,11 @@ const faker = require('./config/faker');
 //init sequelize
 var sequelize = require('./models').sequelize;
 sequelize.sync({
-  force: false,
-  logging: console.log
+  force: false
 }).then(() => {
   // faker.makeFakeData();
 });
 
-
-const scheduler = require('./modules/node_scheduler');
 
 //swagger api
 const YAML = require('yamljs');

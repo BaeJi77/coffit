@@ -3,7 +3,7 @@
 .DS_Store
 
 config/aws_s3.json
-config/authConfig.js
+config/auth_config.js
 config/sentry.json
 config/sequelize_config.json
 authentication/auth.json

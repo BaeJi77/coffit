@@ -32,7 +32,7 @@ module.exports = {
 
     removeExerciseVideo: async function (exerciseVideoId, missionId) {
         try {
-            preSignedUrlGenerator.deleteS3Object(exerciseVideoId);
+            preSignedUrlGenerator.deleteS3Object("missions/origin/" + exerciseVideoId, ".mp4");
             missionRepository.updateHasVideoAndIsConvertedValueToFalse(missionId);
             return await exerciseVideoRepository.deleteExerciseVideo(exerciseVideoId);
         }  catch (e) {
