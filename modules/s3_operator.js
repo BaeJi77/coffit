@@ -22,9 +22,9 @@ module.exports = {
         return preSignedUrlObject;
     },
 
-    getAccessPreSignedUrl: function (exerciseVideoId) {
+    getAccessPreSignedUrl: function (keyName) {
         let param = preSignedConfig.get('getPreSignedUrlConfig');
-        param.Key = "missions/origin/" + exerciseVideoId + ".mp4";
+        param.Key = "missions/origin/" + keyName;
         return s3.getSignedUrl('getObject', param);
     },
 
