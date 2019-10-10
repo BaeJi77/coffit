@@ -95,6 +95,7 @@ module.exports = {
             missionId = missionRes[0].id;
 
             var obj = {};
+            obj.id = 1;
             obj.key_name = 'test_video.mp4';
             obj.student_id = studentId;
             obj.trainer_id = trainerId;
