@@ -2,6 +2,8 @@ const should = require('should');
 const supertest = require('supertest');
 const app = require('../../app');
 
+const {ExerciseVideo} = require('../../models');
+
 const missionRepository = require('../../repositories/missionRepository');
 
 /*
@@ -57,6 +59,7 @@ describe('mission API test', function() {
     after((done) => {
         missionRepository.createNewMission(oldMission)
             .then((res) => {
+                ExerciseVideo.update({mission_id:1},{where:{id:1}});
                 server.close();
                 done();
             })
