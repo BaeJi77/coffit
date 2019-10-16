@@ -21,6 +21,7 @@ var scheduleRouter = require('./routes/scheduleRouter');
 var ptCommentRouter = require('./routes/ptCommentRouter');
 var missionRouter = require('./routes/missionRouter');
 var exerciseVideoRouter = require('./routes/exerciseVideoRouter');
+var reviewRouter = require('./routes/reviewRouter');
 
 
 var app = express();
@@ -70,6 +71,7 @@ app.use('/schedules', scheduleRouter);
 app.use('/ptComments', ptCommentRouter);
 app.use('/missions', missionRouter);
 app.use('/exerciseVideos', exerciseVideoRouter);
+app.use('/reviews', reviewRouter);
 
 app.use(Sentry.Handlers.errorHandler());
 
