@@ -34,6 +34,8 @@ tags:
     description: "Trainer give exercise mission to student"
   - name: "exerciseVideo"
     description: "Student upload video related mission"
+  - name: "review"
+    description: "Student write comment about trainer"
 
 schemes:
   - "https"
@@ -130,6 +132,47 @@ components:
           type: array
           items:
             $ref: "#/definitions/TrainerPicture"
+    TrainerDetailWithPicturesAndReviews:
+      type: object
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        username:
+          type: "string"
+        price:
+          type: "integer"
+          format: "int64"
+        career:
+          type: "string"
+        description:
+          type: "string"
+        summary:
+          type: "string"
+        picture_url:
+          type: "string"
+        phone_number:
+          type: "string"
+        fcm_token:
+          type: "string"
+        total_star:
+          type: "integer"
+        num_review:
+          type: "integer"
+        created_at:
+          type: integer
+          format: date
+        updated_at:
+          type: integer
+          format: date
+        trainer_pictures:
+          type: array
+          items:
+            $ref: "#/definitions/TrainerPicture"
+        reviews:
+          type: array
+          items:
+            $ref: "#/definitions/Review"
     StudentWithSchedules:
       type: object
       properties:
@@ -409,7 +452,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/components/schemas/TrainerDetailWithPictures"
+            $ref: "#/components/schemas/TrainerDetailWithPicturesAndReviews"
         400:
           description: "Invalid ID supplied"
         404:
@@ -1047,7 +1090,7 @@ paths:
           type: integer
         - in: "body"
           name: "body"
-          reqeuired: true
+          required: true
           schema:
             type: object
             properties:
@@ -1058,6 +1101,40 @@ paths:
         204:
           description: "success"
           type: integer
+
+  /reviews:
+    post:
+      tags:
+        - "review"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/Review"
+      summary: "make new review"
+      responses:
+        201:
+          description: "success"
+          schema:
+            $ref: "#/definitions/Review"
+  /reviews/{trainerId}:
+    get:
+      tags:
+        - "review"
+      parameters:
+        - in: "path"
+          name: "trainerId"
+          required: true
+          type: integer
+      summary: "get all reviews of trainers"
+      responses:
+        200:
+          description: "success"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Review"
 
 
 securityDefinitions:
@@ -1404,6 +1481,32 @@ definitions:
       updated_at:
         type: integer
         format: date
+
+  Review:
+    type: object
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+      contents:
+        type: string
+      star:
+        type: integer
+      trainer_id:
+        type: integer
+        format: int64
+      student_Id:
+        type: integer
+        format: int64
+      created_at:
+        type: integer
+        format: date
+      updated_at:
+        type: integer
+        format: date
+
+
 
 
 externalDocs:
