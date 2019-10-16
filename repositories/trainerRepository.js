@@ -1,6 +1,4 @@
-const {Trainer} = require('../models');
-const {TrainerPicture} = require('../models');
-const {Op} = require('../models');
+const {Trainer, TrainerPicture, Review, Op} = require('../models');
 
 const logger = require('../config/logger');
 
@@ -21,6 +19,9 @@ module.exports = {
             },
             include: [{
                 model: TrainerPicture
+            }, {
+                model: Review,
+                limit: 3
             }]
         });
     },
