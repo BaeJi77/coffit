@@ -2,7 +2,8 @@ const should = require('should');
 const supertest = require('supertest');
 const app = require('../../app');
 
-const {Mission} = require('../../models');
+const {ExerciseVideo} = require('../../models');
+
 const missionRepository = require('../../repositories/missionRepository');
 
 /*
@@ -34,20 +35,34 @@ let requestNewMission = {
     ]
 };
 
+let oldMission = [
+    {
+        "id": 1,
+        "contents": "oldMission",
+        "date": "2019-10-20",
+        "pt_id": 1,
+        "trainer_id": 1,
+        "student_id": 1
+    }
+];
+
 describe('mission API test', function() {
     let server = null;
     let request = null;
     let requestUrl = '/missions/';
-    let newTestMission = null;
 
     before(async () => {
         server = app.listen();
         request = supertest.agent(server);
-        // newTestMission = await missionRepository.createNewMission(requestNewM)
     });
 
-    after(() => {
-        server.close();
+    after((done) => {
+        missionRepository.createNewMission(oldMission)
+            .then((res) => {
+                ExerciseVideo.update({mission_id:1},{where:{id:1}});
+                server.close();
+                done();
+            })
     });
 
     it('should success when requesting getMissionDetail.', (done)=> {
@@ -107,5 +122,5 @@ describe('mission API test', function() {
                 missionOfStudent[0].contents.should.be.eql('newMission');
                 done();
             })
-    })
+    });
 });
