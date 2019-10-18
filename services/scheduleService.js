@@ -4,6 +4,7 @@ const trainerScheduleRepository = require('../repositories/trainerScheduleReposi
 const ptRepository = require('../repositories/ptRepository');
 const trainerRepository = require('../repositories/trainerRepository');
 const makeNotificationContent = require('../modules/make_notification_content');
+const fcmPush = require('../modules/fcm_send_message');
 
 /**
  * @post - condition
@@ -73,6 +74,7 @@ async function checkAlreadyAcceptedSchedule (pastSchedule) {
 
 async function makeOccurNotificationToStudentOrTrainer (iAm, requestedSchedule) {
     let newNotification = await makeNotificationAfterMakingSchedule(iAm, requestedSchedule);
+    fcmPush.decideReceivePushTarget(newNotification);
     notificationRepository.createNewNotification(newNotification);
 }
 
@@ -94,9 +96,9 @@ async function makeNotificationAfterMakingSchedule (iAm, requestedSchedule) {
 function makeADistinctionWhereRequestingBy (iAm) {
     let to_whom;
     if (iAm === 'student')
-        to_whom = 0;
-    else if (iAm === 'trainer')
         to_whom = 1;
+    else if (iAm === 'trainer')
+        to_whom = 0;
     return to_whom;
 }
 
@@ -121,6 +123,10 @@ async function makeADistinctionNotificationType (requestedSchedule) {
             notificationTypeAndOriginDate.type = 3;
             break;
 
+        // 트레이너가 코멘트를 달았을 경우
+        case 6:
+            notificationTypeAndOriginDate.type = 6;
+
         default:
             break;
     }
@@ -131,6 +137,7 @@ async function decideToUpdatingWhatUsingScheduleState (scheduleId, iAm, updateSc
     let updatingResult = {};
     let requestedScheduleState = updateSchedule.state;
     switch (requestedScheduleState) {
+        // 승인 하는 경우
         case 1:
             updatingResult = await scheduleRepository.updateScheduleStateWhenAcceptingRequest(scheduleId)
                 .then(result => {
@@ -144,6 +151,7 @@ async function decideToUpdatingWhatUsingScheduleState (scheduleId, iAm, updateSc
             }
             break;
 
+        // 거절하는 경우
         case 3:
             updatingResult = await scheduleRepository.deleteScheduleUsingScheduleId(scheduleId)
                 .then(result => {
@@ -236,6 +244,7 @@ module.exports = {
 
     updateSchedule: async function(scheduleId, requestUpdateSchedule) {
         try {
+            // TODO: 코멘트가 달리 경우 이기때문에 이것에 대한 알람 메세지 만들어야 함.
             return await scheduleRepository.updateSchedule(scheduleId, requestUpdateSchedule)
         } catch (e) {
             throw e;
