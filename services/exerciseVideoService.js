@@ -3,6 +3,8 @@ const missionRepository = require('../repositories/missionRepository');
 
 const preSignedUrlGenerator = require('../modules/s3_operator');
 
+const fcmPush = require('../modules/fcm_send_message');
+
 async function updateKeyNameAboutNewExerciseVideo (newExerciseVideoId, videoFormat) {
     let key_name = newExerciseVideoId + "." + videoFormat;
     await exerciseVideoRepository.updateExerciseVideo(newExerciseVideoId, {"key_name": key_name});
@@ -22,6 +24,7 @@ module.exports = {
     addTimeTag: async function (exerciseVideoId, timeTag) {
         try {
             let exerciseVideo = await exerciseVideoRepository.findCertainExerciseVideo(exerciseVideoId);
+            fcmPush.decideReceivePushTarget(exerciseVideo.student_id, exerciseVideo.trainer_id, 1, 5, " 고객님이 운동 미션을 등록했습니다.", null);
             await missionRepository.updateIsConvertedToTrue(exerciseVideo.mission_id);
             return await exerciseVideoRepository.updateExerciseVideo(exerciseVideoId, timeTag);
         } catch (e) {

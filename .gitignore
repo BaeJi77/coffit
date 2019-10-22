@@ -6,6 +6,7 @@ config/aws_s3.json
 config/auth_config.js
 config/sentry.json
 config/sequelize_config.json
+config/fcm_key.json
 authentication/auth.json
 /log
 ~/

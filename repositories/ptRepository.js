@@ -20,6 +20,10 @@ module.exports = {
         })
     },
 
+    findPtUsingPtId: async function(ptId) {
+        return await Pt.findByPk(ptId);
+    },
+
     findOnePtsOfStudent: async function(studentId) {
         return await Pt.findOne({
             where: {
