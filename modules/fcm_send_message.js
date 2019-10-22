@@ -12,12 +12,12 @@ function convertDateTypeToYYYYMMDD (totalDate) {
 function decideCaseNumberUsingNotificationType (notificationType) {
     let caseNumber;
     switch (notificationType) {
-        // 운동미션 변경 완료 or 운동 미션 피드백 완료 후
+        // 운동미션 등록 완료 (운동 태그 등록 완료 후 알림) or 운동 미션 피드백 완료 후
         case 5:
             caseNumber = '1';
             break;
 
-        // 운동 코멘트 달렸을 경우 => 홈 화면
+        // pt 코멘트 달렸을 경우 => 홈 화면
         case 6:
             caseNumber = '2';
             break;
@@ -30,7 +30,7 @@ function decideCaseNumberUsingNotificationType (notificationType) {
     return caseNumber;
 }
 
-function makeMessage(body, caseNumber, date) {
+function makeMessage(studentId, trainerId, body, caseNumber, date) {
     let message = {};
     message.data = {};
     message.android = {};
@@ -39,6 +39,8 @@ function makeMessage(body, caseNumber, date) {
     message.data.message = body;
     message.data.caseNumber = caseNumber.toString(); // 어디로 가야 될 지 판단 기준
     message.data.date = date; // YYYY-MM-DD 형식으로 보내주기
+    message.data.studentId = studentId.toString();
+    message.data.trainerId = trainerId.toString();
     return message;
 }
 
@@ -71,18 +73,22 @@ async function pushToTrainer (sendingMessage) {
 }
 
 module.exports = {
-    decideReceivePushTarget: async function (newNotificationInformation) {
-        console.log(newNotificationInformation);
-        let caseNumber = decideCaseNumberUsingNotificationType(newNotificationInformation.type);
-        let refinedDate = convertDateTypeToYYYYMMDD(newNotificationInformation.request_date);
-        let message = makeMessage(newNotificationInformation.contents, caseNumber, refinedDate);
-        if(newNotificationInformation.to_whom === 0) {
-            let trainerInformation = await studentRepository.findStudentUsingStudentId(newNotificationInformation.student_id);
-            message.token = trainerInformation.fcm_token;
-            pushToStudent(message);
-        } else {
-            let studentInformation = await trainerRepository.findTrainerUsingTrainerId(newNotificationInformation.trainer_id);
+    decideReceivePushTarget: async function (studentId, trainerId, toWhom, requestType, contents, requestDate) {
+        let caseNumber = decideCaseNumberUsingNotificationType(requestType);
+        let refinedDate = convertDateTypeToYYYYMMDD(requestDate);
+        let studentInformation = await studentRepository.findStudentUsingStudentId(studentId);
+        let trainerInformation = await trainerRepository.findTrainerUsingTrainerId(trainerId);
+        if(toWhom === 0) { // To student
+            if(caseNumber !== 3)
+                contents = trainerInformation.username + contents;
+            let message = makeMessage(studentId, trainerId, contents, caseNumber, refinedDate);
             message.token = studentInformation.fcm_token;
+            pushToStudent(message);
+        } else { // To trainer
+            if(caseNumber !== 3)
+                contents = studentInformation.username + contents;
+            let message = makeMessage(studentId, trainerId, contents, caseNumber, refinedDate);
+            message.token = trainerInformation.fcm_token;
             pushToTrainer(message);
         }
     }
