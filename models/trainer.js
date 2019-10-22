@@ -11,8 +11,14 @@ module.exports = (sequelize, DataTypes) => {
         summary: DataTypes.TEXT,
         picture_url: DataTypes.STRING(1000),
         phone_number: DataTypes.STRING(15),
-        total_star: DataTypes.INTEGER,
-        num_review: DataTypes.INTEGER,
+        total_star: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+        },
+        num_review: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+        },
         access_token: DataTypes.STRING,
         fcm_token: DataTypes.STRING
     })
