@@ -63,5 +63,17 @@ module.exports = {
                 id: trainerId
             }
         })
+    },
+
+    increaseTrainerScoreWhenMakingReview: async function(trainerId, star) {
+        logger.info('[trainerRepository.js] [increaseTrainerScoreWhenMakingReview] update trainer score. trainerId: %d, start: %d', trainerId, star);
+        return await Trainer.increment({
+            'num_review': 1,
+            'total_star': star
+        }, {
+            where: {
+                id: trainerId
+            }
+        })
     }
 };
