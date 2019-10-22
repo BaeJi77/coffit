@@ -1,5 +1,6 @@
 const missionRepository = require('../repositories/missionRepository');
 const exerciseVideoRepository = require('../repositories/exerciseVideoRepository');
+const ptRepository = require('../repositories/ptRepository');
 
 const s3_operator = require('../modules/s3_operator');
 const fcmPush = require('../modules/fcm_send_message');
@@ -48,6 +49,7 @@ module.exports = {
                 .then(async (updateResult) => { // to student, 미션에 관한 평가를 트레이너가 작성
                     let missionInformation = await missionRepository.findMissionUsingMissionId(missionId);
                     fcmPush.decideReceivePushTarget(missionInformation.student_id, missionInformation.trainer_id, 0, 5, " 트레이너님이 미션에 대하여 피드백을 남겼습니다.", null);
+                    ptRepository.increaseTotalRateAndRateCntWhenTrainerUpdateRate(missionInformation.pt_id, updateMission.rate);
                     return updateResult;
                 });
         } catch (e) {

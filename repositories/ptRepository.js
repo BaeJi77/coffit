@@ -72,5 +72,17 @@ module.exports = {
                 id: ptId
             }
         });
+    },
+
+    increaseTotalRateAndRateCntWhenTrainerUpdateRate: async function(ptId, rate) {
+        logger.info('[ptRepository] [increaseTotalRateAndRateCntWhenTrainerUpdateRate] When trainer add comment and rate, update pt information, ptId: %d', ptId);
+        return await Pt.increment({
+            'rate_cnt': 1,
+            'total_rate': rate
+        }, {
+            where: {
+                id: ptId
+            }
+        })
     }
 };
