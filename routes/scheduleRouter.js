@@ -75,7 +75,7 @@ async function updateScheduleMemo(req, res, next) {
     try {
         logger.info('[scheduleRouter] [updateScheduleMemo] update schedule memo. scheduleId: %d', scheduleId);
         logger.info(req.body);
-        res.status(204).send(await scheduleService.updateSchedule(scheduleId, req.body));
+        res.status(204).send(await scheduleService.addScheduleMemo(scheduleId, req.body));
     } catch (e) {
         next(e);
     }

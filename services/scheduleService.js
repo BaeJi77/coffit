@@ -74,7 +74,7 @@ async function checkAlreadyAcceptedSchedule (pastSchedule) {
 
 async function makeOccurNotificationToStudentOrTrainer (iAm, requestedSchedule) {
     let newNotification = await makeNotificationAfterMakingSchedule(iAm, requestedSchedule);
-    fcmPush.decideReceivePushTarget(newNotification);
+    fcmPush.decideReceivePushTarget(newNotification.student_id, newNotification.trainer_id, newNotification.to_whom, newNotification.type, newNotification.contents, newNotification.request_date);
     notificationRepository.createNewNotification(newNotification);
 }
 
@@ -242,10 +242,9 @@ module.exports = {
         }
     },
 
-    updateSchedule: async function(scheduleId, requestUpdateSchedule) {
+    addScheduleMemo: async function(scheduleId, requestUpdateSchedule) {
         try {
-            // TODO: 코멘트가 달리 경우 이기때문에 이것에 대한 알람 메세지 만들어야 함.
-            return await scheduleRepository.updateSchedule(scheduleId, requestUpdateSchedule)
+            return await scheduleRepository.updateSchedule(scheduleId, requestUpdateSchedule);
         } catch (e) {
             throw e;
         }
