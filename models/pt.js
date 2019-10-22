@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: DataTypes.UUIDV4
         },
         trainer_id: DataTypes.INTEGER,
-        student_id: DataTypes.INTEGER
+        student_id: DataTypes.INTEGER,
+        total_rate: DataTypes.INTEGER,
+        rate_cnt: DataTypes.INTEGER
     })
 };
