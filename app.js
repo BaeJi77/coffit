@@ -22,6 +22,8 @@ var ptCommentRouter = require('./routes/ptCommentRouter');
 var missionRouter = require('./routes/missionRouter');
 var exerciseVideoRouter = require('./routes/exerciseVideoRouter');
 var reviewRouter = require('./routes/reviewRouter');
+var chattingRoomRouter = require('./routes/chattingRoomRouter');
+var chattingMessageRouter = require('./routes/chattingMessageRouter');
 
 
 var app = express();
@@ -72,6 +74,8 @@ app.use('/ptComments', ptCommentRouter);
 app.use('/missions', missionRouter);
 app.use('/exerciseVideos', exerciseVideoRouter);
 app.use('/reviews', reviewRouter);
+app.use('/chattingRooms', chattingRoomRouter);
+app.use('/chattingMessages', chattingMessageRouter);
 
 app.use(Sentry.Handlers.errorHandler());
 
