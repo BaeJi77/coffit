@@ -1,13 +1,17 @@
 const SocketIO = require('socket.io');
+const redisAdapter = require('socket.io-redis');
 
 const chattingRoomService = require('../services/chattingRoomService');
 const chattingMessageService = require('../services/chattingMessageService');
 
 const logger = require('../config/logger');
 
+let redisConfig = require('./redis_config')[process.env.NODE_ENV];
+console.log(redisConfig);
 
 module.exports = (server, app) => {
     const io = SocketIO(server);
+    io.adapter(redisAdapter(redisConfig));
     const chatting = io.of('/chattings');
 
     app.set('io', io);
