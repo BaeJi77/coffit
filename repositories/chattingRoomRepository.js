@@ -13,7 +13,8 @@ module.exports = {
             'and messageReads.read = false\n' +
             'group by messageReads.student_id\n' +
             ') b on a.student_id = b.student_id \n' +
-            'where a.student_id = :studentId;',
+            'where a.student_id = :studentId ' +
+            'order by updated_at;',
             {
                 replacements: {
                     studentId: studentId
@@ -33,7 +34,8 @@ module.exports = {
             'and messageReads.read = false\n' +
             'group by messageReads.trainer_id\n' +
             ') b on a.trainer_id = b.trainer_id \n' +
-            'where a.trainer_id = :trainerId;',
+            'where a.trainer_id = :trainerId ' +
+            'order by updated_at;',
             {
                 replacements: {
                     trainerId: trainerId
