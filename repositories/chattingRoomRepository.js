@@ -47,5 +47,17 @@ module.exports = {
         logger.info('[chattingRoomRepository.js] [createNewChattingRoom] Call createNewChattingRoom method');
         logger.info(newChattingRoomInformation);
         return ChattingRoom.create(newChattingRoomInformation);
+    },
+
+    updateLastMessage: async (chattingRoomId ,lastMessageContents) => {
+        logger.info('[chattingRoomRepository.js] [updateLastMessage] when making new chatting message, update last message. chattingRoomId: %d', chattingRoomId);
+        logger.info('[chattingRoomRepository.js] [updateLastMessage] last message: %s', lastMessageContents);
+        return ChattingRoom.update({
+            last_message: lastMessageContents
+        }, {
+            where: {
+                id: chattingRoomId
+            }
+        })
     }
 };
