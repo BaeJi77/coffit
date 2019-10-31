@@ -82,7 +82,7 @@ module.exports = {
         try {
             logger.info('[trainerService] [updateTrainerProfile] update trainer profile information');
             updateTrainerInformationInRequest.picture_url = await getPictureUrl(updateTrainerInformationInRequest, trainerPictures);
-            logger.info('trainer profile picture URL : %s', newTrainerInformation.picture_url);
+            logger.info('trainer profile picture URL : %s', updateTrainerInformationInRequest.picture_url);
             let updatedActivityPictures = await decideMakingTrainerActivityPictures(trainerId, trainerPictures);
             logger.info(updatedActivityPictures);
             return await trainerRepository.updateTrainer(trainerId, updateTrainerInformationInRequest);
