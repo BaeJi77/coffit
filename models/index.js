@@ -47,6 +47,9 @@ db.PtComment = require('./pt_comment')(sequelize, Sequelize);
 db.Mission = require('./mission')(sequelize, Sequelize);
 db.ExerciseVideo = require('./exerciseVideo')(sequelize, Sequelize);
 db.Review = require('./review')(sequelize, Sequelize);
+db.ChattingRoom = require('./chatting_room')(sequelize, Sequelize);
+db.ChattingMessage = require('./chatting_message')(sequelize, Sequelize);
+db.MessageRead = require('./message_read')(sequelize, Sequelize);
 
 db.Trainer.hasMany(db.TrainerPicture, {foreignKey: 'trainer_id'});
 db.TrainerPicture.belongsTo(db.Trainer);
@@ -82,6 +85,21 @@ db.Student.hasMany(db.Mission, {foreignKey: 'student_id'});
 
 db.Trainer.hasMany(db.Review, {foreignKey: 'trainer_id'});
 db.Review.belongsTo(db.Trainer);
+
+db.Student.hasMany(db.ChattingRoom, {foreignKey: 'student_id'});
+db.ChattingRoom.belongsTo(db.Student);
+
+db.Trainer.hasMany(db.ChattingRoom, {foreignKey: 'trainer_id'});
+db.ChattingRoom.belongsTo(db.Trainer);
+
+db.ChattingRoom.hasMany(db.ChattingMessage, {foreignKey: 'chatting_room_id'});
+db.ChattingMessage.belongsTo(db.ChattingRoom);
+
+db.ChattingMessage.hasMany(db.MessageRead, {foreignKey: 'chatting_message_id'});
+db.MessageRead.belongsTo(db.ChattingMessage);
+
+db.ChattingRoom.hasMany(db.MessageRead, {foreignKey: 'chatting_room_id'});
+
 
 db.Op = Sequelize.Op;
 
