@@ -38,10 +38,7 @@ async function deleteSchedule (req, res, next) {
         if(removeCnt === 0)
             next(new Error('Not exist schedule id or already schedule removed'));
 
-        res.status(200).json({
-            state: 'success',
-            removeCnt: result
-        });
+        res.status(204).json(removeCnt);
     } catch (e) {
         next(e);
     }
