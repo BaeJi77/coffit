@@ -7,7 +7,6 @@ const chattingMessageService = require('../services/chattingMessageService');
 const logger = require('../config/logger');
 
 let redisConfig = require('./redis_config')[process.env.NODE_ENV];
-console.log(redisConfig);
 
 module.exports = (server, app) => {
     const io = SocketIO(server);
