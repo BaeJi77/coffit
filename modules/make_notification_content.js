@@ -3,6 +3,8 @@ const moment = require('moment');
 const trainerRepository = require('../repositories/trainerRepository');
 const studentRepository = require('../repositories/studentRepository');
 
+const logger = require('../config/logger');
+
 /**
  * @to_whom
  * 0: to student from trainer
@@ -55,6 +57,8 @@ function makeContentWhnRejectPtReservation(requestNotification, trainerName, stu
 
 
 module.exports = async (newNotification) => {
+    logger.info('[make_notification_contest] make new notification contents');
+    logger.info(newNotification);
     let trainerInformation = await trainerRepository.findTrainerUsingTrainerId(newNotification.trainer_id);
     let studentInformation = await studentRepository.findStudentUsingStudentId(newNotification.student_id);
 
