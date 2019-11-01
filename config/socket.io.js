@@ -33,7 +33,7 @@ module.exports = (server, app) => {
                         let roomNumber = 'room#' + madeChattingRoom.id;
                         logger.info(roomNumber);
                         socket.join(roomNumber);
-                        chatting.in(roomNumber).emit('firstConnect', madeChattingRoom);
+                        chatting.in(roomNumber).emit('firstConnection', madeChattingRoom);
                     });
             });
 
