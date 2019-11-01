@@ -74,6 +74,9 @@ async function pushToTrainer (sendingMessage) {
 
 module.exports = {
     decideReceivePushTarget: async function (studentId, trainerId, toWhom, requestType, contents, requestDate) {
+        logger.info('[fcm_send_message] make fcm push message');
+        logger.info('studentId: %d, trainerId: %d, toWhom: %d, requestType: %d, contents: %s, requestDate: %s',
+            studentId, trainerId, toWhom, requestType, contents, requestDate);
         let caseNumber = decideCaseNumberUsingNotificationType(requestType);
         let refinedDate = convertDateTypeToYYYYMMDD(requestDate);
         let studentInformation = await studentRepository.findStudentUsingStudentId(studentId);
