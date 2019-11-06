@@ -1,4 +1,6 @@
-const {Trainer, TrainerPicture, Review, Op} = require('../models');
+const {Trainer, TrainerPicture, Review, Op, Sequelize} = require('../models');
+
+const redis = require('../config/redis');
 
 const logger = require('../config/logger');
 
@@ -6,14 +8,26 @@ module.exports = {
     //TODO: Decide ordering standard to sorting trainer list. ex) review number, Average etc.
     findAllTrainers: async function() {
         logger.info('[trainerRepository.js] [findAllTrainers] find all trainers');
-        return await Trainer.findAll({
-            raw: true
-        });
+        return redis.redisClient.get('findAllTrainers')
+            .then(async (res) => {
+                if(!res) {
+                    let findAllTrainerResult = await Trainer.findAll({
+                        order: [
+                            ['num_review', 'DESC']
+                        ],
+                        raw: true
+                    });
+                    redis.redisClient.set('findAllTrainers', JSON.stringify(findAllTrainerResult), 'EX', redis.expireTimeOn1Hour);
+                    return findAllTrainerResult;
+                } else {
+                    return JSON.parse(res);
+                }
+            });
     },
 
     findTrainerUsingTrainerId: async function(trainerId) {
         logger.info('[trainerRepository.js] [findTrainerUsingTrainerId] find trainer information using trainerId: %d', trainerId);
-        return await Trainer.findOne({
+        return Trainer.findOne({
             where:{
                 id: trainerId
             },
@@ -28,21 +42,33 @@ module.exports = {
 
     findTrainerUsingTrainerName: async function(trainerName) {
         logger.info('[trainerRepository.js] [findTrainerUsingTrainerName] search using trainer name : %s', trainerName);
-        return await Trainer.findAll({
-            where: {
-                username: {
-                    [Op.like]: "%"+trainerName+"%"
+        let cacheKey = 'findTrainerUsingTrainerName:'+trainerName;
+        return redis.redisClient.get(cacheKey)
+            .then(async (res) => {
+                if(!res) {
+                    let searchTrainerUsingUsername = await Trainer.findAll({
+                        where: {
+                            username: {
+                                [Op.like]: "%"+trainerName+"%"
+                            }
+                        },
+                        order: [
+                            ['num_review', 'DESC']
+                        ],
+                        raw: true
+                    });
+                    redis.redisClient.set(cacheKey, JSON.stringify(searchTrainerUsingUsername), 'EX', redis.expireTimeOn1Hour);
+                    return searchTrainerUsingUsername;
+                } else {
+                    return JSON.parse(res);
                 }
-            },
-        }, {
-            raw: true
-        })
+            });
     },
 
     createTrainer: async function(newTrainer) {
         logger.info('[trainerRepository.js] [createTrainer] register new trainer');
         logger.info(newTrainer);
-        return await Trainer.create(newTrainer);
+        return Trainer.create(newTrainer);
     },
 
     updateTrainer: async function(trainerId, updateTrainer) {
