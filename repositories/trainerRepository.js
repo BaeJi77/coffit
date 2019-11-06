@@ -57,7 +57,6 @@ module.exports = {
                         ],
                         raw: true
                     });
-                    console.log(searchTrainerUsingUsername);
                     redis.redisClient.set(cacheKey, JSON.stringify(searchTrainerUsingUsername), 'EX', redis.expireTimeOn1Hour);
                     return searchTrainerUsingUsername;
                 } else {
