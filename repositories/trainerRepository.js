@@ -17,7 +17,7 @@ module.exports = {
                         ],
                         raw: true
                     });
-                    redis.redisClient.set('findAllTrainers', JSON.stringify(findAllTrainerResult), 'EX', redis.expiredTime);
+                    redis.redisClient.set('findAllTrainers', JSON.stringify(findAllTrainerResult), 'EX', redis.expireTimeOn1Hour);
                     return findAllTrainerResult;
                 } else {
                     return JSON.parse(res);
@@ -58,7 +58,7 @@ module.exports = {
                         raw: true
                     });
                     console.log(searchTrainerUsingUsername);
-                    redis.redisClient.set(cacheKey, JSON.stringify(searchTrainerUsingUsername), 'EX', redis.expiredTime);
+                    redis.redisClient.set(cacheKey, JSON.stringify(searchTrainerUsingUsername), 'EX', redis.expireTimeOn1Hour);
                     return searchTrainerUsingUsername;
                 } else {
                     return JSON.parse(res);
