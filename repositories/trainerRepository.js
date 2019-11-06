@@ -13,7 +13,7 @@ module.exports = {
                 if(!res) {
                     let findAllTrainerResult = await Trainer.findAll({
                         order: [
-                            ['num_review']
+                            ['num_review', 'DESC']
                         ],
                         raw: true
                     });
@@ -27,7 +27,7 @@ module.exports = {
 
     findTrainerUsingTrainerId: async function(trainerId) {
         logger.info('[trainerRepository.js] [findTrainerUsingTrainerId] find trainer information using trainerId: %d', trainerId);
-        return await Trainer.findOne({
+        return Trainer.findOne({
             where:{
                 id: trainerId
             },
@@ -42,21 +42,34 @@ module.exports = {
 
     findTrainerUsingTrainerName: async function(trainerName) {
         logger.info('[trainerRepository.js] [findTrainerUsingTrainerName] search using trainer name : %s', trainerName);
-        return await Trainer.findAll({
-            where: {
-                username: {
-                    [Op.like]: "%"+trainerName+"%"
+        let cacheKey = 'findTrainerUsingTrainerName:'+trainerName;
+        return redis.redisClient.get(cacheKey)
+            .then(async (res) => {
+                if(!res) {
+                    let searchTrainerUsingUsername = await Trainer.findAll({
+                        where: {
+                            username: {
+                                [Op.like]: "%"+trainerName+"%"
+                            }
+                        },
+                        order: [
+                            ['num_review', 'DESC']
+                        ],
+                        raw: true
+                    });
+                    console.log(searchTrainerUsingUsername);
+                    redis.redisClient.set(cacheKey, JSON.stringify(searchTrainerUsingUsername), 'EX', redis.expiredTime);
+                    return searchTrainerUsingUsername;
+                } else {
+                    return JSON.parse(res);
                 }
-            },
-        }, {
-            raw: true
-        })
+            });
     },
 
     createTrainer: async function(newTrainer) {
         logger.info('[trainerRepository.js] [createTrainer] register new trainer');
         logger.info(newTrainer);
-        return await Trainer.create(newTrainer);
+        return Trainer.create(newTrainer);
     },
 
     updateTrainer: async function(trainerId, updateTrainer) {
