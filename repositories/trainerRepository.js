@@ -1,4 +1,6 @@
-const {Trainer, TrainerPicture, Review, Op} = require('../models');
+const {Trainer, TrainerPicture, Review, Op, Sequelize} = require('../models');
+
+const redis = require('../config/redis');
 
 const logger = require('../config/logger');
 
@@ -6,9 +8,21 @@ module.exports = {
     //TODO: Decide ordering standard to sorting trainer list. ex) review number, Average etc.
     findAllTrainers: async function() {
         logger.info('[trainerRepository.js] [findAllTrainers] find all trainers');
-        return await Trainer.findAll({
-            raw: true
-        });
+        return redis.redisClient.get('findAllTrainers')
+            .then(async (res) => {
+                if(!res) {
+                    let findAllTrainerResult = await Trainer.findAll({
+                        order: [
+                            ['num_review']
+                        ],
+                        raw: true
+                    });
+                    redis.redisClient.set('findAllTrainers', JSON.stringify(findAllTrainerResult), 'EX', redis.expiredTime);
+                    return findAllTrainerResult;
+                } else {
+                    return JSON.parse(res);
+                }
+            });
     },
 
     findTrainerUsingTrainerId: async function(trainerId) {
