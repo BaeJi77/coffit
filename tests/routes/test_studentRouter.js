@@ -59,6 +59,7 @@ describe('studentRouter API test', function() {
             .post('/students')
             .attach('profilePicture', __dirname+'/../profilePicture.jpg')
             .field('username', '소마인22')
+            .expect(201)
             .end((err, res) => {
                 if(err) done(err);
                 let resResult = JSON.parse(res.text);
