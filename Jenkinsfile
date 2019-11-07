@@ -8,6 +8,8 @@ pipeline {
     }
     stage('test') {
       steps {
+        echo 'hihi'
+        sh 'sudo cp /var/lib/jenkins/workspace/test_config/* ./config'
         sh 'npm test'
       }
     }
