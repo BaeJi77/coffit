@@ -17,12 +17,12 @@ pipeline {
         sh 'npm test'
       }
     }
-    stage('deploy') {
-      steps{
-        sh 'cd ~/coffit'
-        sh 'npm install'
-        sh 'pm2 startOrReload ecosystem_json --env production'
-      }
-    }
+//     stage('deploy') {
+//       steps{
+//         sh 'cd ~/coffit'
+//         sh 'npm install'
+//         sh 'pm2 startOrReload ecosystem_json --env production'
+//       }
+//     }
   }
 }
