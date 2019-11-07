@@ -6,6 +6,7 @@ module.exports = {
     instances: 'max',
     exec_mode : "cluster",
     watch: false,
+    exec_interpreter: '~/.nvm/versions/node/v12.13.0/bin/node',
     env: {
       NODE_ENV: 'development'
     },
