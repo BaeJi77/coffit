@@ -44,7 +44,7 @@ module.exports = {
                 chatting_room_id: chattingRoomId
             },
             order: [
-                ['created_at', 'desc']
+                ['created_at', 'ASC']
             ]
         })
     },

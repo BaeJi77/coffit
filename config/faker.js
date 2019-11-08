@@ -1,7 +1,7 @@
 const faker = require('faker');
 const moment = require('moment');
 
-const {Trainer, Student, Banner, Pt, Mission, ExerciseVideo} = require('../models');
+const {Trainer, Student, Banner, Pt, Mission, ExerciseVideo, Review} = require('../models');
 
 const trainerRepository = require('../repositories/trainerRepository');
 const trainerPictureRepository = require('../repositories/trainerPictureRepository');
@@ -15,6 +15,7 @@ const ptCommentRepository = require('../repositories/ptCommentRepository');
 const make_notification_context = require('../modules/make_notification_content');
 const exerciseVideoRepository = require('../repositories/exerciseVideoRepository');
 const missionsRepository = require('../repositories/missionRepository');
+const reviewRepository = require('../repositories/reviewRepository');
 
 let trainerNames = ['이지수', '배지훈', '정은석', '오우택', '강대명'];
 let trainerSummaries = ['홈트 한계를 극복하긴 위한 모두를 위한', '우리 모두 건강한 몸을 위해', '개발자를 위한 건강 챙기기', '버킷서울가기 부끄럽지 않은 몸', '우리 모두 바디스페이스에서 만나요~!'];
@@ -37,8 +38,6 @@ module.exports = {
                 obj.description = '언제나 끝까지 운동하는 방법 COFFIT 대표';
                 obj.picture_url = trainerProfilePirtures[i];
                 obj.phone_number = faker.phone.phoneNumberFormat();
-                obj.num_review = faker.random.number(20);
-                obj.total_star = obj.num_review * (i+1);
                 let res = await trainerRepository.createTrainer(obj);
                 trainerId = res.id;
             }
@@ -101,6 +100,15 @@ module.exports = {
             obj.trainer_id = trainerId;
             obj.mission_id = missionId;
             await exerciseVideoRepository.createNewExerciseVideo(obj);
+
+            var obj = {};
+            obj.id = 1;
+            obj.title = 'reviewTitle';
+            obj.contents = 'reviewContents';
+            obj.star = '5';
+            obj.student_id = '1';
+            obj.trainer_id = '1';
+            await reviewRepository.createNewReview(obj);
 
             resolve('good');
         }));
@@ -253,6 +261,7 @@ module.exports = {
                 await Banner.destroy({where:{}});
                 await Pt.destroy({where:{}});
                 await ExerciseVideo.destroy({where:{}});
+                await Review.destroy({where:{}});
             } catch (e) {
                 reject(e);
             }
