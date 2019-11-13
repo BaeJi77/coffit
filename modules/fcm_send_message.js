@@ -14,17 +14,17 @@ function decideCaseNumberUsingNotificationType (notificationType) {
     switch (notificationType) {
         // 운동미션 등록 완료 (운동 태그 등록 완료 후 알림) or 운동 미션 피드백 완료 후
         case 5:
-            caseNumber = '1';
+            caseNumber = 1;
             break;
 
         // pt 코멘트 달렸을 경우 => 홈 화면
         case 6:
-            caseNumber = '2';
+            caseNumber = 2;
             break;
 
         // 캘린더로 넘어가야 되는 경우 type: 0(예약 요청), 1(변경 요청), 3(요청 거절), 2(예약 완료)
         default:
-            caseNumber = '3';
+            caseNumber = 3;
             break;
     }
     return caseNumber;
@@ -60,18 +60,6 @@ function sendMessage(message, target) {
     })
 }
 
-async function pushToStudent (sendingMessage) {
-    logger.info("[fcm_send_message.js] [pushToStudent] send push massage to student");
-    logger.info(sendingMessage);
-    return await sendMessage(sendingMessage, studentPush);
-}
-
-async function pushToTrainer (sendingMessage) {
-    logger.info("[fcm_send_message.js] [pushToTrainer] send push massage to trainer");
-    logger.info(sendingMessage);
-    return await sendMessage(sendingMessage, trainerPush);
-}
-
 module.exports = {
     decideReceivePushTarget: async function (studentId, trainerId, toWhom, requestType, contents, requestDate) {
         logger.info('[fcm_send_message] make fcm push message');
@@ -82,17 +70,21 @@ module.exports = {
         let studentInformation = await studentRepository.findStudentUsingStudentId(studentId);
         let trainerInformation = await trainerRepository.findTrainerUsingTrainerId(trainerId);
         if(toWhom === 0) { // To student
-            if(caseNumber !== 3)
+            logger.info("[fcm_send_message.js] [decideReceivePushTarget] send push massage to student");
+            if(caseNumber !== 3) {
                 contents = trainerInformation.username + contents;
+            }
             let message = makeMessage(studentId, trainerId, contents, caseNumber, refinedDate);
             message.token = studentInformation.fcm_token;
-            pushToStudent(message);
+            await sendMessage(message, studentPush);
         } else { // To trainer
-            if(caseNumber !== 3)
+            logger.info("[fcm_send_message.js] [decideReceivePushTarget] send push massage to trainer");
+            if(caseNumber !== 3){
                 contents = studentInformation.username + contents;
+            }
             let message = makeMessage(studentId, trainerId, contents, caseNumber, refinedDate);
             message.token = trainerInformation.fcm_token;
-            pushToTrainer(message);
+            await sendMessage(message, trainerPush);
         }
     }
 };

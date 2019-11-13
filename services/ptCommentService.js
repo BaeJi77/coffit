@@ -9,7 +9,7 @@ module.exports = {
             return await ptCommentRepository.createNewPtComment(newPtComment)
                 .then(async (ptCommentResult) => {
                     let ptInformation = await ptRepository.findPtUsingPtId(newPtComment.pt_id);
-                    fcmPush.decideReceivePushTarget(ptInformation.student_id, ptInformation.trainer_id, 0, 6, "트레이너의 한마디가 등록되었어요.");
+                    fcmPush.decideReceivePushTarget(ptInformation.student_id, ptInformation.trainer_id, 0, 6, " 트레이너의 한마디가 등록되었어요.", null);
                     return ptCommentResult;
                 })
         } catch (e) {
