@@ -19,7 +19,7 @@ const logger = require('../config/logger');
  */
 
 function changeDateFormatToMakeEasyToRead (previousDate) {
-    return moment(previousDate).utc().format('MM-DD HH:mm');
+    return moment(previousDate).format('MM-DD HH:mm');
 }
 
 
@@ -43,8 +43,13 @@ function makeContentWhenRequestingChangingPtReservation(requestNotification, tra
     }
 }
 
-function makeContentWhenAcceptPtReservation(requestNotification) {
-    return changeDateFormatToMakeEasyToRead(requestNotification.request_date) + " 로 예약완료 되었습니다.";
+function makeContentWhenAcceptPtReservation(requestNotification, trainerName, studentName) {
+    let dateChangedSimpleFormat = changeDateFormatToMakeEasyToRead(requestNotification.request_date);
+    if(requestNotification.to_whom === 0) {
+        return trainerName + " 트레이너님이 "+ dateChangedSimpleFormat +" 에 대한 요청을 승인하였습니다.";
+    } else {
+        return studentName + " 회원님이 "+ dateChangedSimpleFormat +" 에 대한 요청을 승인하였습니다.";
+    }
 }
 
 function makeContentWhnRejectPtReservation(requestNotification, trainerName, studentName) {
@@ -75,7 +80,7 @@ module.exports = async (newNotification) => {
             break;
 
         case 2:
-            notificationContent = makeContentWhenAcceptPtReservation(newNotification);
+            notificationContent = makeContentWhenAcceptPtReservation(newNotification, trainerName, studentName);
             break;
 
         case 3:
