@@ -9,7 +9,7 @@ async function makeDateTimeTypeToOnlyDate (dateTimeType) {
 async function changeTrainerScheduleStartTime (trainerSchedules) {
     let trainerScheduleUpdatedStartTime = [];
     for (const trainerSchedule of trainerSchedules) {
-        trainerSchedule.start_time = moment(trainerSchedule.start_time).subtract(9, 'h').format('YYYY-MM-DD HH:mm:ss');
+        trainerSchedule.start_time = moment(trainerSchedule.start_time).format('YYYY-MM-DD HH:mm:ss');
         trainerScheduleUpdatedStartTime.push(trainerSchedule);
     }
     return trainerScheduleUpdatedStartTime;
