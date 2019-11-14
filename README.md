@@ -154,4 +154,6 @@
 
 - Jmeter
 
-![image](https://user-images.githubusercontent.com/27915410/68853238-d3ac8900-071c-11ea-9f3e-5250f1f9780f.png
+<img width="1346" alt="스크린샷 2019-11-07 오전 12 52 52" src="https://user-images.githubusercontent.com/27915410/68853279-f179ee00-071c-11ea-9b59-661376a14b3c.png">
+
+
