@@ -25,3 +25,9 @@ pipeline {
     }
   }
 }
+
+node {
+  stage('log') {
+    echo '${env}'
+  }
+}
