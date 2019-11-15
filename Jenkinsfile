@@ -17,12 +17,11 @@ pipeline {
         sh 'npm test'
       }
     }
-//     stage('deploy') {
-//       steps{
-//         sh 'cd ~/coffit'
-//         sh 'npm install'
-//         sh 'pm2 startOrReload ecosystem_json --env production'
-//       }
-//     }
+    stage('deploy') {
+      steps{
+        sh 'ssh -i /var/lib/jenkins/workspace/sshkey/coffit.pem ubuntu@3.130.16.63 -o "StrictHostKeyChecking no" ./deploy.sh'
+        sh 'ssh -i /var/lib/jenkins/workspace/sshkey/coffit.pem ubuntu@3.13.92.88 -o "StrictHostKeyChecking no" ./deploy.sh'
+      }
+    }
   }
 }
