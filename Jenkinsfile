@@ -19,8 +19,8 @@ pipeline {
     }
     stage('deploy') {
       steps{
-//         sh 'ssh -i /var/lib/jenkins/workspace/sshkey/coffit.pem ubuntu@3.130.16.63 ./deploy.sh'
-        sh 'ssh -i /var/lib/jenkins/workspace/sshkey/coffit.pem ubuntu@3.13.92.88 ./deploy.sh'
+        sh 'ssh -i /var/lib/jenkins/workspace/sshkey/coffit.pem ubuntu@3.130.16.63 ./deploy.sh StrictHostKeyChecking=no'
+        sh 'ssh -i /var/lib/jenkins/workspace/sshkey/coffit.pem ubuntu@3.13.92.88 ./deploy.sh StrictHostKeyChecking=no'
       }
     }
   }
