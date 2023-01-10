@@ -9,7 +9,7 @@
   "dependencies": {
     "@sentry/node": "^5.7.1",
     "aws-sdk": "^2.560.0",
-    "convict": "^5.2.0",
+    "convict": "^6.2.4",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
